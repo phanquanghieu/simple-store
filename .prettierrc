@@ -12,10 +12,12 @@
   "importOrder": [
     "^(next|react)(.*)$",
     "<THIRD_PARTY_MODULES>",
+    "^~/shared(.*)$",
+    "^~/server/services(.*)$",
     "^~/server(.*)$",
+    "^~/app/_components(.*)$",
     "^~/app/_hooks(.*)$",
     "^~/app/_libs(.*)$",
-    "^~/app/_components(.*)$",
     "^~/app(.*)$",
     "^[./]"
   ],
