@@ -1,22 +1,32 @@
-import { type NextRequest } from 'next/server'
-
-import { INextRouteParams } from '~/shared/interfaces/next'
+import { routeExecutor } from '~/server/core'
 
 import { productService } from '~/server/services/product.service'
 
-import { adminGuard } from '~/server/middlewares/guards/guards'
+import { PaginationQuerySchema } from '~/server/dto/common/req'
 import {
-  validatePaginationQuery,
-  validateParam,
-} from '~/server/middlewares/validation'
+  adminGuard,
+  bodyValidator,
+  idParamValidator,
+  listQueryValidator,
+  paginationQueryValidator,
+} from '~/server/middlewares'
 
-import { routeExecutor } from '../route'
-
-export async function GET(request: NextRequest, params: INextRouteParams) {
-  return routeExecutor(
-    adminGuard(),
-    validateParam(params, ['id']),
-    validatePaginationQuery(request),
+export async function GET(...args: INextRouteArgs) {
+  return routeExecutor(...args)(
+    // adminGuard(),
+    idParamValidator(),
+    listQueryValidator(productService.GET_SORTABLE_FIELDS),
+    paginationQueryValidator(),
     productService.getOne,
+  )
+}
+
+export async function POST(...args: INextRouteArgs) {
+  return routeExecutor(...args)(
+    adminGuard(),
+    idParamValidator(),
+    paginationQueryValidator(),
+    bodyValidator(PaginationQuerySchema),
+    productService.create,
   )
 }

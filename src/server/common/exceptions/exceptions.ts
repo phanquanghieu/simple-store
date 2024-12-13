@@ -1,6 +1,5 @@
-import { IApiErrorRes } from '~/shared/interfaces/api/response'
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { IErrorRes } from '~/shared/dto/common/res'
 
 type IExceptionOption =
   | {
@@ -29,7 +28,7 @@ export class HttpException extends Error {
     this.detail = detail
   }
 
-  static getRes(): IApiErrorRes {
+  static getRes(): IErrorRes {
     return {
       error: 'InternalServerError',
       message: 'Internal Server Error',
@@ -66,7 +65,7 @@ export class HttpException extends Error {
     return this.statusCode
   }
 
-  getRes(): IApiErrorRes {
+  getRes(): IErrorRes {
     return {
       error: this.error,
       message: this.message,

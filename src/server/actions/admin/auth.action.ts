@@ -2,14 +2,16 @@
 
 import { redirect } from 'next/navigation'
 
-import { IActionState } from '~/shared/interfaces/server-action'
-import { ZodSchema, z } from '~/shared/libs/zod'
+import { ZodSchema } from 'zod'
+
+import { IActionState } from '~/shared/dto/common/server-action'
+import { buildErrorValidationResDetail, zod } from '~/shared/libs/zod'
 
 import { ILoginRequest, authService } from '~/server/services/auth.service'
 
-const loginRequestSchema: ZodSchema<ILoginRequest> = z.object({
-  username: z.string().trim().max(50).min(1),
-  password: z.string().trim().max(50).min(1),
+const loginRequestSchema: ZodSchema<ILoginRequest> = zod.object({
+  username: zod.string().trim().max(50).min(1),
+  password: zod.string().trim().max(50).min(1),
 })
 
 export async function loginAction(
@@ -34,15 +36,10 @@ export async function loginAction(
   }
 
   if (!validationResult.success) {
-    console.log(
-      validationResult.success,
-      validationResult.error,
-      validationResult.error?.flatten(),
-      validationResult.error?.format(),
-    )
     return {
       data: responseData,
-      detail: validationResult.error?.flatten().fieldErrors,
+      error: 'BadRequest',
+      detail: buildErrorValidationResDetail(validationResult),
     }
   }
 
@@ -51,7 +48,8 @@ export async function loginAction(
   } catch (error) {
     return {
       data: responseData,
-      error: (error as Error).message,
+      error: 'BadRequest',
+      detail: { _error: [(error as Error).message] },
     }
   }
 

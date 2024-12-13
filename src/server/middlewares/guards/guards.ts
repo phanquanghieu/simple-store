@@ -1,6 +1,6 @@
-import { authService } from '~/server/services/auth.service'
+import { ICtx } from '~/server/core/ctx'
 
-import { ICtx } from '~/server/interfaces/ctx'
+import { authService } from '~/server/services/auth.service'
 
 export function adminGuard() {
   return async (ctx: ICtx) => {

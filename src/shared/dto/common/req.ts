@@ -8,9 +8,14 @@ export interface IPaginationQuery {
 }
 
 export interface ISortQuery {
-  sort: string
+  sort: string[][]
 }
 
 export interface ISearchQuery {
   search?: string
 }
+
+export interface IListQuery
+  extends IPaginationQuery,
+    ISortQuery,
+    ISearchQuery {}

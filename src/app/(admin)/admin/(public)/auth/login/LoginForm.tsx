@@ -57,7 +57,7 @@ export default function LoginForm() {
             </p>
           </div>
           <p className='text-[0.8rem] font-medium text-destructive'>
-            {loginState.error}
+            {loginState.detail?._error?.[0]}
           </p>
           <Button type='submit' disabled={isLoading}>
             {isLoading ? <Spinner /> : <div className='h-4 w-4' />}
