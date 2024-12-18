@@ -11,7 +11,7 @@ import {
   ISortQuerySchemaParams,
   ListQuerySchema,
   PaginationQuerySchema,
-} from '~/server/dto/common/req'
+} from '~/server/dto/_common/req'
 
 export function paramValidator(paramKeys: string[]) {
   return async (ctx: ICtx, { params: { params } }: IMiddlewareArgNext) => {

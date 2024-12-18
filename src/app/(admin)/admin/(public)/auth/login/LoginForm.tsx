@@ -17,7 +17,6 @@ export default function LoginForm() {
     },
   })
 
-  console.log(loginState)
   return (
     <div className='grid gap-6'>
       <form action={login}>

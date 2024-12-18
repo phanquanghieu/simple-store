@@ -2,7 +2,7 @@ import { routeExecutor } from '~/server/core'
 
 import { productService } from '~/server/services/product.service'
 
-import { PaginationQuerySchema } from '~/server/dto/common/req'
+import { PaginationQuerySchema } from '~/server/dto/_common/req'
 import {
   adminGuard,
   bodyValidator,

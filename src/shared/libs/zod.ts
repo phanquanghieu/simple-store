@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEmpty, isNil, isNull, isUndefined } from 'lodash'
-import { SafeParseError, ZodIssueCode, z } from 'zod'
+import { SafeParseError, z } from 'zod'
 
-import { IErrorValidationRes } from '../dto/common/res'
-
-export const ERR_MSG_CODE = {
-  [ZodIssueCode.invalid_date]: 'invalid_date',
-}
+import { IErrorValidationRes } from '../dto/_common/res'
 
 export function buildErrorValidationResDetail(error: SafeParseError<object>) {
   const errorFlatten = error.error.flatten()

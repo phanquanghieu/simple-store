@@ -13,9 +13,9 @@ import {
   UnauthorizedException,
 } from '../common/exceptions/exceptions'
 
-export const COOKIE_KEY_ADMIN_JWT = 'admin-jwt'
+export const COOKIE_KEY_JWT_ADMIN = 'jwt-admin'
 
-export interface IAdminJwtPayload {
+export interface IJwtPayloadAdmin {
   username: string
 }
 
@@ -33,18 +33,18 @@ async function login({ username, password }: ILoginRequest) {
   }
 
   const jwtToken = sign(
-    { username: process.env.ADMIN_USERNAME } as IAdminJwtPayload,
+    { admin: { username: process.env.ADMIN_USERNAME } as IJwtPayloadAdmin },
     process.env.JWT_SECRET!,
     {
-      expiresIn: '1d',
+      expiresIn: '1000d',
     },
   )
   const jwtDecoded = decode(jwtToken) as JwtPayload
 
   const cookiesStore = await cookies()
-  cookiesStore.set(COOKIE_KEY_ADMIN_JWT, jwtToken, {
+  cookiesStore.set(COOKIE_KEY_JWT_ADMIN, jwtToken, {
     httpOnly: true,
-    path: '/api',
+    path: '/api/admin',
     secure: false,
     expires: jwtDecoded.exp! * 1000,
   })
@@ -52,18 +52,20 @@ async function login({ username, password }: ILoginRequest) {
 
 async function logout() {
   const cookiesStore = await cookies()
-  cookiesStore.delete(COOKIE_KEY_ADMIN_JWT)
+  cookiesStore.delete(COOKIE_KEY_JWT_ADMIN)
 }
 
-async function verifyJwt(): Promise<IAdminJwtPayload> {
+async function verifyJwt(): Promise<IJwtPayloadAdmin> {
   const cookiesStore = await cookies()
-  const jwtToken = cookiesStore.get(COOKIE_KEY_ADMIN_JWT)?.value
+  const jwtToken = cookiesStore.get(COOKIE_KEY_JWT_ADMIN)?.value
   if (!jwtToken) {
     throw new UnauthorizedException()
   }
 
   try {
-    const admin = verify(jwtToken, process.env.JWT_SECRET!) as IAdminJwtPayload
+    const { admin } = verify(jwtToken, process.env.JWT_SECRET!) as {
+      admin: IJwtPayloadAdmin
+    }
     return admin
   } catch (error) {
     if (error instanceof TokenExpiredError) {

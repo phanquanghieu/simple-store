@@ -16,6 +16,5 @@
     "hooks": "~/app/_hooks",
     "lib": "~/app/_libs",
     "utils": "~/app/_libs/utils"
-  },
-  "iconLibrary": "lucide"
+  }
 }

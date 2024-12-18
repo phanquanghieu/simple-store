@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { IErrorRes, IOkListRes, IOkRes } from '~/shared/dto/common/res'
+import { IErrorRes, IOkListRes, IOkRes } from '~/shared/dto/_common/res'
 
 export function OkRes<IData>(data: IData) {
   return NextResponse.json<IOkRes<IData>>({ data })

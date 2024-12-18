@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IErrorRes } from '~/shared/dto/common/res'
+import { IErrorRes } from '~/shared/dto/_common/res'
 
 type IExceptionOption =
   | {
@@ -44,20 +44,14 @@ export class HttpException extends Error {
     detail?: any
   } {
     if (!option) {
-      return {
-        message: undefined,
-        detail: undefined,
-      }
+      return {}
     } else if (typeof option === 'string') {
       return {
         message: option,
         detail: undefined,
       }
     } else {
-      return {
-        message: option.message,
-        detail: option.detail,
-      }
+      return option
     }
   }
 

@@ -1,11 +1,14 @@
-import { IIdParam, IListQuery, IPaginationQuery } from '~/shared/dto/common/req'
+import {
+  IIdParam,
+  IListQuery,
+  IPaginationQuery,
+} from '~/shared/dto/_common/req'
 
-import { OkListRes, OkRes } from '../common/response/response'
+import { OkListRes, OkRes } from '../common'
 import { IAdminCtx, IAdminCtxParamQuery, IAdminCtxQuery } from '../core/ctx'
 
-async function get({ query }: IAdminCtxQuery<IListQuery>) {
-  // const r: ProductRes[] = [{ id: '1', name: '1', price: 1, salePrice: 1 }]
-  return OkListRes([query], 100)
+async function get({ query: { search } }: IAdminCtxQuery<IListQuery>) {
+  return OkListRes([search], 100)
 }
 
 async function getOne({
@@ -24,7 +27,7 @@ async function create({
 }
 
 export const productService = {
-  GET_SORTABLE_FIELDS: ['name', 'price', 'salePrice'],
+  GET_SORTABLE_FIELDS: ['id', 'name', 'price', 'createdAt'],
   get,
   getOne,
   create,
