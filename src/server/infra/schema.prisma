@@ -8,12 +8,6 @@ generator client {
   previewFeatures = ["strictUndefinedChecks"]
 }
 
-generator zod {
-  provider    = "zod-prisma"
-  output      = "./zod"
-  modelSuffix = "Schema"
-}
-
 model Product {
   id          String    @id @default(uuid(7)) @db.Uuid()
   categoryId  String?   @map("category_id") @db.Uuid()
