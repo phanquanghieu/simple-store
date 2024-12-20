@@ -29,7 +29,7 @@ async function login({ username, password }: ILoginRequest) {
     username !== process.env.ADMIN_USERNAME ||
     password !== process.env.ADMIN_PASSWORD
   ) {
-    throw new BadRequestException('Invalid username or password')
+    throw new BadRequestException('Username or password is incorrect')
   }
 
   const jwtToken = sign(

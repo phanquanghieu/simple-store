@@ -10,8 +10,16 @@ import { buildErrorValidationResDetail, zod } from '~/shared/libs/zod'
 import { ILoginRequest, authService } from '~/server/services/auth.service'
 
 const loginRequestSchema: ZodSchema<ILoginRequest> = zod.object({
-  username: zod.string().trim().max(50).min(1),
-  password: zod.string().trim().max(50).min(1),
+  username: zod
+    .string()
+    .trim()
+    .max(50, 'Username must be less than 50 chars')
+    .min(1, 'Username is required'),
+  password: zod
+    .string()
+    .trim()
+    .max(50, 'Password must be less than 50 chars')
+    .min(1, 'Password is required'),
 })
 
 export async function loginAction(
@@ -22,14 +30,9 @@ export async function loginAction(
     Object.fromEntries(formData),
   )
 
-  const responseData = {
-    ...prevState.data,
-    ...validationResult.data,
-  }
-
   if (!validationResult.success) {
     return {
-      data: responseData,
+      data: prevState.data,
       error: 'BadRequest',
       detail: buildErrorValidationResDetail(validationResult),
     }
@@ -39,7 +42,7 @@ export async function loginAction(
     await authService.login(validationResult.data)
   } catch (error) {
     return {
-      data: responseData,
+      data: prevState.data,
       error: 'BadRequest',
       detail: { _error: [(error as Error).message] },
     }

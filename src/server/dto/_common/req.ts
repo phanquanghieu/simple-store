@@ -46,7 +46,7 @@ export const SortQuerySchema = (
       )
       .optional()
       .default(sortDefaults)
-      .transform(zodt.defaultWhenUndefined([['id', 'asc']])),
+      .transform(zodt.defaultWhenUndefined([['id', 'desc']])),
   })
 }
 
