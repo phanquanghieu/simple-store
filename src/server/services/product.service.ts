@@ -6,9 +6,12 @@ import {
 
 import { OkListRes, OkRes } from '../common'
 import { IAdminCtx, IAdminCtxParamQuery, IAdminCtxQuery } from '../core/ctx'
+import { prisma } from '../infra/db'
 
-async function get({ query: { search } }: IAdminCtxQuery<IListQuery>) {
-  return OkListRes([search], 100)
+async function get({}: IAdminCtxQuery<IListQuery>) {
+  const products = await prisma.product.findMany()
+
+  return OkListRes(products, 100)
 }
 
 async function getOne({

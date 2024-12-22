@@ -8,46 +8,230 @@ generator client {
   previewFeatures = ["strictUndefinedChecks"]
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 model Product {
-  id          String    @id @default(uuid(7)) @db.Uuid()
-  categoryId  String?   @map("category_id") @db.Uuid()
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  brandId     String?   @map("brand_id") @db.Uuid()
-  brand       Brand?    @relation(fields: [brandId], references: [id], onDelete: SetNull)
-  name        String    @db.VarChar(256)
-  description String
-  price       Decimal   @db.Decimal(20, 2)
-  stock       Int
-  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id                      String                   @id @default(uuid(7)) @db.Uuid()
+  categoryId              String?                  @map("category_id") @db.Uuid()
+  category                Category?                @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  brandId                 String?                  @map("brand_id") @db.Uuid()
+  brand                   Brand?                   @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  productVariants         ProductVariant[]
+  productFiles            ProductFile[]
+  variantAttribute1Id     String?                  @map("variant_attribute_1_id") @db.Uuid()
+  variantAttribute1       Attribute?               @relation("VariantProductAttribute1", fields: [variantAttribute1Id], references: [id], onDelete: SetNull)
+  variantAttribute2Id     String?                  @map("variant_attribute_2_id") @db.Uuid()
+  variantAttribute2       Attribute?               @relation("VariantProductAttribute2", fields: [variantAttribute2Id], references: [id], onDelete: SetNull)
+  variantAttribute3Id     String?                  @map("variant_attribute_3_id") @db.Uuid()
+  variantAttribute3       Attribute?               @relation("VariantProductAttribute3", fields: [variantAttribute3Id], references: [id], onDelete: SetNull)
+  productAttributes       ProductAttribute[]
+  productAttributeOptions ProductAttributeOption[]
+  name                    String                   @db.VarChar(256)
+  slug                    String                   @unique @db.VarChar(256)
+  description             String
+  price                   Decimal                  @db.Decimal(20, 2)
+  compareAtPrice          Decimal?                 @map("compare_at_price") @db.Decimal(20, 2)
+  totalVariants           Int                      @map("total_variants")
+  status                  E_PRODUCT_STATUS
+  updatedAt               DateTime                 @default(now()) @updatedAt @map("updated_at")
+  createdAt               DateTime                 @default(now()) @map("created_at")
 
   @@map("product")
 }
 
-model Category {
-  id          String     @id @default(uuid(7)) @db.Uuid()
-  pathIds     String[]   @default([]) @map("path_ids") @db.Uuid()
-  parentId    String?    @map("parent_id") @db.Uuid()
-  parent      Category?  @relation("CategoryParent", fields: [parentId], references: [id], onDelete: Cascade)
-  children    Category[] @relation("CategoryParent")
-  product     Product[]
-  name        String     @db.VarChar(256)
-  description String
-  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
-  createdAt   DateTime   @default(now()) @map("created_at")
+enum E_PRODUCT_STATUS {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
 
-  @@map("category")
+model ProductVariant {
+  id                        String           @id @default(uuid(7)) @db.Uuid()
+  productId                 String           @map("product_id") @db.Uuid()
+  product                   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  inventoryId               String           @unique @map("inventory_id") @db.Uuid()
+  inventory                 Inventory        @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
+  variantAttributeOption1Id String?          @map("variant_attribute_option_1_id") @db.Uuid()
+  variantAttributeOption1   AttributeOption? @relation("VariantProductVariantAttributeOption1", fields: [variantAttributeOption1Id], references: [id], onDelete: SetNull)
+  variantAttributeOption2Id String?          @map("variant_attribute_option_2_id") @db.Uuid()
+  variantAttributeOption2   AttributeOption? @relation("VariantProductVariantAttributeOption2", fields: [variantAttributeOption2Id], references: [id], onDelete: SetNull)
+  variantAttributeOption3Id String?          @map("variant_attribute_option_3_id") @db.Uuid()
+  variantAttributeOption3   AttributeOption? @relation("VariantProductVariantAttributeOption3", fields: [variantAttributeOption3Id], references: [id], onDelete: SetNull)
+  sku                       String?          @unique @db.VarChar(100)
+  price                     Decimal          @db.Decimal(20, 2)
+  compareAtPrice            Decimal?         @map("compare_at_price") @db.Decimal(20, 2)
+  cost                      Decimal?         @db.Decimal(20, 2)
+  position                  Int              @default(1) @db.SmallInt()
+  updatedAt                 DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdAt                 DateTime         @default(now()) @map("created_at")
+
+  @@map("product_variant")
+}
+
+model ProductAttribute {
+  id                      String                   @id @default(uuid(7)) @db.Uuid()
+  productId               String                   @map("product_id") @db.Uuid()
+  product                 Product                  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attributeId             String                   @map("attribute_id") @db.Uuid()
+  attribute               Attribute                @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  productAttributeOptions ProductAttributeOption[]
+  position                Int                      @default(1) @db.SmallInt()
+  updatedAt               DateTime                 @default(now()) @updatedAt @map("updated_at")
+  createdAt               DateTime                 @default(now()) @map("created_at")
+
+  @@map("product_attribute")
+}
+
+model ProductAttributeOption {
+  id                 String           @id @default(uuid(7)) @db.Uuid()
+  productId          String           @map("product_id") @db.Uuid()
+  product            Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productAttributeId String           @map("product_attribute_id") @db.Uuid()
+  productAttribute   ProductAttribute @relation(fields: [productAttributeId], references: [id], onDelete: Cascade)
+  attributeOptionId  String           @map("attribute_option_id") @db.Uuid()
+  attributeOption    AttributeOption  @relation(fields: [attributeOptionId], references: [id], onDelete: Cascade)
+  position           Int              @default(1) @db.SmallInt()
+  updatedAt          DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdAt          DateTime         @default(now()) @map("created_at")
+
+  @@map("product_attribute_option")
+}
+
+model Inventory {
+  id                  String             @id @default(uuid(7)) @db.Uuid()
+  productVariantId    String             @map("product_variant_id") @db.Uuid()
+  productVariant      ProductVariant?
+  inventoryHistories  InventoryHistory[]
+  sku                 String?            @unique @db.VarChar(100)
+  quantityAvailable   Int                @default(0) @map("quantity_available")
+  quantityUnavailable Int                @default(0) @map("quantity_unavailable")
+  quantityCommitted   Int                @default(0) @map("quantity_committed")
+  quantityTotal       Int                @default(0) @map("quantity_total")
+  updatedAt           DateTime           @default(now()) @updatedAt @map("updated_at")
+  createdAt           DateTime           @default(now()) @map("created_at")
+
+  @@map("inventory")
+}
+
+model InventoryHistory {
+  id                       String    @id @default(uuid(7)) @db.Uuid()
+  inventoryId              String    @map("inventory_id") @db.Uuid()
+  inventory                Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
+  quantityAvailable        Int       @default(0) @map("quantity_available")
+  quantityAvailableDelta   Int       @default(0) @map("quantity_available_delta")
+  quantityUnavailable      Int       @default(0) @map("quantity_unavailable")
+  quantityUnavailableDelta Int       @default(0) @map("quantity_unavailable_delta")
+  quantityCommitted        Int       @default(0) @map("quantity_committed")
+  quantityCommittedDelta   Int       @default(0) @map("quantity_committed_delta")
+  quantityTotal            Int       @default(0) @map("quantity_total")
+  quantityTotalDelta       Int       @default(0) @map("quantity_total_delta")
+  reason                   String
+  createdAt                DateTime  @default(now()) @map("created_at")
+
+  @@map("inventory_history")
 }
 
 model Brand {
   id          String    @id @default(uuid(7)) @db.Uuid()
-  product     Product[]
+  products    Product[]
   name        String    @db.VarChar(256)
   description String
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   createdAt   DateTime  @default(now()) @map("created_at")
 
   @@map("brand")
+}
+
+model Category {
+  id          String      @id @default(uuid(7)) @db.Uuid()
+  pathIds     String[]    @default([]) @map("path_ids") @db.Uuid()
+  parentId    String?     @map("parent_id") @db.Uuid()
+  parent      Category?   @relation("CategoryParent", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Category[]  @relation("CategoryParent")
+  products    Product[]
+  attributes  Attribute[] @relation("category_to_attribute")
+  name        String      @db.VarChar(256)
+  description String
+  updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at")
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  @@map("category")
+}
+
+model Attribute {
+  id                String             @id @default(uuid(7)) @db.Uuid()
+  categories        Category[]         @relation("category_to_attribute")
+  attributeOptions  AttributeOption[]
+  variantProduct1s  Product[]          @relation("VariantProductAttribute1")
+  variantProduct2s  Product[]          @relation("VariantProductAttribute2")
+  variantProduct3s  Product[]          @relation("VariantProductAttribute3")
+  productAttributes ProductAttribute[]
+  name              String             @db.VarChar(256)
+  key               String             @unique @db.VarChar(256)
+  description       String
+  type              E_ATTRIBUTE_TYPE
+  updatedAt         DateTime           @default(now()) @updatedAt @map("updated_at")
+  createdAt         DateTime           @default(now()) @map("created_at")
+
+  @@map("attribute")
+}
+
+enum E_ATTRIBUTE_TYPE {
+  TEXT
+  BOOLEAN
+  COLOR
+}
+
+model AttributeOption {
+  id                      String                   @id @default(uuid(7)) @db.Uuid()
+  attributeId             String                   @map("attribute_id") @db.Uuid()
+  attribute               Attribute                @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  variantProductVariant1  ProductVariant[]         @relation("VariantProductVariantAttributeOption1")
+  variantProductVariant2  ProductVariant[]         @relation("VariantProductVariantAttributeOption2")
+  variantProductVariant3  ProductVariant[]         @relation("VariantProductVariantAttributeOption3")
+  productAttributeOptions ProductAttributeOption[]
+  name                    String                   @db.VarChar(256)
+  key                     String                   @unique @db.VarChar(256)
+  value                   String                   @db.VarChar(256)
+  updatedAt               DateTime                 @default(now()) @updatedAt @map("updated_at")
+  createdAt               DateTime                 @default(now()) @map("created_at")
+
+  @@map("attribute_option")
+}
+
+model File {
+  id           String        @id @default(uuid(7)) @db.Uuid()
+  productFiles ProductFile[]
+  key          String
+  url          String
+  type         E_FILE_TYPE
+  name         String        @db.VarChar(256)
+  alt          String
+  size         Int
+  mimeType     String        @map("mime_type") @db.VarChar(32)
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  @@map("file")
+}
+
+enum E_FILE_TYPE {
+  IMAGE
+  VIDEO
+  OTHER
+}
+
+model ProductFile {
+  productId String  @map("product_id") @db.Uuid()
+  product   Product @relation(fields: [productId], references: [id])
+  fileId    String  @map("file_id") @db.Uuid()
+  file      File    @relation(fields: [fileId], references: [id])
+  position  Int     @default(1) @db.SmallInt()
+
+  @@id([productId, fileId])
+  @@map("product_file")
 }
 
 // model Example {
