@@ -1,8 +1,8 @@
 'use client'
 
 import * as React from 'react'
+import { LuX } from 'react-icons/lu'
 
-import { Cross2Icon } from '@radix-ui/react-icons'
 import * as ToastPrimitives from '@radix-ui/react-toast'
 import { type VariantProps, cva } from 'class-variance-authority'
 
@@ -84,7 +84,7 @@ const ToastClose = React.forwardRef<
     toast-close=''
     {...props}
   >
-    <Cross2Icon className='h-4 w-4' />
+    <LuX className='h-4 w-4' />
   </ToastPrimitives.Close>
 ))
 ToastClose.displayName = ToastPrimitives.Close.displayName
@@ -118,13 +118,13 @@ type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
 type ToastActionElement = React.ReactElement<typeof ToastAction>
 
 export {
-  type ToastProps,
-  type ToastActionElement,
-  ToastProvider,
-  ToastViewport,
   Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
   ToastAction,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+  type ToastActionElement,
+  type ToastProps,
 }

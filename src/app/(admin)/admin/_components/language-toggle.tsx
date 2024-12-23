@@ -1,7 +1,7 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import { LuMoon, LuSun } from 'react-icons/lu'
+import { LuLanguages } from 'react-icons/lu'
 
 import { Button } from '~/app/_components/ui/button'
 import {
@@ -11,19 +11,14 @@ import {
   DropdownMenuTrigger,
 } from '~/app/_components/ui/dropdown-menu'
 
-export default function ThemeToggle({
-  hideBorder = false,
-}: {
-  hideBorder?: boolean
-}) {
+export default function LanguageToggle() {
   const { setTheme } = useTheme()
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={hideBorder ? 'ghost' : 'outline'} size='icon'>
-          <LuSun className='h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
-          <LuMoon className='absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
+        <Button variant='ghost' size='icon'>
+          <LuLanguages />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
