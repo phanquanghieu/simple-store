@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useActionState } from 'react'
+import { useActionState } from 'react'
 
 import { loginAction } from '~/server/actions/admin/auth.action'
 
@@ -60,7 +60,7 @@ export default function LoginForm() {
           </p>
           <Button type='submit' disabled={isLoading}>
             {isLoading ? <Spinner /> : <div className='h-4 w-4' />}
-            Sign In with Email
+            Sign In
             <div className='h-4 w-4' />
           </Button>
         </div>
