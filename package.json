@@ -19,6 +19,9 @@
   "prisma": {
     "schema": "src/server/infra/schema.prisma"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css}": "prettier --write"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.0.1",
@@ -56,6 +59,8 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "15.0.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "postcss": "^8",
     "prettier": "^3.4.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
