@@ -24,7 +24,7 @@ export function NavHeader() {
                 <LuTarget />
               </div>
               <div className='grid flex-1 text-left text-lg leading-tight'>
-                <span className='font-semibold'>{'Simple Store'}</span>
+                <span className='truncate font-semibold'>{'Simple Store'}</span>
               </div>
             </SidebarMenuButton>
           </Link>

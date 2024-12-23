@@ -7,7 +7,6 @@
     "source.sortMembers": "always",
     "source.sortImports": "always",
     "source.fixAll.eslint": "always",
-    "source.removeUnused.ts": "always",
     "source.removeUnusedImports": "always"
   }
 }
