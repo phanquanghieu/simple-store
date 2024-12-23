@@ -1,4 +1,4 @@
-import ThemeToggle from '../_components/ThemeToggle'
+import ThemeToggle from '../_components/theme-toggle'
 
 export default function Layout({
   children,

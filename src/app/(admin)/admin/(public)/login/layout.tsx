@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import ThemeToggle from '~/app/(admin)/admin/_components/ThemeToggle'
+import ThemeToggle from '~/app/(admin)/admin/_components/theme-toggle'
 
 export default function Layout({
   children,

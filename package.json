@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write src",
+    "format": "prettier --write .",
     "p": "prisma",
     "p:gen": "prisma generate",
     "p:m": "prisma migrate dev --name",
