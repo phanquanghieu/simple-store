@@ -14,6 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '~/app/_components/ui/sidebar'
+import { Skeleton } from '~/app/_components/ui/skeleton'
 
 export function NavFooter() {
   const [admin, setAdmin] = useState<IAdminRes | undefined>()
@@ -41,7 +42,13 @@ export function NavFooter() {
               </AvatarFallback>
             </Avatar>
             <div className='grid flex-1 text-left leading-tight'>
-              <span className='truncate font-semibold'>{admin?.username}</span>
+              {admin ? (
+                <span className='truncate font-semibold'>
+                  {admin?.username}
+                </span>
+              ) : (
+                <Skeleton className='h-4' />
+              )}
             </div>
             <LuLogOut className='mr-2' onClick={logoutAction} />
           </SidebarMenuButton>
