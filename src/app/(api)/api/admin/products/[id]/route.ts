@@ -8,24 +8,21 @@ import {
   bodyValidator,
   idParamValidator,
   listQueryValidator,
-  paginationQueryValidator,
 } from '~/server/middlewares'
 
 export async function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    // adminGuard(),
-    idParamValidator(),
+    adminGuard,
+    idParamValidator,
     listQueryValidator(productService.GET_SORTABLE_FIELDS),
-    paginationQueryValidator(),
     productService.getOne,
   )
 }
 
 export async function POST(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    adminGuard(),
-    idParamValidator(),
-    paginationQueryValidator(),
+    adminGuard,
+    idParamValidator,
     bodyValidator(PaginationQuerySchema),
     productService.create,
   )

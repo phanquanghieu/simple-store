@@ -6,7 +6,7 @@ import { listQueryValidator } from '~/server/middlewares'
 
 export function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    // adminGuard(),
+    // adminGuard,
     listQueryValidator(productService.GET_SORTABLE_FIELDS),
     productService.get,
   )

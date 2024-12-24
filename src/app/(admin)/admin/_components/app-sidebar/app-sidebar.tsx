@@ -24,7 +24,6 @@ export type IMenuItem = {
   title: string
   url: string
   icon?: IconType
-  isActive?: boolean
   subMenuItems?: {
     title: string
     url: string
@@ -61,12 +60,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/admin/collections',
         },
         {
-          title: 'Attribute',
-          url: '#',
+          title: 'Attributes',
+          url: '/admin/attributes',
         },
         {
-          title: 'Inventory',
-          url: '#',
+          title: 'Inventories',
+          url: '/admin/inventories',
         },
       ],
     },

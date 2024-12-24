@@ -51,16 +51,12 @@ export function bodyValidator(schema: ZodSchema) {
   }
 }
 
-export function idParamValidator() {
-  return async (...args: IMiddlewareArgs) => {
-    await paramValidator(['id'])(...args)
-  }
+export async function idParamValidator(...args: IMiddlewareArgs) {
+  await paramValidator(['id'])(...args)
 }
 
-export function paginationQueryValidator() {
-  return (...args: IMiddlewareArgs) => {
-    queryValidator(PaginationQuerySchema)(...args)
-  }
+export async function paginationQueryValidator(...args: IMiddlewareArgs) {
+  queryValidator(PaginationQuerySchema)(...args)
 }
 
 export function listQueryValidator(...sortArgs: ISortQuerySchemaParams) {

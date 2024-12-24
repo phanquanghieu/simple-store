@@ -1,8 +1,9 @@
 'use client'
 
 import { useActionState } from 'react'
+import { LuGithub } from 'react-icons/lu'
 
-import { loginAction } from '~/server/actions/admin/auth.action'
+import { loginAction } from '~/server/actions/auth.action'
 
 import { Button } from '~/app/_components/ui/button'
 import { Input } from '~/app/_components/ui/input'
@@ -74,7 +75,7 @@ export default function LoginForm() {
         </div>
       </div>
       <Button variant='outline' type='button' disabled={isLoading}>
-        GitHub
+        <LuGithub /> GitHub
       </Button>
     </div>
   )

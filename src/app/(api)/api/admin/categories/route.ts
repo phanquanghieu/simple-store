@@ -11,7 +11,7 @@ import {
 
 export function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    adminGuard(),
+    adminGuard,
     listQueryValidator(categoryService.GET_SORTABLE_FIELDS),
     categoryService.get,
   )
@@ -19,7 +19,7 @@ export function GET(...args: INextRouteArgs) {
 
 export async function POST(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    adminGuard(),
+    adminGuard,
     bodyValidator(CreateCategorySchema),
     categoryService.create,
   )

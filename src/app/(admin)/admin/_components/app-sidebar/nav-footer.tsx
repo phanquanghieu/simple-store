@@ -1,6 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { LuLogOut } from 'react-icons/lu'
+
+import { IAdminRes } from '~/shared/dto/admin/req'
+
+import { logoutAction } from '~/server/actions/auth.action'
 
 import { Avatar, AvatarFallback } from '~/app/_components/ui/avatar'
 import {
@@ -11,9 +16,16 @@ import {
 } from '~/app/_components/ui/sidebar'
 
 export function NavFooter() {
-  const user = {
-    username: 'hieuneo',
-  }
+  const [admin, setAdmin] = useState<IAdminRes | undefined>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch('/api/admin/me')
+      const data = await res.json()
+      setAdmin(data.data)
+    }
+    fetchData()
+  }, [])
 
   return (
     <SidebarFooter>
@@ -25,13 +37,13 @@ export function NavFooter() {
           >
             <Avatar className='h-8 w-8 rounded-lg'>
               <AvatarFallback className='rounded-lg'>
-                {user.username[0].toUpperCase()}
+                {admin?.username?.[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className='grid flex-1 text-left leading-tight'>
-              <span className='truncate font-semibold'>{user.username}</span>
+              <span className='truncate font-semibold'>{admin?.username}</span>
             </div>
-            <LuLogOut className='mr-2' />
+            <LuLogOut className='mr-2' onClick={logoutAction} />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

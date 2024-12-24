@@ -5,11 +5,12 @@ import { redirect } from 'next/navigation'
 import { ZodSchema } from 'zod'
 
 import { IActionState } from '~/shared/dto/_common/server-action'
+import { ILoginReq } from '~/shared/dto/auth/req'
 import { buildErrorValidationResDetail, zod } from '~/shared/libs/zod'
 
-import { ILoginRequest, authService } from '~/server/services/auth.service'
+import { authService } from '~/server/services/auth.service'
 
-const loginRequestSchema: ZodSchema<ILoginRequest> = zod.object({
+const loginRequestSchema: ZodSchema<ILoginReq> = zod.object({
   username: zod
     .string()
     .trim()
@@ -23,9 +24,9 @@ const loginRequestSchema: ZodSchema<ILoginRequest> = zod.object({
 })
 
 export async function loginAction(
-  prevState: IActionState<ILoginRequest>,
+  prevState: IActionState<ILoginReq>,
   formData: FormData,
-): Promise<IActionState<ILoginRequest>> {
+): Promise<IActionState<ILoginReq>> {
   const validationResult = loginRequestSchema.safeParse(
     Object.fromEntries(formData),
   )
@@ -49,4 +50,9 @@ export async function loginAction(
   }
 
   redirect('/admin')
+}
+
+export async function logoutAction(): Promise<void> {
+  await authService.logout()
+  redirect('/admin/login')
 }

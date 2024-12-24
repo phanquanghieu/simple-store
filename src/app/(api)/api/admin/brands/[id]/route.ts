@@ -11,16 +11,16 @@ import {
 
 export async function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    adminGuard(),
-    idParamValidator(),
+    adminGuard,
+    idParamValidator,
     categoryService.getOne,
   )
 }
 
 export async function PATCH(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    adminGuard(),
-    idParamValidator(),
+    adminGuard,
+    idParamValidator,
     bodyValidator(UpdateBrandSchema),
     categoryService.update,
   )
@@ -28,8 +28,8 @@ export async function PATCH(...args: INextRouteArgs) {
 
 export async function DELETE(...args: INextRouteArgs) {
   return routeExecutor(...args)(
-    adminGuard(),
-    idParamValidator(),
+    adminGuard,
+    idParamValidator,
     categoryService.delete,
   )
 }

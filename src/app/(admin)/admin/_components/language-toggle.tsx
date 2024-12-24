@@ -1,6 +1,5 @@
 'use client'
 
-import { useTheme } from 'next-themes'
 import { LuLanguages } from 'react-icons/lu'
 
 import { Button } from '~/app/_components/ui/button'
@@ -12,8 +11,6 @@ import {
 } from '~/app/_components/ui/dropdown-menu'
 
 export default function LanguageToggle() {
-  const { setTheme } = useTheme()
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,15 +19,8 @@ export default function LanguageToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuItem onClick={() => setTheme('light')}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
-          System
-        </DropdownMenuItem>
+        <DropdownMenuItem>Vietnamese</DropdownMenuItem>
+        <DropdownMenuItem>English</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
