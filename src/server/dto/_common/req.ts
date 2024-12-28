@@ -17,36 +17,33 @@ export const SearchQuerySchema = zod.object({
 
 export const SortQuerySchema = (
   sortableFields: string[],
-  sortDefaults?: string[],
+  sortDefaults: string[][] = [['id', 'desc']],
 ) => {
   return zod.object({
     sort: zod
       .preprocess(
         (val) =>
-          (isArray(val) ? val : [val]).map((val) => {
-            const vals = val.split(':')
-            if (vals[1]) vals[1] = vals[1]?.toLowerCase()
-            return vals
-          }),
+          (isArray(val) ? val : [val])
+            .map((val) => {
+              const vals: string[] = val.split(':')
+              if (vals[1]) vals[1] = vals[1]?.toLowerCase()
+              return vals
+            })
+            .filter(
+              (val) =>
+                sortableFields.includes(val[0]) &&
+                ['asc', 'desc'].includes(val[1]),
+            ),
         zod.array(
-          zod.tuple(
-            [
-              zod.string().refine((val) => sortableFields.includes(val), {
-                message: `Invalid sort field. Allow ${sortableFields.join(', ')}`,
-              }),
-              zod.enum(['asc', 'desc']),
-            ],
-            {
-              errorMap: () => ({
-                message: 'Sort must have format `field:asc`',
-              }),
-            },
-          ),
+          zod.tuple([zod.string(), zod.enum(['asc', 'desc'])], {
+            errorMap: () => ({
+              message: 'Sort must have format `field:asc`',
+            }),
+          }),
         ),
       )
       .optional()
-      .default(sortDefaults)
-      .transform(zodt.defaultWhenUndefined([['id', 'desc']])),
+      .transform(zodt.defaultWhenUndefined(sortDefaults)),
   })
 }
 

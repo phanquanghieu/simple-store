@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react'
 
+import ReactQueryProvider from '~/app/_components/providers/react-query-provider'
 import {
   SidebarInset,
   SidebarProvider,
@@ -14,21 +15,23 @@ import ThemeToggle from '../_components/theme-toggle'
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className='sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between border-b bg-background transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12'>
-          <div className='flex items-center gap-2 px-2'>
-            <SidebarTrigger />
-          </div>
-          <div className='flex items-center px-3'>
-            <LanguageToggle />
-            <ThemeToggle hideBorder />
-            <Notification />
-          </div>
-        </header>
-        <div className='flex flex-col gap-4 p-4'>{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+    <ReactQueryProvider>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className='sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between border-b bg-background transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12'>
+            <div className='flex items-center gap-2 px-2'>
+              <SidebarTrigger />
+            </div>
+            <div className='flex items-center px-3'>
+              <LanguageToggle />
+              <ThemeToggle hideBorder />
+              <Notification />
+            </div>
+          </header>
+          <div className='flex flex-col gap-4 p-4'>{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </ReactQueryProvider>
   )
 }

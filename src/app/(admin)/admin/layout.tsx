@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, Suspense } from 'react'
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
@@ -24,12 +24,14 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' className={inter.className} suppressHydrationWarning>
       <body>
-        <ThemeProvider>
-          <NuqsAdapter>
-            {children}
-            <Toaster />
-          </NuqsAdapter>
-        </ThemeProvider>
+        <Suspense>
+          <ThemeProvider>
+            <NuqsAdapter>
+              {children}
+              <Toaster />
+            </NuqsAdapter>
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   )

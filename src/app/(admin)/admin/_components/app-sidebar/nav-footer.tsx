@@ -1,9 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { LuLogOut } from 'react-icons/lu'
-
-import { IAdminRes } from '~/shared/dto/admin/req'
 
 import { logoutAction } from '~/server/actions/auth.action'
 
@@ -16,17 +13,10 @@ import {
 } from '~/app/_components/ui/sidebar'
 import { Skeleton } from '~/app/_components/ui/skeleton'
 
-export function NavFooter() {
-  const [admin, setAdmin] = useState<IAdminRes | undefined>()
+import { useGetMe } from '~/app/_apis/admin/admin/useGetMe'
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch('/api/admin/me')
-      const data = await res.json()
-      setAdmin(data.data)
-    }
-    fetchData()
-  }, [])
+export function NavFooter() {
+  const { data: admin, isLoading } = useGetMe()
 
   return (
     <SidebarFooter>
@@ -42,12 +32,9 @@ export function NavFooter() {
               </AvatarFallback>
             </Avatar>
             <div className='grid flex-1 text-left leading-tight'>
-              {admin ? (
-                <span className='truncate font-semibold'>
-                  {admin?.username}
-                </span>
-              ) : (
-                <Skeleton className='h-4' />
+              {isLoading && <Skeleton className='h-4' />}
+              {admin && (
+                <span className='truncate font-semibold'>{admin.username}</span>
               )}
             </div>
             <LuLogOut className='mr-2' onClick={logoutAction} />

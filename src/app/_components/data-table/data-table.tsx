@@ -1,18 +1,22 @@
 'use client'
 
+import Link from 'next/link'
 import { useMemo } from 'react'
+import { LuPen, LuTrash } from 'react-icons/lu'
 
 import {
   ColumnDef,
   PaginationState,
+  SortingState,
   Updater,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { parseAsInteger, useQueryState } from 'nuqs'
 
 import { IProductRes } from '~/shared/dto/product/res'
+
+import { useQueryList } from '~/app/_hooks/query/use-query-list'
 
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
@@ -24,13 +28,30 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table'
+import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTablePagination } from './data-table-pagination'
 
-export default function DataTable({}: {
-  // columns
+export default function DataTable<IData extends IProductRes>({
+  data,
+  total,
+  isLoading,
+  sortDefaults,
+}: {
+  data: IData[] | undefined
+  total: number | undefined
+  isLoading: boolean
+  sortDefaults?: string[][]
 }) {
+  // const colors = ['red', 'green', 'blue'] as const
+
+  // const [color, setColor] = useQueryState(
+  //   'color',
+  //   parseAsStringLiteral(colors) // pass a readonly list of allowed values
+  //     .withDefault('red'),
+  // )
+
   const columns = useMemo(() => {
-    const columns: ColumnDef<IProductRes>[] = [
+    const columns: ColumnDef<IData>[] = [
       {
         id: 'select',
         meta: {
@@ -57,21 +78,33 @@ export default function DataTable({}: {
       {
         accessorKey: 'id',
         meta: {
-          sizePercentage: 10,
+          sizePercentage: 16,
         },
-        cell: ({ row }) => <div className='lowercase'>{row.original.id}</div>,
+        header: (ctx) => {
+          console.log(ctx)
+          return <DataTableColumnHeader {...ctx} />
+        },
+        cell: ({ row }) => (
+          <div className='max-w-24 truncate'>{row.original.id}</div>
+        ),
       },
       {
         accessorKey: 'name',
         meta: {
-          sizePercentage: 10,
+          sizePercentage: 16,
         },
-        cell: ({ row }) => <Button size={'sm'}> {row.original.name}</Button>,
+        header: (ctx) => {
+          console.log(ctx)
+          return <DataTableColumnHeader {...ctx} />
+        },
+        cell: ({ row }) => (
+          <div className='max-w-md truncate'>{row.original.name}</div>
+        ),
       },
       {
         accessorKey: 'description',
         meta: {
-          sizePercentage: 10,
+          sizePercentage: 16,
         },
         cell: ({ row }) => (
           <div className='max-w-md truncate'>{row.original.description}</div>
@@ -80,61 +113,120 @@ export default function DataTable({}: {
       {
         accessorKey: 'price',
         meta: {
-          sizePercentage: 10,
+          sizePercentage: 16,
         },
       },
       {
         accessorKey: 'status',
         meta: {
-          sizePercentage: 10,
+          sizePercentage: 16,
         },
+      },
+      {
+        accessorKey: 'createdAt',
+        meta: {
+          sizePercentage: 16,
+        },
+        cell: ({ row }) => (
+          <>
+            {Intl.DateTimeFormat('vi', {
+              dateStyle: 'short',
+              timeStyle: 'short',
+            }).format(new Date(row.original.createdAt))}
+          </>
+        ),
+      },
+      {
+        id: 'action',
+        meta: {
+          sizePercentage: 0,
+        },
+        cell: ({ row }) => (
+          <div className='flex'>
+            <Link href={`/admin/products/${row.original.id}`}>
+              <Button size={'icon'} variant={'ghost'}>
+                <LuPen className='text-info' />
+              </Button>
+            </Link>
+            <Button
+              size={'icon'}
+              variant={'ghost'}
+              onClick={() => {
+                // console.log(color)
+                // setColor(colors[random(0, colors.length - 1, false)])
+              }}
+            >
+              <LuTrash className='text-destructive' />
+            </Button>
+          </div>
+        ),
       },
     ]
     return columns
   }, [])
 
-  const [pageSize, setPageSize] = useQueryState(
-    'size',
-    parseAsInteger.withDefault(10),
-  )
-  const [pageIndex, setPageIndex] = useQueryState(
-    'page',
-    parseAsInteger.withDefault(1),
-  )
+  // const [pageSize, setPageSize] = useQueryPageSize()
+  // const [pageIndex, setPageIndex] = useQueryState(
+  //   'page',
+  //   parseAsInteger.withDefault(1),
+  // )
+  // const [sort, setSort] = useQueryState<string[][]>('sort', {
+  //   defaultValue: [['createdAt', 'desc']],
+  //   parse: (sortRaw) => {
+  //     return []
+  //   },
+  //   serialize: (sort) => {
+  //     return sort.map((s) => s.join(':')).join(',')
+  //   },
+  // })
+
+  const [{ search, page, size, sort }, setQueryList] =
+    useQueryList(sortDefaults)
 
   const table = useReactTable({
-    data: products,
+    data: data ?? [],
+    rowCount: total ?? 0,
     columns,
     initialState: {
-      pagination: {
-        pageIndex: 1,
-        pageSize: 10,
-      },
+      // pagination: {
+      //   pageIndex: 1,
+      //   pageSize: 30,
+      // },
+      // sorting: [{ id: 'createdAt', desc: false }],
     },
     state: {
       pagination: {
-        pageIndex: pageIndex - 1,
-        pageSize,
+        pageIndex: page - 1,
+        pageSize: size,
       },
+      sorting: sort?.map((s) => ({ id: s[0], desc: s[1] === 'desc' })),
     },
     manualPagination: true,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange(updaterOrValue: Updater<PaginationState>) {
-      if (typeof updaterOrValue === 'function') {
-        const newPagination = updaterOrValue({
-          pageIndex: pageIndex - 1,
-          pageSize: pageSize,
-        })
-        setPageIndex(newPagination.pageIndex + 1)
-        setPageSize(newPagination.pageSize)
-      } else {
-        setPageIndex(updaterOrValue.pageIndex + 1)
-        setPageSize(updaterOrValue.pageSize)
-      }
+      const _pagination =
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue({ pageIndex: page - 1, pageSize: size })
+          : updaterOrValue
+
+      setQueryList({
+        page: _pagination.pageIndex + 1,
+        size: _pagination.pageSize,
+      })
+    },
+    onSortingChange(updaterOrValue: Updater<SortingState>) {
+      const _sortingState =
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue([])
+          : updaterOrValue
+
+      setQueryList({
+        sort: _sortingState.map((s) => [s.id, s.desc ? 'desc' : 'asc']),
+      })
     },
   })
 
-  console.log(table)
   return (
     <div className='space-y-2'>
       <div className='overflow-hidden rounded-md border'>
@@ -184,7 +276,7 @@ export default function DataTable({}: {
                   colSpan={table.getAllColumns().length}
                   className='h-24 text-center'
                 >
-                  No results
+                  {isLoading ? 'Loading...' : ' No results found.'}
                 </TableCell>
               </TableRow>
             )}
@@ -197,184 +289,3 @@ export default function DataTable({}: {
     </div>
   )
 }
-
-const productsCore: IProductRes[] = [
-  // {
-  //   id: '1',
-  //   categoryId: '1',
-  //   brandId: '1',
-  //   variantAttribute1Id: '1',
-  //   variantAttribute2Id: '2',
-  //   variantAttribute3Id: '3',
-  //   name: 'Product 1',
-  //   slug: 'product-1',
-  //   description: 'Description for product 1',
-  //   price: '100',
-  //   compareAtPrice: '120',
-  //   totalVariants: 3,
-  //   status: 'ACTIVE',
-  //   updatedAt: new Date().toISOString(),
-  //   createdAt: new Date().toISOString(),
-  // },
-  {
-    id: '2',
-    categoryId: '2',
-    brandId: '2',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 2',
-    slug: 'product-2',
-    description: 'Description for product 2',
-    price: '200',
-    compareAtPrice: '220',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    categoryId: '3',
-    brandId: '3',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 3',
-    slug: 'product-3',
-    description: 'Description for product 3',
-    price: '300',
-    compareAtPrice: '320',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    categoryId: '4',
-    brandId: '4',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 4',
-    slug: 'product-4',
-    description:
-      'Description for product 4 Description for product 4 Description for product 4 Description for product 4 Description for product 4',
-    price: '400',
-    compareAtPrice: '420',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    categoryId: '5',
-    brandId: '5',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 5',
-    slug: 'product-5',
-    description: 'Description for product 5',
-    price: '500',
-    compareAtPrice: '520',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    categoryId: '6',
-    brandId: '6',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 6',
-    slug: 'product-6',
-    description: 'Description for product 6',
-    price: '600',
-    compareAtPrice: '620',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '7',
-    categoryId: '7',
-    brandId: '7',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 7',
-    slug: 'product-7',
-    description: 'Description for product 7',
-    price: '700',
-    compareAtPrice: '720',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '8',
-    categoryId: '8',
-    brandId: '8',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 8',
-    slug: 'product-8',
-    description: 'Description for product 8',
-    price: '800',
-    compareAtPrice: '820',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '9',
-    categoryId: '9',
-    brandId: '9',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 9',
-    slug: 'product-9',
-    description: 'Description for product 9',
-    price: '900',
-    compareAtPrice: '920',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '10',
-    categoryId: '10',
-    brandId: '10',
-    variantAttribute1Id: '1',
-    variantAttribute2Id: '2',
-    variantAttribute3Id: '3',
-    name: 'Product 10',
-    slug: 'product-10',
-    description: 'Description for product 10',
-    price: '1000',
-    compareAtPrice: '1020',
-    totalVariants: 3,
-    status: 'ACTIVE',
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  },
-]
-
-const products = [
-  ...productsCore,
-  ...productsCore,
-  ...productsCore,
-  ...productsCore,
-]

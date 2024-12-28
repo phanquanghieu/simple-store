@@ -1,17 +1,29 @@
+import { Prisma } from '@prisma/client'
+
 import {
   IIdParam,
   IListQuery,
   IPaginationQuery,
 } from '~/shared/dto/_common/req'
 
-import { OkListRes, OkRes } from '../common'
+import { OkListRes, OkRes, queryUtil } from '../common'
 import { IAdminCtx, IAdminCtxParamQuery, IAdminCtxQuery } from '../core/ctx'
 import { prisma } from '../infra/db'
 
-async function get({}: IAdminCtxQuery<IListQuery>) {
-  const products = await prisma.product.findMany()
+async function get({ query }: IAdminCtxQuery<IListQuery>) {
+  const where: Prisma.ProductWhereInput = {
+    name: { contains: query.search ?? Prisma.skip },
+  }
 
-  return OkListRes(products, 100)
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      ...queryUtil.skipTakeOrder(query),
+    }),
+    prisma.product.count({ where }),
+  ])
+
+  return OkListRes(products, total)
 }
 
 async function getOne({
@@ -31,6 +43,7 @@ async function create({
 
 export const productService = {
   GET_SORTABLE_FIELDS: ['id', 'name', 'price', 'createdAt'],
+  GET_SORT_DEFAULTS: [['name', 'asc']],
   get,
   getOne,
   create,
