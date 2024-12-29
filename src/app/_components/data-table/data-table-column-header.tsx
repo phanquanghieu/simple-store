@@ -19,7 +19,7 @@ export function DataTableColumnHeader<TData>({
           onClick={header.column.getToggleSortingHandler()}
         >
           {column.id}
-          {column.getCanSort() && column.getIsSorted() === 'desc' ? (
+          {column.getIsSorted() === 'desc' ? (
             <LuArrowDown />
           ) : column.getIsSorted() === 'asc' ? (
             <LuArrowUp />

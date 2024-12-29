@@ -42,7 +42,7 @@ async function create({
 }
 
 export const productService = {
-  GET_SORTABLE_FIELDS: ['id', 'name', 'price', 'createdAt'],
+  GET_SORTABLE_FIELDS: ['id', 'name', 'price', 'status', 'createdAt'],
   GET_SORT_DEFAULTS: [['name', 'asc']],
   get,
   getOne,

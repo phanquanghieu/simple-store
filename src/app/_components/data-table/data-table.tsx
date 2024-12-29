@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo } from 'react'
-import { LuPen, LuTrash } from 'react-icons/lu'
+import { LuPen, LuTrash, LuX } from 'react-icons/lu'
 
 import {
   ColumnDef,
@@ -13,6 +13,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { isEmpty } from 'lodash'
 
 import { IProductRes } from '~/shared/dto/product/res'
 
@@ -20,6 +21,7 @@ import { useQueryList } from '~/app/_hooks/query/use-query-list'
 
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
+import { Input } from '../ui/input'
 import {
   Table,
   TableBody,
@@ -42,14 +44,6 @@ export default function DataTable<IData extends IProductRes>({
   isLoading: boolean
   sortDefaults?: string[][]
 }) {
-  // const colors = ['red', 'green', 'blue'] as const
-
-  // const [color, setColor] = useQueryState(
-  //   'color',
-  //   parseAsStringLiteral(colors) // pass a readonly list of allowed values
-  //     .withDefault('red'),
-  // )
-
   const columns = useMemo(() => {
     const columns: ColumnDef<IData>[] = [
       {
@@ -81,7 +75,7 @@ export default function DataTable<IData extends IProductRes>({
           sizePercentage: 16,
         },
         header: (ctx) => {
-          console.log(ctx)
+          // console.log(ctx)
           return <DataTableColumnHeader {...ctx} />
         },
         cell: ({ row }) => (
@@ -94,7 +88,7 @@ export default function DataTable<IData extends IProductRes>({
           sizePercentage: 16,
         },
         header: (ctx) => {
-          console.log(ctx)
+          // console.log(ctx)
           return <DataTableColumnHeader {...ctx} />
         },
         cell: ({ row }) => (
@@ -120,6 +114,10 @@ export default function DataTable<IData extends IProductRes>({
         accessorKey: 'status',
         meta: {
           sizePercentage: 16,
+        },
+        header: (ctx) => {
+          // console.log(ctx)
+          return <DataTableColumnHeader {...ctx} />
         },
       },
       {
@@ -165,21 +163,6 @@ export default function DataTable<IData extends IProductRes>({
     return columns
   }, [])
 
-  // const [pageSize, setPageSize] = useQueryPageSize()
-  // const [pageIndex, setPageIndex] = useQueryState(
-  //   'page',
-  //   parseAsInteger.withDefault(1),
-  // )
-  // const [sort, setSort] = useQueryState<string[][]>('sort', {
-  //   defaultValue: [['createdAt', 'desc']],
-  //   parse: (sortRaw) => {
-  //     return []
-  //   },
-  //   serialize: (sort) => {
-  //     return sort.map((s) => s.join(':')).join(',')
-  //   },
-  // })
-
   const [{ search, page, size, sort }, setQueryList] =
     useQueryList(sortDefaults)
 
@@ -195,40 +178,75 @@ export default function DataTable<IData extends IProductRes>({
       // sorting: [{ id: 'createdAt', desc: false }],
     },
     state: {
+      globalFilter: search,
       pagination: {
-        pageIndex: page - 1,
+        pageIndex: util.toPageIndex(page),
         pageSize: size,
       },
-      sorting: sort?.map((s) => ({ id: s[0], desc: s[1] === 'desc' })),
+      sorting: util.toSortingState(sort),
     },
+    manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
+    onGlobalFilterChange(updaterOrValue: Updater<string>) {
+      const _search =
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(search ?? '')
+          : updaterOrValue
+      console.log(_search, updaterOrValue)
+      setQueryList({ search: _search || null })
+    },
     onPaginationChange(updaterOrValue: Updater<PaginationState>) {
       const _pagination =
         typeof updaterOrValue === 'function'
-          ? updaterOrValue({ pageIndex: page - 1, pageSize: size })
+          ? updaterOrValue({
+              pageIndex: util.toPageIndex(page),
+              pageSize: size,
+            })
           : updaterOrValue
 
       setQueryList({
-        page: _pagination.pageIndex + 1,
+        page: util.fromPageIndex(_pagination.pageIndex),
         size: _pagination.pageSize,
       })
     },
     onSortingChange(updaterOrValue: Updater<SortingState>) {
       const _sortingState =
         typeof updaterOrValue === 'function'
-          ? updaterOrValue([])
+          ? updaterOrValue(util.toSortingState(sort))
           : updaterOrValue
-
       setQueryList({
-        sort: _sortingState.map((s) => [s.id, s.desc ? 'desc' : 'asc']),
+        sort: util.fromSortingState(_sortingState),
       })
     },
   })
 
   return (
     <div className='space-y-2'>
+      <div className='-mx-1 flex items-center justify-start gap-2 p-1'>
+        <Input
+          className='h-8 w-40'
+          placeholder='Search...'
+          value={table.getState().globalFilter ?? ''}
+          onChange={(event) => {
+            console.log(event.target.value)
+            table.setGlobalFilter(event.target.value)
+          }}
+        />
+        <Button
+          size={'sm'}
+          variant={'outline'}
+          className='pr-2'
+          onClick={() => {
+            table.resetGlobalFilter()
+            table.resetColumnFilters()
+          }}
+        >
+          Reset
+          <LuX className='ml-0' />
+        </Button>
+      </div>
       <div className='overflow-hidden rounded-md border'>
         <Table>
           <TableHeader>
@@ -283,9 +301,24 @@ export default function DataTable<IData extends IProductRes>({
           </TableBody>
         </Table>
       </div>
-      <div className='flex flex-col'>
-        <DataTablePagination table={table} />
-      </div>
+      <DataTablePagination table={table} />
     </div>
   )
+}
+
+const util = {
+  toPageIndex(page: number): number {
+    return page - 1
+  },
+  fromPageIndex(pageIndex: number): number {
+    return pageIndex + 1
+  },
+  toSortingState(sort: string[][] | null | undefined): SortingState {
+    return sort?.map((s) => ({ id: s[0], desc: s[1] === 'desc' })) ?? []
+  },
+  fromSortingState(sortingState: SortingState): string[][] | null {
+    return isEmpty(sortingState)
+      ? null
+      : sortingState.map((s) => [s.id, s.desc ? 'desc' : 'asc'])
+  },
 }
