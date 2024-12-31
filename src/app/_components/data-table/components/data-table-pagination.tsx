@@ -5,28 +5,39 @@ import {
   LuChevronsRight,
 } from 'react-icons/lu'
 
-import { type Table } from '@tanstack/react-table'
+import { values } from 'lodash'
 
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select'
+} from '../../ui/select'
+import { useTable } from '../data-table.context'
 
-export function DataTablePagination<TData>({
-  table,
-  pageSizeOptions = [10, 20, 30, 40, 50],
+const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50]
+
+export function DataTablePagination({
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
 }: {
-  table: Table<TData>
   pageSizeOptions?: number[]
 }) {
+  const { table } = useTable()
+
+  const countSelectedRow = values(table.getState().rowSelection).filter(
+    Boolean,
+  ).length
+
+  if (table.getRowCount() === 0) {
+    return null
+  }
+
   return (
     <div className='-mx-1 flex flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8'>
       <div className='flex-1 whitespace-nowrap text-sm text-muted-foreground'>
-        {`${table.getFilteredSelectedRowModel().rows.length} of ${table.getRowCount()} rows selected.`}
+        {`${countSelectedRow} of ${table.getRowCount()} rows selected.`}
       </div>
       <div className='flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8'>
         <div className='flex items-center space-x-2'>

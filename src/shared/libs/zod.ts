@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isEmpty, isNil, isNull, isUndefined } from 'lodash'
+import { isArray, isEmpty, isNil, isNull, isUndefined } from 'lodash'
 import { SafeParseError, z } from 'zod'
 
 import { IErrorValidationRes } from '../dto/_common/res'
@@ -15,6 +15,7 @@ export function buildErrorValidationResDetail(error: SafeParseError<object>) {
 }
 
 export const zodt = {
+  toArray: <T>(val: T | T[]): T[] => (isArray(val) ? val : [val]),
   defaultWhenUndefined: (d: any) => (val: unknown) =>
     isUndefined(val) ? d : val,
   defaultWhenNull: (d: any) => (val: unknown) => (isNull(val) ? d : val),

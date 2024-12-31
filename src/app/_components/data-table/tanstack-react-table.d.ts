@@ -7,4 +7,8 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta<TData extends RowData, TValue> {
     sizePercentage?: number
   }
+  type GlobalFilterState = Record<
+    string,
+    string[] | string | number[] | number | null | undefined
+  >
 }

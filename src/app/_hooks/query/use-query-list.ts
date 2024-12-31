@@ -1,8 +1,7 @@
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
+import { parseAsInteger, useQueryStates } from 'nuqs'
 
 export function useQueryList(sortDefaults?: string[][]) {
   return useQueryStates({
-    search: parseAsString,
     page: parseAsInteger.withDefault(1),
     size: parseAsInteger.withDefault(10),
     sort: {

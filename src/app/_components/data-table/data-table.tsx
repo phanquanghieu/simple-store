@@ -1,12 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo } from 'react'
-import { LuPen, LuTrash, LuX } from 'react-icons/lu'
+import { ReactNode, useMemo, useState } from 'react'
+import { LuPen, LuRotateCw, LuTrash } from 'react-icons/lu'
 
 import {
   ColumnDef,
+  GlobalFilterState,
   PaginationState,
+  RowSelectionState,
   SortingState,
   Updater,
   flexRender,
@@ -17,11 +19,13 @@ import { isEmpty } from 'lodash'
 
 import { IProductRes } from '~/shared/dto/product/res'
 
+import { useQueryFilter } from '~/app/_hooks/query/use-query-filter'
 import { useQueryList } from '~/app/_hooks/query/use-query-list'
+import { useDebouncedCallback } from '~/app/_hooks/use-debounced-callback'
 
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
-import { Input } from '../ui/input'
+import { Spinner } from '../ui/spinner'
 import {
   Table,
   TableBody,
@@ -30,19 +34,29 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table'
-import { DataTableColumnHeader } from './data-table-column-header'
-import { DataTablePagination } from './data-table-pagination'
+import { DataTableColumnHeader } from './components/data-table-column-header'
+import { DataTableFilter } from './components/data-table-filter'
+import { DataTablePagination } from './components/data-table-pagination'
+import { DataTableContext } from './data-table.context'
+
+const DEBOUNCE_DELAY = 500
 
 export default function DataTable<IData extends IProductRes>({
   data,
   total,
-  isLoading,
+  isFetching,
   sortDefaults,
+  filterNode,
+  filterDefs,
+  onRefetch,
 }: {
-  data: IData[] | undefined
-  total: number | undefined
-  isLoading: boolean
+  data: IData[]
+  total: number
+  isFetching: boolean
   sortDefaults?: string[][]
+  filterNode?: ReactNode
+  filterDefs?: IFilterDef[]
+  onRefetch: () => void
 }) {
   const columns = useMemo(() => {
     const columns: ColumnDef<IData>[] = [
@@ -121,6 +135,16 @@ export default function DataTable<IData extends IProductRes>({
         },
       },
       {
+        accessorKey: 'totalVariants',
+        meta: {
+          sizePercentage: 10,
+        },
+        header: (ctx) => {
+          // console.log(ctx)
+          return <DataTableColumnHeader {...ctx} />
+        },
+      },
+      {
         accessorKey: 'createdAt',
         meta: {
           sizePercentage: 16,
@@ -150,8 +174,7 @@ export default function DataTable<IData extends IProductRes>({
               size={'icon'}
               variant={'ghost'}
               onClick={() => {
-                // console.log(color)
-                // setColor(colors[random(0, colors.length - 1, false)])
+                console.log('delete', row, table.getState().rowSelection)
               }}
             >
               <LuTrash className='text-destructive' />
@@ -163,22 +186,27 @@ export default function DataTable<IData extends IProductRes>({
     return columns
   }, [])
 
-  const [{ search, page, size, sort }, setQueryList] =
-    useQueryList(sortDefaults)
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+
+  const [{ page, size, sort }, setQueryList] = useQueryList(sortDefaults)
+
+  const [queryFilter, setQueryFilter] = useQueryFilter(filterDefs)
+
+  const debouncedSetQueryFilter = useDebouncedCallback(
+    setQueryFilter,
+    DEBOUNCE_DELAY,
+  )
+
+  const [globalFilter, setGlobalFilter] =
+    useState<GlobalFilterState>(queryFilter)
 
   const table = useReactTable({
-    data: data ?? [],
-    rowCount: total ?? 0,
+    data,
+    rowCount: total,
     columns,
-    initialState: {
-      // pagination: {
-      //   pageIndex: 1,
-      //   pageSize: 30,
-      // },
-      // sorting: [{ id: 'createdAt', desc: false }],
-    },
     state: {
-      globalFilter: search,
+      rowSelection,
+      globalFilter,
       pagination: {
         pageIndex: util.toPageIndex(page),
         pageSize: size,
@@ -188,14 +216,20 @@ export default function DataTable<IData extends IProductRes>({
     manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
+    getRowId: (row) => row.id,
     getCoreRowModel: getCoreRowModel(),
-    onGlobalFilterChange(updaterOrValue: Updater<string>) {
-      const _search =
+    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange(updaterOrValue: Updater<GlobalFilterState>) {
+      const _globalFilter =
         typeof updaterOrValue === 'function'
-          ? updaterOrValue(search ?? '')
-          : updaterOrValue
-      console.log(_search, updaterOrValue)
-      setQueryList({ search: _search || null })
+          ? updaterOrValue(globalFilter)
+          : { ...globalFilter, ...updaterOrValue }
+
+      setGlobalFilter(_globalFilter)
+      setRowSelection({})
+      setQueryList({ page: 1 })
+
+      debouncedSetQueryFilter(_globalFilter)
     },
     onPaginationChange(updaterOrValue: Updater<PaginationState>) {
       const _pagination =
@@ -206,6 +240,7 @@ export default function DataTable<IData extends IProductRes>({
             })
           : updaterOrValue
 
+      setRowSelection({})
       setQueryList({
         page: util.fromPageIndex(_pagination.pageIndex),
         size: _pagination.pageSize,
@@ -216,93 +251,90 @@ export default function DataTable<IData extends IProductRes>({
         typeof updaterOrValue === 'function'
           ? updaterOrValue(util.toSortingState(sort))
           : updaterOrValue
+
+      setRowSelection({})
       setQueryList({
+        page: 1,
         sort: util.fromSortingState(_sortingState),
       })
     },
   })
 
   return (
-    <div className='space-y-2'>
-      <div className='-mx-1 flex items-center justify-start gap-2 p-1'>
-        <Input
-          className='h-8 w-40'
-          placeholder='Search...'
-          value={table.getState().globalFilter ?? ''}
-          onChange={(event) => {
-            console.log(event.target.value)
-            table.setGlobalFilter(event.target.value)
-          }}
-        />
-        <Button
-          size={'sm'}
-          variant={'outline'}
-          className='pr-2'
-          onClick={() => {
-            table.resetGlobalFilter()
-            table.resetColumnFilters()
-          }}
-        >
-          Reset
-          <LuX className='ml-0' />
-        </Button>
-      </div>
-      <div className='overflow-hidden rounded-md border'>
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    style={{
-                      width: `${header.column.columnDef.meta?.sizePercentage ?? 50}%`,
-                    }}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      <div className='flex h-10 items-center'>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </div>
-                    </TableCell>
+    <DataTableContext.Provider value={{ table }}>
+      <div className='space-y-2'>
+        <div className='-mx-1 flex items-center justify-between p-1'>
+          <div className='flex items-center gap-2'>
+            <Button
+              size={'icon'}
+              variant={'outline'}
+              className='size-8'
+              onClick={onRefetch}
+              disabled={isFetching}
+            >
+              {isFetching ? <Spinner className='' /> : <LuRotateCw />}
+            </Button>
+            <DataTableFilter>{filterNode}</DataTableFilter>
+          </div>
+          <div className='flex items-center gap-2'></div>
+        </div>
+        <div className='overflow-hidden rounded-md border'>
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      style={{
+                        width: `${header.column.columnDef.meta?.sizePercentage ?? 50}%`,
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={table.getAllColumns().length}
-                  className='h-24 text-center'
-                >
-                  {isLoading ? 'Loading...' : ' No results found.'}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        <div className='flex h-10 items-center'>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </div>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    className='h-96 text-center text-lg text-muted-foreground'
+                  >
+                    {isFetching ? 'Loading...' : 'No results found.'}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <DataTablePagination />
       </div>
-      <DataTablePagination table={table} />
-    </div>
+    </DataTableContext.Provider>
   )
 }
 

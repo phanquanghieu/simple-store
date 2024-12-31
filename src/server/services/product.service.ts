@@ -1,18 +1,17 @@
 import { Prisma } from '@prisma/client'
 
-import {
-  IIdParam,
-  IListQuery,
-  IPaginationQuery,
-} from '~/shared/dto/_common/req'
+import { IIdParam, IPaginationQuery } from '~/shared/dto/_common/req'
+import { IGetProductQuery } from '~/shared/dto/product/req'
 
 import { OkListRes, OkRes, queryUtil } from '../common'
 import { IAdminCtx, IAdminCtxParamQuery, IAdminCtxQuery } from '../core/ctx'
 import { prisma } from '../infra/db'
 
-async function get({ query }: IAdminCtxQuery<IListQuery>) {
+async function get({ query }: IAdminCtxQuery<IGetProductQuery>) {
   const where: Prisma.ProductWhereInput = {
-    name: { contains: query.search ?? Prisma.skip },
+    name: { contains: query.search ?? Prisma.skip, mode: 'insensitive' },
+    status: { in: query.status ?? Prisma.skip },
+    totalVariants: query.totalVariants ?? Prisma.skip,
   }
 
   const [products, total] = await Promise.all([
@@ -42,7 +41,14 @@ async function create({
 }
 
 export const productService = {
-  GET_SORTABLE_FIELDS: ['id', 'name', 'price', 'status', 'createdAt'],
+  GET_SORTABLE_FIELDS: [
+    'id',
+    'name',
+    'price',
+    'status',
+    'totalVariants',
+    'createdAt',
+  ],
   GET_SORT_DEFAULTS: [['name', 'asc']],
   get,
   getOne,

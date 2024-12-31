@@ -4,7 +4,7 @@ import { LuArrowDown, LuArrowUp, LuChevronsUpDown } from 'react-icons/lu'
 
 import { HeaderContext } from '@tanstack/react-table'
 
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 
 export function DataTableColumnHeader<TData>({
   header,

@@ -8,5 +8,9 @@
     "source.sortImports": "always",
     "source.sortMembers": "always",
     "source.removeUnusedImports": "always"
-  }
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
 }
