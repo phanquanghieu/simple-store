@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { IOkListRes } from '~/shared/dto/_common/res'
 import { IGetProductQuery } from '~/shared/dto/product/req'
@@ -6,6 +6,8 @@ import { IProductRes } from '~/shared/dto/product/res'
 
 import { useQueryFilter } from '~/app/_hooks/query/use-query-filter'
 import { useQueryList } from '~/app/_hooks/query/use-query-list'
+
+import { IFilterDef } from '~/app/_interfaces/data-table'
 
 import { fetcherAdmin } from '../../fetcher'
 
@@ -34,6 +36,6 @@ export function useGetProducts() {
     queryKey: ['products', query],
     queryFn: () =>
       fetcherAdmin.get<IOkListRes<IProductRes>>('/products', { query }),
-    placeholderData: keepPreviousData,
+    staleTime: 10_000,
   })
 }

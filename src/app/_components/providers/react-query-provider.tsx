@@ -1,21 +1,14 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import { PropsWithChildren } from 'react'
 
 import {
   QueryClient,
   QueryClientProvider,
   isServer,
+  keepPreviousData,
 } from '@tanstack/react-query'
-
-const ReactQueryDevtools = dynamic(
-  () =>
-    import('@tanstack/react-query-devtools').then(
-      (module) => module.ReactQueryDevtools,
-    ),
-  { ssr: false },
-)
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function makeQueryClient() {
   return new QueryClient({
@@ -23,6 +16,7 @@ function makeQueryClient() {
       queries: {
         refetchOnMount: 'always',
         staleTime: 60 * 1000,
+        placeholderData: keepPreviousData,
       },
     },
   })

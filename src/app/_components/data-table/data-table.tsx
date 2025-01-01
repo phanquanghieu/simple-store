@@ -23,6 +23,9 @@ import { useQueryFilter } from '~/app/_hooks/query/use-query-filter'
 import { useQueryList } from '~/app/_hooks/query/use-query-list'
 import { useDebouncedCallback } from '~/app/_hooks/use-debounced-callback'
 
+import { cn } from '~/app/_libs/utils'
+
+import { E_COLUMN_ID, IFilterDef } from '../../_interfaces/data-table'
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
 import { Spinner } from '../ui/spinner'
@@ -56,55 +59,41 @@ export default function DataTable<IData extends IProductRes>({
   sortDefaults?: string[][]
   filterNode?: ReactNode
   filterDefs?: IFilterDef[]
+  columnDefs?: ColumnDef<IData>[]
   onRefetch: () => void
 }) {
   const columns = useMemo(() => {
     const columns: ColumnDef<IData>[] = [
       {
-        id: 'select',
-        meta: {
-          sizePercentage: 0,
-        },
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllRowsSelected() ||
-              (table.getIsSomeRowsSelected() && 'indeterminate')
-            }
-            onCheckedChange={(checked) =>
-              table.toggleAllPageRowsSelected(!!checked)
-            }
-          />
-        ),
+        id: E_COLUMN_ID.SELECT,
+        size: 40,
+        header: DataTableColumnHeader,
         cell: ({ row }) => (
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
+            className='mx-1'
           />
         ),
       },
       {
         accessorKey: 'id',
+        size: 50,
         meta: {
-          sizePercentage: 16,
+          headerTitle: 'ID',
+          // sizePercent: 16,
         },
-        header: (ctx) => {
-          // console.log(ctx)
-          return <DataTableColumnHeader {...ctx} />
-        },
-        cell: ({ row }) => (
-          <div className='max-w-24 truncate'>{row.original.id}</div>
-        ),
+        header: DataTableColumnHeader,
+        // cell: ({ row }) => (
+        //   <div className='max-w-24 truncate'>{row.original.id}</div>
+        // ),
       },
       {
         accessorKey: 'name',
         meta: {
-          sizePercentage: 16,
+          sizePercent: 16,
         },
-        header: (ctx) => {
-          // console.log(ctx)
-          return <DataTableColumnHeader {...ctx} />
-        },
+        header: DataTableColumnHeader,
         cell: ({ row }) => (
           <div className='max-w-md truncate'>{row.original.name}</div>
         ),
@@ -112,7 +101,7 @@ export default function DataTable<IData extends IProductRes>({
       {
         accessorKey: 'description',
         meta: {
-          sizePercentage: 16,
+          sizePercent: 16,
         },
         cell: ({ row }) => (
           <div className='max-w-md truncate'>{row.original.description}</div>
@@ -121,33 +110,27 @@ export default function DataTable<IData extends IProductRes>({
       {
         accessorKey: 'price',
         meta: {
-          sizePercentage: 16,
+          sizePercent: 16,
         },
       },
       {
         accessorKey: 'status',
         meta: {
-          sizePercentage: 16,
+          sizePercent: 16,
         },
-        header: (ctx) => {
-          // console.log(ctx)
-          return <DataTableColumnHeader {...ctx} />
-        },
+        header: DataTableColumnHeader,
       },
       {
         accessorKey: 'totalVariants',
         meta: {
-          sizePercentage: 10,
+          sizePercent: 10,
         },
-        header: (ctx) => {
-          // console.log(ctx)
-          return <DataTableColumnHeader {...ctx} />
-        },
+        header: DataTableColumnHeader,
       },
       {
         accessorKey: 'createdAt',
         meta: {
-          sizePercentage: 16,
+          sizePercent: 16,
         },
         cell: ({ row }) => (
           <>
@@ -159,12 +142,12 @@ export default function DataTable<IData extends IProductRes>({
         ),
       },
       {
-        id: 'action',
+        id: E_COLUMN_ID.ACTION,
         meta: {
-          sizePercentage: 0,
+          sizePercent: 0,
         },
         cell: ({ row }) => (
-          <div className='flex'>
+          <div className='-mx-1 flex'>
             <Link href={`/admin/products/${row.original.id}`}>
               <Button size={'icon'} variant={'ghost'}>
                 <LuPen className='text-info' />
@@ -192,7 +175,7 @@ export default function DataTable<IData extends IProductRes>({
 
   const [queryFilter, setQueryFilter] = useQueryFilter(filterDefs)
 
-  const debouncedSetQueryFilter = useDebouncedCallback(
+  const setQueryFilterDebounced = useDebouncedCallback(
     setQueryFilter,
     DEBOUNCE_DELAY,
   )
@@ -204,6 +187,12 @@ export default function DataTable<IData extends IProductRes>({
     data,
     rowCount: total,
     columns,
+    initialState: {
+      columnPinning: {
+        left: [E_COLUMN_ID.SELECT],
+        right: [E_COLUMN_ID.ACTION],
+      },
+    },
     state: {
       rowSelection,
       globalFilter,
@@ -216,6 +205,9 @@ export default function DataTable<IData extends IProductRes>({
     manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
+    defaultColumn: {
+      size: undefined,
+    },
     getRowId: (row) => row.id,
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: setRowSelection,
@@ -229,7 +221,7 @@ export default function DataTable<IData extends IProductRes>({
       setRowSelection({})
       setQueryList({ page: 1 })
 
-      debouncedSetQueryFilter(_globalFilter)
+      setQueryFilterDebounced(_globalFilter)
     },
     onPaginationChange(updaterOrValue: Updater<PaginationState>) {
       const _pagination =
@@ -287,14 +279,25 @@ export default function DataTable<IData extends IProductRes>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
+                      className={cn({
+                        'sticky left-0 bg-background':
+                          header.column.getIsPinned() === 'left',
+                        'sticky right-0 bg-background':
+                          header.column.getIsPinned() === 'right',
+                      })}
                       style={{
-                        width: `${header.column.columnDef.meta?.sizePercentage ?? 50}%`,
+                        width: `${header.column.columnDef.meta?.sizePercent ?? (header.column.columnDef.size ? 0 : 50)}%`,
                       }}
                     >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                      <div
+                        className='flex items-center px-2'
+                        style={{ width: header.column.columnDef.size }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                      </div>
                     </TableHead>
                   ))}
                 </TableRow>
@@ -308,8 +311,20 @@ export default function DataTable<IData extends IProductRes>({
                     data-state={row.getIsSelected() && 'selected'}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        <div className='flex h-10 items-center'>
+                      <TableCell
+                        key={cell.id}
+                        className={cn({
+                          'sticky left-0 bg-background':
+                            cell.column.getIsPinned() === 'left',
+                          'sticky right-0 bg-background':
+                            cell.column.getIsPinned() === 'right',
+                          'bg-muted': row.getIsSelected(),
+                        })}
+                      >
+                        <div
+                          className='flex h-10 items-center truncate px-2'
+                          style={{ width: cell.column.columnDef.size }}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),

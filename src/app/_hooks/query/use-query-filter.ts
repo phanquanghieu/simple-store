@@ -8,6 +8,8 @@ import {
   useQueryStates,
 } from 'nuqs'
 
+import { IFilterDef } from '~/app/_interfaces/data-table'
+
 export function useQueryFilter<IQuery>(filterDefs: IFilterDef<IQuery>[] = []) {
   const parseAsFilters = useMemo(() => {
     return filterDefs.reduce(
