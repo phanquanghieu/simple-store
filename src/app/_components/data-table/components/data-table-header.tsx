@@ -3,17 +3,18 @@
 import { LuArrowDown, LuArrowUp, LuChevronsUpDown } from 'react-icons/lu'
 
 import { HeaderContext } from '@tanstack/react-table'
+import { isUndefined } from 'lodash'
 
 import { E_COLUMN_ID } from '~/app/_interfaces/data-table'
 
 import { Button } from '../../ui/button'
 import { Checkbox } from '../../ui/checkbox'
 
-export function DataTableColumnHeader<TData>({
+export function DataTableHeader<IData>({
   column,
   header,
   table,
-}: HeaderContext<TData, unknown>) {
+}: HeaderContext<IData, unknown>) {
   if (column.id === E_COLUMN_ID.SELECT) {
     return (
       <Checkbox
@@ -29,7 +30,8 @@ export function DataTableColumnHeader<TData>({
     )
   }
 
-  const title = column.columnDef.meta?.headerTitle ?? column.id
+  const headerTitle = column.columnDef.meta?.headerTitle
+  const title = isUndefined(headerTitle) ? column.id : headerTitle
 
   if (column.getCanSort()) {
     return (

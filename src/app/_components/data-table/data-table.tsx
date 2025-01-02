@@ -1,8 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { ReactNode, useMemo, useState } from 'react'
-import { LuPen, LuRotateCw, LuTrash } from 'react-icons/lu'
+import { ReactNode, useState } from 'react'
+import { LuRotateCw } from 'react-icons/lu'
 
 import {
   ColumnDef,
@@ -17,8 +16,6 @@ import {
 } from '@tanstack/react-table'
 import { isEmpty } from 'lodash'
 
-import { IProductRes } from '~/shared/dto/product/res'
-
 import { useQueryFilter } from '~/app/_hooks/query/use-query-filter'
 import { useQueryList } from '~/app/_hooks/query/use-query-list'
 import { useDebouncedCallback } from '~/app/_hooks/use-debounced-callback'
@@ -27,7 +24,6 @@ import { cn } from '~/app/_libs/utils'
 
 import { E_COLUMN_ID, IFilterDef } from '../../_interfaces/data-table'
 import { Button } from '../ui/button'
-import { Checkbox } from '../ui/checkbox'
 import { Spinner } from '../ui/spinner'
 import {
   Table,
@@ -37,138 +33,35 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table'
-import { DataTableColumnHeader } from './components/data-table-column-header'
+import { DataTableCell } from './components/data-table-cell'
 import { DataTableFilter } from './components/data-table-filter'
+import { DataTableHeader } from './components/data-table-header'
 import { DataTablePagination } from './components/data-table-pagination'
 import { DataTableContext } from './data-table.context'
 
 const DEBOUNCE_DELAY = 500
 
-export default function DataTable<IData extends IProductRes>({
+export function DataTable<IData extends object>({
   data,
   total,
+  columns,
   isFetching,
   sortDefaults,
   filterNode,
   filterDefs,
+  getRowId,
   onRefetch,
 }: {
   data: IData[]
   total: number
+  columns: ColumnDef<IData>[]
   isFetching: boolean
   sortDefaults?: string[][]
   filterNode?: ReactNode
   filterDefs?: IFilterDef[]
-  columnDefs?: ColumnDef<IData>[]
+  getRowId: (row: IData) => string
   onRefetch: () => void
 }) {
-  const columns = useMemo(() => {
-    const columns: ColumnDef<IData>[] = [
-      {
-        id: E_COLUMN_ID.SELECT,
-        size: 40,
-        header: DataTableColumnHeader,
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            className='mx-1'
-          />
-        ),
-      },
-      {
-        accessorKey: 'id',
-        size: 50,
-        meta: {
-          headerTitle: 'ID',
-          // sizePercent: 16,
-        },
-        header: DataTableColumnHeader,
-        // cell: ({ row }) => (
-        //   <div className='max-w-24 truncate'>{row.original.id}</div>
-        // ),
-      },
-      {
-        accessorKey: 'name',
-        meta: {
-          sizePercent: 16,
-        },
-        header: DataTableColumnHeader,
-        cell: ({ row }) => (
-          <div className='max-w-md truncate'>{row.original.name}</div>
-        ),
-      },
-      {
-        accessorKey: 'description',
-        meta: {
-          sizePercent: 16,
-        },
-        cell: ({ row }) => (
-          <div className='max-w-md truncate'>{row.original.description}</div>
-        ),
-      },
-      {
-        accessorKey: 'price',
-        meta: {
-          sizePercent: 16,
-        },
-      },
-      {
-        accessorKey: 'status',
-        meta: {
-          sizePercent: 16,
-        },
-        header: DataTableColumnHeader,
-      },
-      {
-        accessorKey: 'totalVariants',
-        meta: {
-          sizePercent: 10,
-        },
-        header: DataTableColumnHeader,
-      },
-      {
-        accessorKey: 'createdAt',
-        meta: {
-          sizePercent: 16,
-        },
-        cell: ({ row }) => (
-          <>
-            {Intl.DateTimeFormat('vi', {
-              dateStyle: 'short',
-              timeStyle: 'short',
-            }).format(new Date(row.original.createdAt))}
-          </>
-        ),
-      },
-      {
-        id: E_COLUMN_ID.ACTION,
-        meta: {
-          sizePercent: 0,
-        },
-        cell: ({ row }) => (
-          <div className='-mx-1 flex'>
-            <Link href={`/admin/products/${row.original.id}`}>
-              <Button size={'icon'} variant={'ghost'}>
-                <LuPen className='text-info' />
-              </Button>
-            </Link>
-            <Button
-              size={'icon'}
-              variant={'ghost'}
-              onClick={() => {
-                console.log('delete', row, table.getState().rowSelection)
-              }}
-            >
-              <LuTrash className='text-destructive' />
-            </Button>
-          </div>
-        ),
-      },
-    ]
-    return columns
-  }, [])
-
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
   const [{ page, size, sort }, setQueryList] = useQueryList(sortDefaults)
@@ -207,8 +100,12 @@ export default function DataTable<IData extends IProductRes>({
     manualSorting: true,
     defaultColumn: {
       size: undefined,
+      maxSize: 360,
+      enableSorting: false,
+      header: DataTableHeader,
+      cell: DataTableCell,
     },
-    getRowId: (row) => row.id,
+    getRowId,
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange(updaterOrValue: Updater<GlobalFilterState>) {
@@ -232,7 +129,6 @@ export default function DataTable<IData extends IProductRes>({
             })
           : updaterOrValue
 
-      setRowSelection({})
       setQueryList({
         page: util.fromPageIndex(_pagination.pageIndex),
         size: _pagination.pageSize,
@@ -256,7 +152,7 @@ export default function DataTable<IData extends IProductRes>({
     <DataTableContext.Provider value={{ table }}>
       <div className='space-y-2'>
         <div className='-mx-1 flex items-center justify-between p-1'>
-          <div className='flex items-center gap-2'>
+          <div className='flex flex-wrap items-center gap-2'>
             <Button
               size={'icon'}
               variant={'outline'}
@@ -286,7 +182,7 @@ export default function DataTable<IData extends IProductRes>({
                           header.column.getIsPinned() === 'right',
                       })}
                       style={{
-                        width: `${header.column.columnDef.meta?.sizePercent ?? (header.column.columnDef.size ? 0 : 50)}%`,
+                        width: `${header.column.columnDef.meta?.sizePercent ?? (header.column.columnDef.size ? 0 : 20)}%`,
                       }}
                     >
                       <div

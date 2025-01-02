@@ -16,7 +16,7 @@ export function DataTableFilter({ children }: PropsWithChildren) {
   const hasFilter = !isEmpty(compact(values(globalFilter)))
 
   return (
-    <div className='flex flex-wrap items-center justify-start gap-2'>
+    <>
       <Input
         className='w-48'
         variant={'icon'}
@@ -43,6 +43,6 @@ export function DataTableFilter({ children }: PropsWithChildren) {
           <LuX />
         </Button>
       )}
-    </div>
+    </>
   )
 }
