@@ -8,7 +8,7 @@ import {
   useQueryStates,
 } from 'nuqs'
 
-import { IFilterDef } from '~/app/_interfaces/data-table'
+import { IFilterDef } from '~/app/_components/data-table/data-table.interface'
 
 export function useQueryFilter<IQuery>(filterDefs: IFilterDef<IQuery>[] = []) {
   const parseAsFilters = useMemo(() => {

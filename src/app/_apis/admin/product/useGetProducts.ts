@@ -4,10 +4,10 @@ import { IOkListRes } from '~/shared/dto/_common/res'
 import { IGetProductQuery } from '~/shared/dto/product/req'
 import { IProductRes } from '~/shared/dto/product/res'
 
+import { IFilterDef } from '~/app/_components/data-table/data-table.interface'
+
 import { useQueryFilter } from '~/app/_hooks/query/use-query-filter'
 import { useQueryList } from '~/app/_hooks/query/use-query-list'
-
-import { IFilterDef } from '~/app/_interfaces/data-table'
 
 import { fetcherAdmin } from '../../fetcher'
 

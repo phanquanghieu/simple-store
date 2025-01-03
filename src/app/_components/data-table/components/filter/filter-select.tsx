@@ -24,6 +24,8 @@ import {
 } from '~/app/_components/ui/popover'
 import { Separator } from '~/app/_components/ui/separator'
 
+import { IOption } from '~/app/_interfaces/common.interface'
+
 import { useTable } from '../../data-table.context'
 
 const OPTION_LENGTH_SHOW_SEARCH = 2
@@ -105,14 +107,14 @@ export function FilterSelect({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[12.5rem] p-0' align='start'>
+      <PopoverContent className='w-fit max-w-md p-0' align='start'>
         <Command>
           {options.length > OPTION_LENGTH_SHOW_SEARCH && (
             <CommandInput placeholder={'Search'} />
           )}
           <CommandList className='max-h-full'>
             <CommandEmpty>No results found</CommandEmpty>
-            <CommandGroup className='max-h-[18.75rem] overflow-y-auto overflow-x-hidden'>
+            <CommandGroup className='max-h-[18.75rem] overflow-y-auto overflow-x-hidden truncate'>
               {options.map((option) => {
                 const isSelected = selectedOptionValuesSet.has(option.value)
 

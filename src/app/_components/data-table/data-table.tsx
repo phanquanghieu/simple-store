@@ -9,6 +9,7 @@ import {
   PaginationState,
   RowSelectionState,
   SortingState,
+  TableMeta,
   Updater,
   flexRender,
   getCoreRowModel,
@@ -22,7 +23,6 @@ import { useDebouncedCallback } from '~/app/_hooks/use-debounced-callback'
 
 import { cn } from '~/app/_libs/utils'
 
-import { E_COLUMN_ID, IFilterDef } from '../../_interfaces/data-table'
 import { Button } from '../ui/button'
 import { Spinner } from '../ui/spinner'
 import {
@@ -33,11 +33,13 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table'
+import { DataTableBulkAction } from './components/data-table-bulk-action'
 import { DataTableCell } from './components/data-table-cell'
 import { DataTableFilter } from './components/data-table-filter'
 import { DataTableHeader } from './components/data-table-header'
 import { DataTablePagination } from './components/data-table-pagination'
 import { DataTableContext } from './data-table.context'
+import { E_COLUMN_ID } from './data-table.interface'
 
 const DEBOUNCE_DELAY = 500
 
@@ -46,9 +48,8 @@ export function DataTable<IData extends object>({
   total,
   columns,
   isFetching,
-  sortDefaults,
   filterNode,
-  filterDefs,
+  meta,
   getRowId,
   onRefetch,
 }: {
@@ -56,17 +57,16 @@ export function DataTable<IData extends object>({
   total: number
   columns: ColumnDef<IData>[]
   isFetching: boolean
-  sortDefaults?: string[][]
   filterNode?: ReactNode
-  filterDefs?: IFilterDef[]
+  meta: TableMeta<IData>
   getRowId: (row: IData) => string
   onRefetch: () => void
 }) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
-  const [{ page, size, sort }, setQueryList] = useQueryList(sortDefaults)
+  const [{ page, size, sort }, setQueryList] = useQueryList(meta.sortDefaults)
 
-  const [queryFilter, setQueryFilter] = useQueryFilter(filterDefs)
+  const [queryFilter, setQueryFilter] = useQueryFilter(meta.filterDefs)
 
   const setQueryFilterDebounced = useDebouncedCallback(
     setQueryFilter,
@@ -95,9 +95,6 @@ export function DataTable<IData extends object>({
       },
       sorting: util.toSortingState(sort),
     },
-    manualFiltering: true,
-    manualPagination: true,
-    manualSorting: true,
     defaultColumn: {
       size: undefined,
       maxSize: 360,
@@ -105,6 +102,10 @@ export function DataTable<IData extends object>({
       header: DataTableHeader,
       cell: DataTableCell,
     },
+    meta,
+    manualFiltering: true,
+    manualPagination: true,
+    manualSorting: true,
     getRowId,
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: setRowSelection,
@@ -151,7 +152,7 @@ export function DataTable<IData extends object>({
   return (
     <DataTableContext.Provider value={{ table }}>
       <div className='space-y-2'>
-        <div className='-mx-1 flex items-center justify-between p-1'>
+        <div className='-mx-1 flex items-end justify-between p-1'>
           <div className='flex flex-wrap items-center gap-2'>
             <Button
               size={'icon'}
@@ -164,7 +165,9 @@ export function DataTable<IData extends object>({
             </Button>
             <DataTableFilter>{filterNode}</DataTableFilter>
           </div>
-          <div className='flex items-center gap-2'></div>
+          <div className='flex gap-2'>
+            <DataTableBulkAction />
+          </div>
         </div>
         <div className='overflow-hidden rounded-md border'>
           <Table>

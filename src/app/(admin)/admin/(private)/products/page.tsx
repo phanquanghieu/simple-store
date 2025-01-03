@@ -1,12 +1,23 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { LuArchive, LuBox, LuFilePen } from 'react-icons/lu'
 
 import { E_PRODUCT_STATUS } from '@prisma/client'
 
+import { IProductRes } from '~/shared/dto/product/res'
+
 import { FilterSelect } from '~/app/_components/data-table/components/filter/filter-select'
 import { DataTable } from '~/app/_components/data-table/data-table'
-import { useDataTableColumn } from '~/app/_components/data-table/hooks/use-data-table-column'
+import {
+  E_COMMON_BULK_ACTION_TYPE,
+  E_COMMON_ROW_ACTION_TYPE,
+} from '~/app/_components/data-table/data-table.interface'
+import {
+  IDataTableConfig,
+  useDataTable,
+} from '~/app/_components/data-table/hooks/use-data-table'
 import { Button } from '~/app/_components/ui/button'
 
 import {
@@ -14,61 +25,29 @@ import {
   SORT_DEFAULTS,
   useGetProducts,
 } from '~/app/_apis/admin/product/useGetProducts'
-import { IOption } from '~/app/_interfaces/common'
+import { IOption } from '~/app/_interfaces/common.interface'
 
+import { ConfirmDialog } from '../../_components/dialog/confirm-dialog'
 import { PageHeader } from '../../_components/page-header'
 
 export default function Page() {
   const { data, isFetching, refetch } = useGetProducts()
 
-  const { columns, rowAction } = useDataTableColumn(
-    [
-      {
-        accessorKey: 'id',
-        meta: {
-          headerTitle: 'ID',
-        },
-      },
-      {
-        accessorKey: 'name',
-        enableSorting: true,
-        meta: {
-          cellType: 'link',
-          cellLink: (row) => `/admin/products/${row.original.id}`,
-        },
-      },
-      {
-        accessorKey: 'description',
-      },
-      {
-        accessorKey: 'price',
-        enableSorting: true,
-        meta: {
-          cellType: 'money',
-        },
-      },
-      {
-        accessorKey: 'status',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'totalVariants',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'createdAt',
-        enableSorting: true,
-        meta: {
-          cellType: 'datetime',
-        },
-      },
-    ],
-    {
-      showSelectColumn: true,
-      showActionColumn: true,
-      editLink: (row) => `/admin/products/${row.id}`,
-    },
-  )
+  const {
+    columns,
+    meta,
+    rowAction,
+    bulkAction,
+    resetBulkAction,
+    resetRowAction,
+  } = useDataTable<IProductRes>(dataTableConfig)
+
+  useEffect(() => {
+    if (rowAction?.type === E_ROW_ACTION_TYPE.ACTIVE) {
+      console.log('active')
+    }
+  }, [rowAction])
+
   return (
     <>
       <PageHeader title='Products'>
@@ -81,8 +60,7 @@ export default function Page() {
         total={data?.total ?? 0}
         columns={columns}
         isFetching={isFetching}
-        sortDefaults={SORT_DEFAULTS}
-        filterDefs={FILTER_DEFS}
+        meta={meta}
         getRowId={(row) => row.id}
         onRefetch={refetch}
         filterNode={
@@ -101,8 +79,149 @@ export default function Page() {
           </>
         }
       />
+
+      <ConfirmDialog
+        open={bulkAction?.type === E_BULK_ACTION_TYPE.ARCHIVE}
+        title={`Archive ${bulkAction?.rowIds.length} products?`}
+        description=''
+        actionTitle='Archive'
+        actionVariant={'warning'}
+        onOpenChange={resetBulkAction}
+        onAction={() => {
+          console.log('delete')
+        }}
+      />
+
+      <ConfirmDialog
+        open={bulkAction?.type === E_BULK_ACTION_TYPE.DELETE}
+        title={`Delete ${bulkAction?.rowIds.length} products?`}
+        onOpenChange={resetBulkAction}
+        onAction={() => {
+          console.log('delete')
+        }}
+      />
+
+      <ConfirmDialog
+        open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
+        title={`Delete this product?`}
+        onOpenChange={resetRowAction}
+        onAction={() => {
+          console.log('delete')
+        }}
+      />
+
+      <ConfirmDialog
+        open={rowAction?.type === E_ROW_ACTION_TYPE.ARCHIVE}
+        title={`Archive this product?`}
+        description=''
+        actionTitle='Archive'
+        actionVariant={'warning'}
+        onOpenChange={resetRowAction}
+        onAction={() => {
+          console.log('delete')
+        }}
+      />
     </>
   )
+}
+
+enum E_BULK_ACTION_TYPE {
+  ACTIVE = 'ACTIVE',
+  DRAFT = 'DRAFT',
+  ARCHIVE = 'ARCHIVE',
+  DELETE = E_COMMON_BULK_ACTION_TYPE.DELETE,
+}
+enum E_ROW_ACTION_TYPE {
+  ACTIVE = 'ACTIVE',
+  ARCHIVE = 'ARCHIVE',
+  UPDATE = E_COMMON_ROW_ACTION_TYPE.UPDATE,
+  DELETE = E_COMMON_ROW_ACTION_TYPE.DELETE,
+}
+const dataTableConfig: IDataTableConfig<IProductRes> = {
+  columnDefs: [
+    {
+      accessorKey: 'id',
+      meta: {
+        headerTitle: 'ID',
+      },
+    },
+    {
+      accessorKey: 'name',
+      enableSorting: true,
+      meta: {
+        cellType: 'link',
+        cellLink: (row) => `/admin/products/${row.original.id}`,
+      },
+    },
+    {
+      accessorKey: 'description',
+    },
+    {
+      accessorKey: 'price',
+      enableSorting: true,
+      meta: {
+        cellType: 'money',
+      },
+    },
+    {
+      accessorKey: 'status',
+      enableSorting: true,
+      meta: {
+        cellType: 'badge',
+        cellBadge: {
+          [E_PRODUCT_STATUS.DRAFT]: 'info',
+          [E_PRODUCT_STATUS.ACTIVE]: 'success',
+          [E_PRODUCT_STATUS.ARCHIVED]: 'secondary',
+        },
+      },
+    },
+    {
+      accessorKey: 'totalVariants',
+      enableSorting: true,
+    },
+    {
+      accessorKey: 'createdAt',
+      enableSorting: true,
+      meta: {
+        cellType: 'datetime',
+      },
+    },
+  ],
+  sortDefaults: SORT_DEFAULTS,
+  filterDefs: FILTER_DEFS,
+  bulkActionDefs: [
+    {
+      label: 'Set as Active',
+      icon: <LuBox className='text-success' />,
+      type: E_BULK_ACTION_TYPE.ACTIVE,
+    },
+    {
+      label: 'Set as Draft',
+      icon: <LuFilePen className='text-info' />,
+      type: E_BULK_ACTION_TYPE.DRAFT,
+    },
+    {
+      label: 'Archive',
+      icon: <LuArchive />,
+      type: E_BULK_ACTION_TYPE.ARCHIVE,
+    },
+    { type: E_BULK_ACTION_TYPE.DELETE },
+  ],
+  rowActionDefs: [
+    {
+      icon: <LuBox className='text-success' />,
+      type: E_ROW_ACTION_TYPE.ACTIVE,
+    },
+    {
+      icon: <LuArchive />,
+      type: E_ROW_ACTION_TYPE.ARCHIVE,
+    },
+    {
+      type: E_ROW_ACTION_TYPE.UPDATE,
+      actionLink: (row) => `/admin/products/${row.id}`,
+    },
+    { type: E_ROW_ACTION_TYPE.DELETE },
+  ],
 }
 
 const STATUS_OPTIONS: IOption<E_PRODUCT_STATUS>[] = [

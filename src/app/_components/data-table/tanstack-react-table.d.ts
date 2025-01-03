@@ -5,12 +5,32 @@ import { ReactNode } from 'react'
 
 import { Row, RowData } from '@tanstack/react-table'
 
+import { BadgeProps } from '../ui/badge'
+import {
+  IBulkAction,
+  IBulkActionDef,
+  IFilterDef,
+  IRowAction,
+  IRowActionDef,
+} from './data-table.interface'
+
 declare module '@tanstack/react-table' {
+  interface TableMeta<TData extends RowData> {
+    sortDefaults?: string[][]
+    filterDefs?: IFilterDef[]
+    bulkActionDefs?: IBulkActionDef[]
+    setBulkAction?: (bulkAction: IBulkAction) => void
+  }
   interface ColumnMeta<TData extends RowData, TValue> {
     sizePercent?: number
     headerTitle?: ReactNode
-    cellType?: 'text' | 'datetime' | 'date' | 'link' | 'money'
+    cellType?: 'text' | 'datetime' | 'date' | 'link' | 'money' | 'badge'
     cellLink?: (row: Row<TData>) => string
+    cellAction?: {
+      rowActionDefs?: IRowActionDef<TData>[]
+      setRowAction?: (row: IRowAction<TData>) => void
+    }
+    cellBadge?: Record<string, BadgeProps['variant']>
   }
   type GlobalFilterState = Record<
     string,
