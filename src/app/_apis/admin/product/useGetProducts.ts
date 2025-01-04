@@ -30,12 +30,10 @@ export const FILTER_DEFS: IFilterDef<IGetProductQuery>[] = [
 export function useGetProducts() {
   const [queryList] = useQueryList(SORT_DEFAULTS)
   const [queryFilter] = useQueryFilter(FILTER_DEFS)
-
   const query = { ...queryList, ...queryFilter }
-  return useQuery({
+
+  return useQuery<IOkListRes<IProductRes>>({
     queryKey: ['products', query],
-    queryFn: () =>
-      fetcherAdmin.get<IOkListRes<IProductRes>>('/products', { query }),
-    staleTime: 10_000,
+    queryFn: () => fetcherAdmin.get('/products', { query }),
   })
 }

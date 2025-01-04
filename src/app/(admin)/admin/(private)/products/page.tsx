@@ -6,6 +6,7 @@ import { LuArchive, LuBox, LuFilePen } from 'react-icons/lu'
 
 import { E_PRODUCT_STATUS } from '@prisma/client'
 
+import { E_BULK_PRODUCT_TYPE } from '~/shared/dto/product/req'
 import { IProductRes } from '~/shared/dto/product/res'
 
 import { FilterSelect } from '~/app/_components/data-table/components/filter/filter-select'
@@ -20,6 +21,7 @@ import {
 } from '~/app/_components/data-table/hooks/use-data-table'
 import { Button } from '~/app/_components/ui/button'
 
+import { useBulkProducts } from '~/app/_apis/admin/product/useBulkProducts'
 import {
   FILTER_DEFS,
   SORT_DEFAULTS,
@@ -32,6 +34,7 @@ import { PageHeader } from '../../_components/page-header'
 
 export default function Page() {
   const { data, isFetching, refetch } = useGetProducts()
+  const { mutate, mutateAsync } = useBulkProducts()
 
   const {
     columns,
@@ -43,10 +46,31 @@ export default function Page() {
   } = useDataTable<IProductRes>(dataTableConfig)
 
   useEffect(() => {
-    if (rowAction?.type === E_ROW_ACTION_TYPE.ACTIVE) {
-      console.log('active')
+    if (rowAction && !mustConfirmRowActions.includes(rowAction.type)) {
+      handleBulkAction()
     }
   }, [rowAction])
+
+  console.log('rowAction', rowAction)
+  const handleBulkAction = async () => {
+    if (!bulkAction) return
+
+    console.log('bulkAction', bulkAction)
+    const BULK_TYPE_MAP: Record<string, E_BULK_PRODUCT_TYPE> = {
+      [E_BULK_ACTION_TYPE.ACTIVE]: E_BULK_PRODUCT_TYPE.ACTIVE,
+      [E_BULK_ACTION_TYPE.ARCHIVE]: E_BULK_PRODUCT_TYPE.ARCHIVE,
+      [E_BULK_ACTION_TYPE.DELETE]: E_BULK_PRODUCT_TYPE.DELETE,
+    }
+    mutate({
+      ids: bulkAction.rowIds,
+      type: BULK_TYPE_MAP[bulkAction.type],
+    })
+    // await mutateAsync({
+    //   ids: bulkAction.rowIds,
+    //   type: BULK_TYPE_MAP[bulkAction.type],
+    // })
+    console.log('ddd')
+  }
 
   return (
     <>
@@ -87,27 +111,21 @@ export default function Page() {
         actionTitle='Archive'
         actionVariant={'warning'}
         onOpenChange={resetBulkAction}
-        onAction={() => {
-          console.log('delete')
-        }}
+        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
         open={bulkAction?.type === E_BULK_ACTION_TYPE.DELETE}
         title={`Delete ${bulkAction?.rowIds.length} products?`}
         onOpenChange={resetBulkAction}
-        onAction={() => {
-          console.log('delete')
-        }}
+        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
         open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
         title={`Delete this product?`}
         onOpenChange={resetRowAction}
-        onAction={() => {
-          console.log('delete')
-        }}
+        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
@@ -117,9 +135,7 @@ export default function Page() {
         actionTitle='Archive'
         actionVariant={'warning'}
         onOpenChange={resetRowAction}
-        onAction={() => {
-          console.log('delete')
-        }}
+        onAction={handleBulkAction}
       />
     </>
   )
@@ -223,6 +239,16 @@ const dataTableConfig: IDataTableConfig<IProductRes> = {
     { type: E_ROW_ACTION_TYPE.DELETE },
   ],
 }
+
+const mustConfirmRowActions: string[] = [
+  E_ROW_ACTION_TYPE.DELETE,
+  E_ROW_ACTION_TYPE.ARCHIVE,
+]
+
+const mustConfirmBulkActions = [
+  E_BULK_ACTION_TYPE.DELETE,
+  E_BULK_ACTION_TYPE.ARCHIVE,
+]
 
 const STATUS_OPTIONS: IOption<E_PRODUCT_STATUS>[] = [
   {

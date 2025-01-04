@@ -1,5 +1,7 @@
 import { has, isNil, omitBy, set } from 'lodash'
-import querystring, { ParsedUrlQueryInput } from 'querystring'
+import querystring from 'querystring'
+
+import { IErrorRes } from '~/shared/dto/_common/res'
 
 export interface IFetcherOption extends Omit<RequestInit, 'body'> {
   query?: object
@@ -36,7 +38,7 @@ export class Fetcher {
           (_query.sort as string[][]).map((s) => s.join(':')),
         )
       }
-      url += `?${querystring.stringify(_query as ParsedUrlQueryInput)}`
+      url += `?${querystring.stringify(_query)}`
     }
 
     const _requestInit: RequestInit = {
@@ -56,22 +58,39 @@ export class Fetcher {
       window.location.replace(this.unAuthRedirectUrl)
     }
 
-    const data = await res.json()
+    try {
+      const resBody = await res.json()
 
-    return data as IDataRes
+      if (!res.ok) {
+        throw resBody as IErrorRes
+      } else {
+        return resBody as IDataRes
+      }
+    } catch (error) {
+      console.error(error)
+      throw {
+        error: 'InternalServerError',
+        message: 'Internal Server Error',
+      } as IErrorRes
+    }
   }
+
   async get<IDataRes = object>(path: string, option?: IFetcherOption) {
     return this.http<IDataRes>(path, option)
   }
+
   async post<IDataRes = object>(path: string, option?: IFetcherOption) {
     return this.http<IDataRes>(path, { method: 'POST', ...option })
   }
+
   async put<IDataRes = object>(path: string, option?: IFetcherOption) {
     return this.http<IDataRes>(path, { method: 'PUT', ...option })
   }
+
   async patch<IDataRes = object>(path: string, option?: IFetcherOption) {
     return this.http<IDataRes>(path, { method: 'PATCH', ...option })
   }
+
   async delete<IDataRes = object>(path: string, option?: IFetcherOption) {
     return this.http<IDataRes>(path, { method: 'DELETE', ...option })
   }

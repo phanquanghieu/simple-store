@@ -5,14 +5,14 @@ import { ReactNode } from 'react'
 
 import { Row, RowData } from '@tanstack/react-table'
 
-import { BadgeProps } from '../ui/badge'
 import {
   IBulkAction,
   IBulkActionDef,
   IFilterDef,
   IRowAction,
   IRowActionDef,
-} from './data-table.interface'
+} from '../_components/data-table/data-table.interface'
+import { BadgeProps } from '../_components/ui/badge'
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
