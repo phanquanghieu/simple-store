@@ -7,10 +7,11 @@ import {
   IGetProductQuery,
 } from '~/shared/dto/product/req'
 
-import { OkListRes, OkRes, queryUtil } from '../common'
+import { NotFoundException, OkListRes, OkRes, queryUtil } from '../common'
 import {
   IAdminCtx,
   IAdminCtxBody,
+  IAdminCtxParam,
   IAdminCtxParamQuery,
   IAdminCtxQuery,
 } from '../core/ctx'
@@ -58,6 +59,16 @@ export const productService = {
     body,
   }: IAdminCtx<IIdParam, IPaginationQuery>) => {
     return OkRes({ param, query, body })
+  },
+
+  delete: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
+    await prisma.product.findUniqueOrThrow({ where: { id } }).catch(() => {
+      throw new NotFoundException('Product not found')
+    })
+
+    await prisma.product.delete({ where: { id } })
+
+    return OkRes(true)
   },
 
   bulk: async ({ body: { ids, type } }: IAdminCtxBody<IBulkProductBody>) => {

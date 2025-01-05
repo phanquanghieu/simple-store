@@ -27,3 +27,11 @@ export async function POST(...args: INextRouteArgs) {
     productService.create,
   )
 }
+
+export async function DELETE(...args: INextRouteArgs) {
+  return routeExecutor(...args)(
+    adminGuard,
+    idParamValidator,
+    productService.delete,
+  )
+}

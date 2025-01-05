@@ -21,6 +21,7 @@ import {
 import { Button } from '~/app/_components/ui/button'
 
 import { useBulkProducts } from '~/app/_apis/admin/product/useBulkProducts'
+import { useDeleteProduct } from '~/app/_apis/admin/product/useDeleteProduct'
 import {
   FILTER_DEFS,
   SORT_DEFAULTS,
@@ -33,8 +34,10 @@ import { PageHeader } from '../../_components/page-header'
 
 export default function Page() {
   const { data, isFetching, refetch } = useGetProducts()
-  const { mutate: mutateBulkProducts, isPending: isBulkActionPending } =
+  const { mutate: mutateBulkProducts, isPending: isBulkProductsPending } =
     useBulkProducts()
+  const { mutate: mutateDeleteProduct, isPending: isDeleteProductPending } =
+    useDeleteProduct()
 
   const {
     columns,
@@ -70,6 +73,19 @@ export default function Page() {
         },
       },
     )
+  }
+
+  const handleRowAction = async () => {
+    if (!rowAction) return
+
+    if (rowAction.type === E_ROW_ACTION_TYPE.DELETE) {
+      mutateDeleteProduct(rowAction.row.id, {
+        onSettled: () => {
+          resetRowAction()
+          resetRowSelection()
+        },
+      })
+    }
   }
 
   return (
@@ -109,7 +125,7 @@ export default function Page() {
       <ConfirmDialog
         open={bulkAction?.type === E_BULK_ACTION_TYPE.ACTIVE}
         title={`Activate ${bulkAction?.rowIds.length} products?`}
-        isActionPending={isBulkActionPending}
+        isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
@@ -117,7 +133,7 @@ export default function Page() {
       <ConfirmDialog
         open={bulkAction?.type === E_BULK_ACTION_TYPE.DRAFT}
         title={`Draft ${bulkAction?.rowIds.length} products?`}
-        isActionPending={isBulkActionPending}
+        isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
@@ -125,7 +141,7 @@ export default function Page() {
       <ConfirmDialog
         open={bulkAction?.type === E_BULK_ACTION_TYPE.ARCHIVE}
         title={`Archive ${bulkAction?.rowIds.length} products?`}
-        isActionPending={isBulkActionPending}
+        isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
@@ -135,7 +151,7 @@ export default function Page() {
         title={`Delete ${bulkAction?.rowIds.length} products?`}
         actionTitle={'Delete'}
         actionVariant={'destructive'}
-        isActionPending={isBulkActionPending}
+        isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
@@ -145,8 +161,9 @@ export default function Page() {
         title={`Delete this product?`}
         actionTitle={'Delete'}
         actionVariant={'destructive'}
+        isActionPending={isDeleteProductPending}
         onOpenChange={resetRowAction}
-        onAction={handleBulkAction}
+        onAction={handleRowAction}
       />
     </>
   )

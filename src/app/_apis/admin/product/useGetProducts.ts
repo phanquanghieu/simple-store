@@ -32,8 +32,9 @@ export function useGetProducts() {
   const [queryFilter] = useQueryFilter(FILTER_DEFS)
   const query = { ...queryList, ...queryFilter }
 
-  return useQuery<IOkListRes<IProductRes>>({
+  return useQuery({
     queryKey: ['products', query],
-    queryFn: () => fetcherAdmin.get('/products', { query }),
+    queryFn: () =>
+      fetcherAdmin.get<IOkListRes<IProductRes>>('/products', { query }),
   })
 }

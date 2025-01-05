@@ -58,20 +58,21 @@ export class Fetcher {
       window.location.replace(this.unAuthRedirectUrl)
     }
 
+    let resBody
     try {
-      const resBody = await res.json()
-
-      if (!res.ok) {
-        throw resBody as IErrorRes
-      } else {
-        return resBody as IDataRes
-      }
+      resBody = await res.json()
     } catch (error) {
       console.error(error)
       throw {
         error: 'InternalServerError',
         message: 'Internal Server Error',
       } as IErrorRes
+    }
+
+    if (res.ok) {
+      return resBody as IDataRes
+    } else {
+      throw resBody as IErrorRes
     }
   }
 
