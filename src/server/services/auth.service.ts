@@ -14,8 +14,8 @@ import {
   UnauthorizedException,
 } from '../common/exceptions/exceptions'
 
-export const COOKIE_KEY_JWT_ADMIN = 'jwt-admin'
-export const COOKIE_KEY_ADMIN_AUTHENTICATED = 'admin-authenticated'
+export const COOKIE_KEY_JWT_ADMIN = 'ss-jwt-admin'
+export const COOKIE_KEY_ADMIN_AUTHENTICATED = 'ss-admin-authenticated'
 
 interface IJwtPayloadAdmin {
   username: string
