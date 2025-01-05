@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
+import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { LuRotateCw } from 'react-icons/lu'
 
 import {
@@ -48,22 +48,24 @@ export function DataTable<IData extends object>({
   total,
   columns,
   isFetching,
-  filterNode,
   meta,
+  rowSelection,
+  setRowSelection,
   getRowId,
   onRefetch,
+  filterNode,
 }: {
   data: IData[]
   total: number
   columns: ColumnDef<IData>[]
   isFetching: boolean
-  filterNode?: ReactNode
   meta: TableMeta<IData>
+  rowSelection?: RowSelectionState
+  setRowSelection?: Dispatch<SetStateAction<RowSelectionState>>
   getRowId: (row: IData) => string
   onRefetch: () => void
+  filterNode?: ReactNode
 }) {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-
   const [{ page, size, sort }, setQueryList] = useQueryList(meta.sortDefaults)
 
   const [queryFilter, setQueryFilter] = useQueryFilter(meta.filterDefs)
@@ -116,7 +118,7 @@ export function DataTable<IData extends object>({
           : { ...globalFilter, ...updaterOrValue }
 
       setGlobalFilter(_globalFilter)
-      setRowSelection({})
+      setRowSelection?.({})
       setQueryList({ page: 1 })
 
       setQueryFilterDebounced(_globalFilter)
@@ -141,13 +143,18 @@ export function DataTable<IData extends object>({
           ? updaterOrValue(util.toSortingState(sort))
           : updaterOrValue
 
-      setRowSelection({})
+      setRowSelection?.({})
       setQueryList({
         page: 1,
         sort: util.fromSortingState(_sortingState),
       })
     },
   })
+
+  const handleRefetch = () => {
+    onRefetch()
+    setRowSelection?.({})
+  }
 
   return (
     <DataTableContext.Provider value={{ table }}>
@@ -158,7 +165,7 @@ export function DataTable<IData extends object>({
               size={'icon'}
               variant={'outline'}
               className='size-8'
-              onClick={onRefetch}
+              onClick={handleRefetch}
               disabled={isFetching}
             >
               {isFetching ? <Spinner className='' /> : <LuRotateCw />}

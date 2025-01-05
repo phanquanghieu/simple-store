@@ -1,10 +1,7 @@
-import { useTransition } from 'react'
-
 import { AlertDialogProps } from '@radix-ui/react-alert-dialog'
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -12,15 +9,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '~/app/_components/ui/alert-dialog'
-import { Button } from '~/app/_components/ui/button'
+import { Button, ButtonProps } from '~/app/_components/ui/button'
 import { Spinner } from '~/app/_components/ui/spinner'
 
 export function ConfirmDialog({
   title = 'Are you absolutely sure?',
-  description = 'Action can’t be undone.',
+  description,
   cancelTitle = 'Cancel',
-  actionTitle = 'Delete',
-  actionVariant = 'destructive',
+  actionTitle = 'Save',
+  actionVariant = 'default',
+  isActionPending = false,
   onAction,
   ...props
 }: {
@@ -28,21 +26,10 @@ export function ConfirmDialog({
   description?: string
   cancelTitle?: string
   actionTitle?: string
-  actionVariant?: React.ComponentProps<typeof AlertDialogAction>['variant']
+  actionVariant?: ButtonProps['variant']
+  isActionPending?: boolean
   onAction?: () => Promise<void>
 } & AlertDialogProps) {
-  const [isPending, startTransition] = useTransition()
-
-  const handleAction = () => {
-    startTransition(async () => {
-      await onAction?.()
-
-      startTransition(() => {
-        props.onOpenChange?.(false)
-      })
-    })
-  }
-
   return (
     <AlertDialog {...props}>
       <AlertDialogContent>
@@ -54,10 +41,10 @@ export function ConfirmDialog({
           <AlertDialogCancel>{cancelTitle}</AlertDialogCancel>
           <Button
             variant={actionVariant}
-            onClick={handleAction}
-            disabled={isPending}
+            onClick={onAction}
+            disabled={isActionPending}
           >
-            {isPending && <Spinner />}
+            {isActionPending && <Spinner />}
             {actionTitle}
           </Button>
         </AlertDialogFooter>

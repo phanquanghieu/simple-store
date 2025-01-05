@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactNode } from 'react'
 
-import { Row, RowData } from '@tanstack/react-table'
+import { RowData } from '@tanstack/react-table'
 
 import {
   IBulkAction,
@@ -25,7 +25,7 @@ declare module '@tanstack/react-table' {
     sizePercent?: number
     headerTitle?: ReactNode
     cellType?: 'text' | 'datetime' | 'date' | 'link' | 'money' | 'badge'
-    cellLink?: (row: Row<TData>) => string
+    cellLink?: (row: TData) => string
     cellAction?: {
       rowActionDefs?: IRowActionDef<TData>[]
       setRowAction?: (row: IRowAction<TData>) => void

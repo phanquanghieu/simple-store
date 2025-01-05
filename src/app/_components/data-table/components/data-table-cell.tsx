@@ -38,7 +38,7 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
 
   if (meta?.cellType === 'link') {
     return (
-      <Link href={meta?.cellLink?.(row) ?? '#'}>
+      <Link href={meta?.cellLink?.(row.original) ?? '#'}>
         <Button variant={'link'} className='pl-0'>
           {getValue<string>()}
         </Button>

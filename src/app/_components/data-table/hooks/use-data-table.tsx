@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 
-import { ColumnDef, TableMeta } from '@tanstack/react-table'
+import { ColumnDef, RowSelectionState, TableMeta } from '@tanstack/react-table'
 
 import {
   E_COLUMN_ID,
@@ -28,6 +28,7 @@ export function useDataTable<IData>({
   bulkActionDefs,
   rowActionDefs,
 }: IDataTableConfig<IData>) {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [bulkAction, setBulkAction] = useState<IBulkAction | undefined>()
   const [rowAction, setRowAction] = useState<IRowAction<IData> | undefined>()
 
@@ -74,6 +75,8 @@ export function useDataTable<IData>({
     return meta
   }, [sortDefaults, filterDefs, bulkActionDefs])
 
+  const resetRowSelection = useCallback(() => setRowSelection({}), [])
+
   const resetRowAction = useCallback(() => setRowAction(undefined), [])
 
   const resetBulkAction = useCallback(() => setBulkAction(undefined), [])
@@ -81,6 +84,9 @@ export function useDataTable<IData>({
   return {
     columns,
     meta,
+    rowSelection,
+    setRowSelection,
+    resetRowSelection,
     rowAction,
     setRowAction,
     resetRowAction,

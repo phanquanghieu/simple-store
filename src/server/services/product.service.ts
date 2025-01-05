@@ -1,10 +1,13 @@
-import { Prisma } from '@prisma/client'
-import { random } from 'lodash'
+import { E_PRODUCT_STATUS, Prisma } from '@prisma/client'
 
 import { IIdParam, IPaginationQuery } from '~/shared/dto/_common/req'
-import { IBulkProductBody, IGetProductQuery } from '~/shared/dto/product/req'
+import {
+  E_BULK_PRODUCT_TYPE,
+  IBulkProductBody,
+  IGetProductQuery,
+} from '~/shared/dto/product/req'
 
-import { BadRequestException, OkListRes, OkRes, queryUtil } from '../common'
+import { OkListRes, OkRes, queryUtil } from '../common'
 import {
   IAdminCtx,
   IAdminCtxBody,
@@ -57,14 +60,38 @@ export const productService = {
     return OkRes({ param, query, body })
   },
 
-  bulk: async ({ body }: IAdminCtxBody<IBulkProductBody>) => {
-    const r = random(1, 2, false)
-    console.log(r)
-    await wait(1000)
-    if (1 === 1) {
-      throw new BadRequestException('Error')
+  bulk: async ({ body: { ids, type } }: IAdminCtxBody<IBulkProductBody>) => {
+    switch (type) {
+      case E_BULK_PRODUCT_TYPE.ACTIVE: {
+        await prisma.product.updateMany({
+          where: { id: { in: ids } },
+          data: { status: E_PRODUCT_STATUS.ACTIVE },
+        })
+
+        break
+      }
+      case E_BULK_PRODUCT_TYPE.DRAFT: {
+        await prisma.product.updateMany({
+          where: { id: { in: ids } },
+          data: { status: E_PRODUCT_STATUS.DRAFT },
+        })
+        break
+      }
+      case E_BULK_PRODUCT_TYPE.ARCHIVE: {
+        await prisma.product.updateMany({
+          where: { id: { in: ids } },
+          data: { status: E_PRODUCT_STATUS.ARCHIVED },
+        })
+
+        break
+      }
+      case E_BULK_PRODUCT_TYPE.DELETE: {
+        await prisma.product.deleteMany({ where: { id: { in: ids } } })
+
+        break
+      }
     }
-    console.log(body)
+
     return OkRes(true)
   },
 }
