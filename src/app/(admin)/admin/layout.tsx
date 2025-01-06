@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { Inter } from 'next/font/google'
+import NextTopLoader from 'nextjs-toploader'
 import { PropsWithChildren, Suspense } from 'react'
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
@@ -39,6 +40,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             </ThemeProvider>
           </NextIntlClientProvider>
         </Suspense>
+        <NextTopLoader color={'hsl(var(--primary))'} showSpinner={false} />
       </body>
     </html>
   )

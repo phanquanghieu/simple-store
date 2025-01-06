@@ -30,7 +30,7 @@ import {
 } from '~/app/_apis/admin/product/useGetProducts'
 import { IOption } from '~/app/_interfaces/common.interface'
 
-import { ConfirmDialog } from '../../_components/dialog/confirm-dialog'
+import { ConfirmDialog } from '../../_components/dialogs/confirm-dialog'
 import { PageHeader } from '../../_components/page-header'
 
 export default function Page() {

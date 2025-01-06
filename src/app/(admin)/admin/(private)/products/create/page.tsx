@@ -1,13 +1,18 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
+
 import { Button } from '~/app/_components/ui/button'
 
 import { PageHeader } from '../../../_components/page-header'
 
-export default async function Page() {
+export default function Page() {
+  const t = useTranslations()
+
   return (
     <>
       <PageHeader title='Create Product' backUrl='/admin/products'>
-        <Button>Save</Button>
-        <Button>Save</Button>
+        <Button>{t('Common.save')}</Button>
       </PageHeader>
     </>
   )
