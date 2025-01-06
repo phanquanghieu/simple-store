@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { LuArchive, LuBox, LuFilePen } from 'react-icons/lu'
 
@@ -51,7 +52,6 @@ export default function Page() {
     resetRowSelection,
   } = useDataTable<IProductRes>(dataTableConfig)
 
-  console.log('rowAction', rowAction)
   const handleBulkAction = async () => {
     if (!bulkAction) return
 
@@ -88,11 +88,13 @@ export default function Page() {
     }
   }
 
+  const t = useTranslations()
+
   return (
     <>
       <PageHeader title='Products'>
         <Link href='/admin/products/create'>
-          <Button>Create</Button>
+          <Button>{t('Common.create')}</Button>
         </Link>
       </PageHeader>
       <DataTable

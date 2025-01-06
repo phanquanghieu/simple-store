@@ -1,7 +1,7 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
-import { LuTarget } from 'react-icons/lu'
 
 import {
   SidebarHeader,
@@ -15,16 +15,16 @@ export function NavHeader() {
     <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem>
-          <Link href={'/admin'}>
+          <Link href={'/'}>
             <SidebarMenuButton
               size='lg'
               className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
             >
-              <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
-                <LuTarget />
-              </div>
+              <Image src={'/logo.svg'} alt='logo' width={32} height={32} />
               <div className='grid flex-1 text-left text-lg leading-tight'>
-                <span className='truncate font-semibold'>{'Simple Store'}</span>
+                <span className='truncate font-semibold'>
+                  Simple Store Admin
+                </span>
               </div>
             </SidebarMenuButton>
           </Link>

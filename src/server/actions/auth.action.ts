@@ -11,16 +11,8 @@ import { buildErrorValidationResDetail, zod } from '~/shared/libs/zod'
 import { authService } from '~/server/services/auth.service'
 
 const loginRequestSchema: ZodSchema<ILoginReq> = zod.object({
-  username: zod
-    .string()
-    .trim()
-    .max(50, 'Username must be less than 50 chars')
-    .min(1, 'Username is required'),
-  password: zod
-    .string()
-    .trim()
-    .max(50, 'Password must be less than 50 chars')
-    .min(1, 'Password is required'),
+  username: zod.string().trim().max(50, 'TOO_LONG').min(1, 'REQUIRED'),
+  password: zod.string().trim().max(50, 'TOO_LONG').min(1, 'REQUIRED'),
 })
 
 export async function loginAction(

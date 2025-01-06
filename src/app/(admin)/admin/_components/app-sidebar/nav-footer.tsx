@@ -37,7 +37,12 @@ export function NavFooter() {
                 <span className='truncate font-semibold'>{admin.username}</span>
               )}
             </div>
-            <LuLogOut className='mr-2' onClick={logoutAction} />
+            <div
+              onClick={logoutAction}
+              className='flex size-8 items-center justify-center rounded-md bg-transparent transition-colors hover:bg-destructive hover:text-destructive-foreground'
+            >
+              <LuLogOut />
+            </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

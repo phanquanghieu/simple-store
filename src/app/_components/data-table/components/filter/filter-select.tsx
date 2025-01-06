@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { LuListFilter } from 'react-icons/lu'
 
@@ -80,6 +81,8 @@ export function FilterSelect({
     table.setGlobalFilter({ [queryField]: null })
   }
 
+  const t = useTranslations()
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -110,10 +113,10 @@ export function FilterSelect({
       <PopoverContent className='w-fit max-w-md p-0' align='start'>
         <Command>
           {options.length > OPTION_LENGTH_SHOW_SEARCH && (
-            <CommandInput placeholder={'Search'} />
+            <CommandInput placeholder={t('Common.search')} />
           )}
           <CommandList className='max-h-full'>
-            <CommandEmpty>No results found</CommandEmpty>
+            <CommandEmpty>{t('Admin.Common.noResultFound')}</CommandEmpty>
             <CommandGroup className='max-h-[18.75rem] overflow-y-auto overflow-x-hidden truncate'>
               {options.map((option) => {
                 const isSelected = selectedOptionValuesSet.has(option.value)
@@ -140,7 +143,7 @@ export function FilterSelect({
                     onSelect={handleClear}
                     className='justify-center text-center'
                   >
-                    Clear
+                    {t('Common.clear')}
                   </CommandItem>
                 </CommandGroup>
               </>

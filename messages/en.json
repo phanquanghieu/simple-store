@@ -1,0 +1,61 @@
+{
+  "Admin": {
+    "Common": {
+      "Pagination": {
+        "pageOf": "Page {page} of {total}",
+        "rowSelected": "{count} of {total} rows selected",
+        "rowsPerPage": "Rows per page"
+      },
+      "noResultFound": "No result found"
+    },
+    "LoginPage": {
+      "FormError": {
+        "INVALID_CREDENTIALS": "Username or password is incorrect",
+        "password": {
+          "REQUIRED": "Password is required",
+          "TOO_LONG": "Password must be less than 50 characters"
+        },
+        "username": {
+          "REQUIRED": "Username is required",
+          "TOO_LONG": "Username must be less than 50 characters"
+        }
+      },
+      "description": "Enter your username and password to sign in",
+      "orContinueWith": "Or continue with",
+      "password": "Password",
+      "signIn": "Sign In",
+      "username": "Username"
+    },
+    "SideBar": {
+      "attributes": "Attributes",
+      "brands": "Brands",
+      "categories": "Categories",
+      "collections": "Collections",
+      "customers": "Customers",
+      "general": "General",
+      "groups": "Groups",
+      "home": "Home",
+      "inventories": "Inventories",
+      "orders": "Orders",
+      "products": "Products",
+      "settings": "Settings"
+    }
+  },
+  "Common": {
+    "Language": {
+      "en": "English",
+      "vi": "Vietnamese"
+    },
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading",
+    "reset": "Reset",
+    "save": "Save",
+    "search": "Search",
+    "update": "Update"
+  },
+  "Shop": {}
+}

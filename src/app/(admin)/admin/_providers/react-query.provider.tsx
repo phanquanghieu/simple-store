@@ -52,7 +52,7 @@ function getQueryClient() {
   }
 }
 
-export default function ReactQueryProvider({ children }: PropsWithChildren) {
+export function ReactQueryProvider({ children }: PropsWithChildren) {
   const queryClient = getQueryClient()
 
   return (

@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { PropsWithChildren } from 'react'
 import { LuSearch, LuX } from 'react-icons/lu'
 
@@ -15,13 +16,14 @@ export function DataTableFilter({ children }: PropsWithChildren) {
   const globalFilter = table.getState().globalFilter
   const hasFilter = !isEmpty(compact(values(globalFilter)))
 
+  const t = useTranslations()
   return (
     <>
       <Input
         className='w-48'
         variant={'icon'}
         variantSize={'sm'}
-        placeholder='Search...'
+        placeholder={t('Common.search')}
         icon={<LuSearch />}
         value={globalFilter.search ?? ''}
         onChange={(event) => {

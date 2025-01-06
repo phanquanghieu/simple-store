@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment, useEffect, useState } from 'react'
@@ -29,11 +30,13 @@ export function NavMain({ menuItems }: { menuItems: IMenuItem[] }) {
     setPathname(_pathname)
   }, [_pathname])
 
+  const t = useTranslations()
+
   return (
     <SidebarGroup>
       <SidebarMenu>
         {menuItems.map((menuItem) => (
-          <Fragment key={menuItem.title}>
+          <Fragment key={menuItem.url}>
             {menuItem.subMenuItems ? (
               <Collapsible
                 asChild
@@ -48,24 +51,24 @@ export function NavMain({ menuItems }: { menuItems: IMenuItem[] }) {
                 <SidebarMenuItem>
                   <Link href={menuItem.url}>
                     <SidebarMenuButton
-                      tooltip={menuItem.title}
+                      tooltip={t(menuItem.title)}
                       isActive={pathname === menuItem.url}
                     >
                       {menuItem.icon && <menuItem.icon />}
-                      {menuItem.title}
+                      {t(menuItem.title)}
                       <LuChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                     </SidebarMenuButton>
                   </Link>
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {menuItem.subMenuItems?.map((subMenuItem) => (
-                        <SidebarMenuSubItem key={subMenuItem.title}>
+                        <SidebarMenuSubItem key={subMenuItem.url}>
                           <SidebarMenuSubButton
                             asChild
                             isActive={pathname === subMenuItem.url}
                           >
                             <Link href={subMenuItem.url}>
-                              {subMenuItem.title}
+                              {t(subMenuItem.title)}
                             </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
@@ -77,11 +80,11 @@ export function NavMain({ menuItems }: { menuItems: IMenuItem[] }) {
             ) : (
               <Link href={menuItem.url}>
                 <SidebarMenuButton
-                  tooltip={menuItem.title}
+                  tooltip={t(menuItem.title)}
                   isActive={pathname === menuItem.url}
                 >
                   {menuItem.icon && <menuItem.icon />}
-                  {menuItem.title}
+                  {t(menuItem.title)}
                 </SidebarMenuButton>
               </Link>
             )}

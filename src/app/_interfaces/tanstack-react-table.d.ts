@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactNode } from 'react'
 
 import { RowData } from '@tanstack/react-table'

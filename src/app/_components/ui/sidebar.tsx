@@ -23,7 +23,7 @@ import { useIsMobile } from '~/app/_hooks/use-mobile'
 
 import { cn } from '~/app/_libs/utils'
 
-const SIDEBAR_LOCAL_STORAGE_KEY = 'ss-sidebar'
+const SIDEBAR_LOCAL_STORAGE_NAME = 'ss-sidebar'
 const SIDEBAR_WIDTH = '16rem'
 const SIDEBAR_WIDTH_MOBILE = '18rem'
 const SIDEBAR_WIDTH_ICON = '3rem'
@@ -63,7 +63,7 @@ const SidebarProvider = React.forwardRef<
 
   const [open, _setOpen] = React.useState(defaultOpen)
   const [_open, setOpen] = useLocalStorage(
-    SIDEBAR_LOCAL_STORAGE_KEY,
+    SIDEBAR_LOCAL_STORAGE_NAME,
     defaultOpen,
   )
   React.useEffect(() => {

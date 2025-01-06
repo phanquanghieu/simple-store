@@ -1,6 +1,5 @@
 import { PropsWithChildren } from 'react'
 
-import ReactQueryProvider from '~/app/_components/providers/react-query-provider'
 import {
   SidebarInset,
   SidebarProvider,
@@ -8,6 +7,7 @@ import {
 } from '~/app/_components/ui/sidebar'
 
 import { AppSidebar } from '~/app/(admin)/admin/_components/app-sidebar/app-sidebar'
+import { ReactQueryProvider } from '~/app/(admin)/admin/_providers/react-query.provider'
 
 import LanguageToggle from '../_components/language-toggle'
 import Notification from '../_components/notification'
@@ -24,8 +24,8 @@ export default function Layout({ children }: PropsWithChildren) {
               <SidebarTrigger />
             </div>
             <div className='flex items-center px-3'>
-              <LanguageToggle />
               <ThemeToggle hideBorder />
+              <LanguageToggle hideBorder />
               <Notification />
             </div>
           </header>

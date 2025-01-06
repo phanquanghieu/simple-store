@@ -1,0 +1,60 @@
+{
+  "Admin": {
+    "Common": {
+      "Pagination": {
+        "pageOf": "Trang {page} trong tổng số {total}",
+        "rowSelected": "{count} trong số {total} hàng đã được chọn",
+        "rowsPerPage": "Số hàng trên mỗi trang"
+      },
+      "noResultFound": "Không tìm thấy kết quả"
+    },
+    "LoginPage": {
+      "FormError": {
+        "INVALID_CREDENTIALS": "Tên người dùng hoặc mật khẩu không chính xác",
+        "password": {
+          "REQUIRED": "Mật khẩu là bắt buộc",
+          "TOO_LONG": "Mật khẩu phải ít hơn 50 ký tự"
+        },
+        "username": {
+          "REQUIRED": "Tên người dùng là bắt buộc",
+          "TOO_LONG": "Tên người dùng phải ít hơn 50 ký tự"
+        }
+      },
+      "description": "Nhập tên người dùng và mật khẩu để đăng nhập",
+      "orContinueWith": "Hoặc tiếp tục với",
+      "password": "Mật khẩu",
+      "signIn": "Đăng nhập",
+      "username": "Tên người dùng"
+    },
+    "SideBar": {
+      "attributes": "Thuộc tính",
+      "brands": "Thương hiệu",
+      "categories": "Thể loại",
+      "collections": "Bộ sưu tập",
+      "customers": "Khách hàng",
+      "general": "Tổng quan",
+      "groups": "Nhóm",
+      "home": "Trang chủ",
+      "inventories": "Hàng tồn kho",
+      "orders": "Đơn đặt hàng",
+      "products": "Sản phẩm",
+      "settings": "Cài đặt"
+    }
+  },
+  "Common": {
+    "Language": {
+      "en": "Tiếng Anh",
+      "vi": "Tiếng Việt"
+    },
+    "cancel": "Hủy bỏ",
+    "clear": "Xóa",
+    "create": "Tạo mới",
+    "delete": "Xóa bỏ",
+    "edit": "Chỉnh sửa",
+    "loading": "Đang tải",
+    "reset": "Cài lại",
+    "save": "Lưu",
+    "search": "Tìm kiếm",
+    "update": "Cập nhật"
+  }
+}

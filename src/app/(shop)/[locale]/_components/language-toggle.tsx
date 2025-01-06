@@ -11,19 +11,17 @@ import {
   DropdownMenuTrigger,
 } from '~/app/_components/ui/dropdown-menu'
 
-import { TLocale, locales, setCookieAdminLocate } from '~/app/_i18n'
+import { Link, locales, usePathname } from '~/app/_i18n'
 
 export default function LanguageToggle({
   hideBorder = false,
 }: {
   hideBorder?: boolean
 }) {
-  const t = useTranslations()
   const currLocale = useLocale()
+  const pathname = usePathname()
 
-  const handleChangeLanguage = async (locale: TLocale) => {
-    await setCookieAdminLocate(locale)
-  }
+  const t = useTranslations()
 
   return (
     <DropdownMenu>
@@ -34,13 +32,11 @@ export default function LanguageToggle({
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         {locales.map((locale) => (
-          <DropdownMenuItem
-            key={locale}
-            onClick={() => handleChangeLanguage(locale)}
-            disabled={locale === currLocale}
-          >
-            {t(`Common.Language.${locale}`)}
-          </DropdownMenuItem>
+          <Link key={locale} href={pathname} locale={locale}>
+            <DropdownMenuItem disabled={locale === currLocale}>
+              {t(`Common.Language.${locale}`)}
+            </DropdownMenuItem>
+          </Link>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

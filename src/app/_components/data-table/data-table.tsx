@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { LuRotateCw } from 'react-icons/lu'
 
@@ -156,6 +157,8 @@ export function DataTable<IData extends object>({
     setRowSelection?.({})
   }
 
+  const t = useTranslations()
+
   return (
     <DataTableContext.Provider value={{ table }}>
       <div className='space-y-2'>
@@ -246,7 +249,9 @@ export function DataTable<IData extends object>({
                     colSpan={table.getAllColumns().length}
                     className='h-96 text-center text-lg text-muted-foreground'
                   >
-                    {isFetching ? 'Loading...' : 'No results found.'}
+                    {isFetching
+                      ? t('Common.loading')
+                      : t('Admin.Common.noResultFound')}
                   </TableCell>
                 </TableRow>
               )}

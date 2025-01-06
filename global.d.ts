@@ -1,10 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-declare namespace JSX {
-  export import Element = React.JSX.Element
-}
+import { MessageKeys, NestedKeyOf } from 'next-intl'
+import { NextRequest } from 'next/server'
 
-declare interface INextRouteParams<IParam = object> {
-  params: Promise<IParam>
-}
+import en from './messages/en.json'
 
-declare type INextRouteArgs = [any, INextRouteParams] //  [NextRequest, INextRouteParams]
+declare global {
+  interface INextRouteParams<IParam = object> {
+    params: Promise<IParam>
+  }
+
+  type INextRouteArgs = [NextRequest, INextRouteParams]
+
+  type TMessages = typeof en
+
+  interface IntlMessages extends TMessages {}
+
+  type TMessageKey = MessageKeys<IntlMessages, NestedKeyOf<TMessages>>
+}

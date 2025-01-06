@@ -14,8 +14,9 @@ import {
   UnauthorizedException,
 } from '../common/exceptions/exceptions'
 
-export const COOKIE_KEY_JWT_ADMIN = 'ss-jwt-admin'
-export const COOKIE_KEY_ADMIN_AUTHENTICATED = 'ss-admin-authenticated'
+const COOKIE_EXPIRED_IN = '1000d'
+export const COOKIE_NAME_ADMIN_JWT = 'ss-admin-jwt'
+export const COOKIE_NAME_ADMIN_AUTHENTICATED = 'ss-admin-authenticated'
 
 interface IJwtPayloadAdmin {
   username: string
@@ -26,27 +27,27 @@ export const authService = {
       username !== process.env.ADMIN_USERNAME ||
       password !== process.env.ADMIN_PASSWORD
     ) {
-      throw new BadRequestException('Username or password is incorrect')
+      throw new BadRequestException('INVALID_CREDENTIALS')
     }
 
     const jwtToken = sign(
       { admin: { username: process.env.ADMIN_USERNAME } as IJwtPayloadAdmin },
       process.env.JWT_SECRET!,
       {
-        expiresIn: '1000d',
+        expiresIn: COOKIE_EXPIRED_IN,
       },
     )
     const expiredAt = (decode(jwtToken) as JwtPayload).exp! * 1000
 
     const cookiesStore = await cookies()
-    cookiesStore.set(COOKIE_KEY_JWT_ADMIN, jwtToken, {
+    cookiesStore.set(COOKIE_NAME_ADMIN_JWT, jwtToken, {
       httpOnly: true,
       path: '/api/admin',
       secure: false,
       expires: expiredAt,
     })
 
-    cookiesStore.set(COOKIE_KEY_ADMIN_AUTHENTICATED, 'true', {
+    cookiesStore.set(COOKIE_NAME_ADMIN_AUTHENTICATED, 'true', {
       httpOnly: false,
       path: '/',
       secure: false,
@@ -56,12 +57,12 @@ export const authService = {
 
   logout: async () => {
     const cookiesStore = await cookies()
-    cookiesStore.set(COOKIE_KEY_JWT_ADMIN, '', {
+    cookiesStore.set(COOKIE_NAME_ADMIN_JWT, '', {
       path: '/api/admin',
       maxAge: 0,
     })
 
-    cookiesStore.set(COOKIE_KEY_ADMIN_AUTHENTICATED, '', {
+    cookiesStore.set(COOKIE_NAME_ADMIN_AUTHENTICATED, '', {
       path: '/',
       maxAge: 0,
     })
@@ -69,7 +70,7 @@ export const authService = {
 
   verifyJwt: async (): Promise<IJwtPayloadAdmin> => {
     const cookiesStore = await cookies()
-    const jwtToken = cookiesStore.get(COOKIE_KEY_JWT_ADMIN)?.value
+    const jwtToken = cookiesStore.get(COOKIE_NAME_ADMIN_JWT)?.value
     if (!jwtToken) {
       throw new UnauthorizedException()
     }
@@ -90,6 +91,6 @@ export const authService = {
 
   checkIsAuthenticated: async (): Promise<boolean> => {
     const cookiesStore = await cookies()
-    return cookiesStore.get(COOKIE_KEY_ADMIN_AUTHENTICATED)?.value === 'true'
+    return cookiesStore.get(COOKIE_NAME_ADMIN_AUTHENTICATED)?.value === 'true'
   },
 }
