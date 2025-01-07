@@ -23,10 +23,33 @@ export const zodt = {
   defaultWhenEmpty: (d: any) => (val: unknown) => (isEmpty(val) ? d : val),
 }
 
+export enum E_ZOD_ERROR_CODE {
+  REQUIRED = 'REQUIRED',
+  TOO_BIG = 'TOO_BIG',
+  TOO_LONG = 'TOO_LONG',
+  TOO_SHORT = 'TOO_SHORT',
+  TOO_SMALL = 'TOO_SMALL',
+}
+
 const errorMap: z.ZodErrorMap = (error, ctx) => {
-  return {
-    message: `${error.code}#${ctx.defaultError}`,
+  let message = error.message ?? ctx.defaultError
+
+  if (error.code === 'too_small') {
+    if (error.type === 'number' || error.type === 'bigint') {
+      message = `${E_ZOD_ERROR_CODE.TOO_SMALL}#${error.minimum}`
+    } else {
+      message = `${E_ZOD_ERROR_CODE.TOO_SHORT}#${error.minimum}`
+    }
   }
+  if (error.code === 'too_big') {
+    if (error.type === 'number' || error.type === 'bigint') {
+      message = `${E_ZOD_ERROR_CODE.TOO_BIG}#${error.maximum}`
+    } else {
+      message = `${E_ZOD_ERROR_CODE.TOO_LONG}#${error.maximum}`
+    }
+  }
+
+  return { message }
 }
 
 z.setErrorMap(errorMap)

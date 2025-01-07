@@ -11,7 +11,7 @@ import {
   E_COMMON_ROW_ACTION_TYPE,
 } from '~/app/_components/data-table/data-table.interface'
 
-import { useThrottledCallback } from '~/app/_hooks/use-throttled-callback'
+import { useThrottledCallback } from '~/app/_hooks/common/use-throttled-callback'
 
 import { Badge } from '../../ui/badge'
 import { Button } from '../../ui/button'

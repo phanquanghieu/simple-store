@@ -1,6 +1,13 @@
 {
   "Admin": {
     "Common": {
+      "FormError": {
+        "REQUIRED": "This field is required",
+        "TOO_BIG": "This field must be less than {v1}",
+        "TOO_LONG": "This field must be less than {v1} characters",
+        "TOO_SHORT": "This field must be at least {v1} characters",
+        "TOO_SMALL": "This field must be at least {v1}"
+      },
       "Pagination": {
         "pageOf": "Page {page} of {total}",
         "rowSelected": "{count} of {total} rows selected",
@@ -8,7 +15,7 @@
       },
       "noResultFound": "No result found"
     },
-    "LoginPage": {
+    "Login": {
       "FormError": {
         "INVALID_CREDENTIALS": "Username or password is incorrect",
         "password": {
@@ -25,6 +32,15 @@
       "password": "Password",
       "signIn": "Sign In",
       "username": "Username"
+    },
+    "Product": {
+      "createProduct": "Create Product",
+      "name": "Name",
+      "slug": "Slug",
+      "description": "Description",
+      "price": "Price",
+      "compareAtPrice": "Compare-At Price",
+      "status": "Status"
     },
     "SideBar": {
       "attributes": "Attributes",

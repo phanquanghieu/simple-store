@@ -17,6 +17,26 @@ const Card = React.forwardRef<
 ))
 Card.displayName = 'Card'
 
+const CardS = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { title?: React.ReactNode }
+>(({ children, title, className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'rounded-xl bg-card p-4 text-card-foreground shadow',
+      className,
+    )}
+    {...props}
+  >
+    {title && (
+      <div className='mb-3 text-base font-medium leading-none'>{title}</div>
+    )}
+    {children}
+  </div>
+))
+CardS.displayName = 'CardS'
+
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -73,4 +93,12 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = 'CardFooter'
 
-export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardS,
+  CardTitle,
+}

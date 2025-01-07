@@ -19,7 +19,7 @@ import {
   TooltipTrigger,
 } from '~/app/_components/ui/tooltip'
 
-import { useIsMobile } from '~/app/_hooks/use-mobile'
+import { useIsMobile } from '~/app/_hooks/common/use-mobile'
 
 import { cn } from '~/app/_libs/utils'
 
@@ -120,7 +120,7 @@ const SidebarProvider = React.forwardRef<
             } as React.CSSProperties
           }
           className={cn(
-            'group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar',
+            'group/sidebar-wrapper flex min-h-svh w-full bg-background2 has-[[data-variant=inset]]:bg-sidebar',
             className,
           )}
           ref={ref}
@@ -300,7 +300,7 @@ const SidebarInset = React.forwardRef<
     <main
       ref={ref}
       className={cn(
-        'relative h-full w-full bg-background',
+        'relative h-full w-full bg-background2',
         'transition-[padding] duration-200 ease-linear peer-data-[state=collapsed]:pl-[--sidebar-width-icon] peer-data-[state=expanded]:pl-[--sidebar-width]',
         'peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow',
         className,

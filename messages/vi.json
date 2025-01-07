@@ -1,6 +1,13 @@
 {
   "Admin": {
     "Common": {
+      "FormError": {
+        "REQUIRED": "Trường này là bắt buộc",
+        "TOO_BIG": "Trường này phải nhỏ hơn {v1}",
+        "TOO_LONG": "Trường này phải ít hơn {v1} ký tự",
+        "TOO_SHORT": "Trường này phải có ít nhất {v1} ký tự",
+        "TOO_SMALL": "Trường này phải lớn hơn hoặc bằng {v1}"
+      },
       "Pagination": {
         "pageOf": "Trang {page} trong tổng số {total}",
         "rowSelected": "{count} trong số {total} hàng đã được chọn",
@@ -8,7 +15,7 @@
       },
       "noResultFound": "Không tìm thấy kết quả"
     },
-    "LoginPage": {
+    "Login": {
       "FormError": {
         "INVALID_CREDENTIALS": "Tên người dùng hoặc mật khẩu không chính xác",
         "password": {
@@ -25,6 +32,15 @@
       "password": "Mật khẩu",
       "signIn": "Đăng nhập",
       "username": "Tên người dùng"
+    },
+    "Product": {
+      "compareAtPrice": "Giá so sánh",
+      "createProduct": "Tạo sản phẩm",
+      "description": "Mô tả",
+      "name": "Tên",
+      "price": "Giá",
+      "slug": "Slug",
+      "status": "Trạng thái"
     },
     "SideBar": {
       "attributes": "Thuộc tính",

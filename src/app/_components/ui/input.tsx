@@ -5,7 +5,7 @@ import { VariantProps, cva } from 'class-variance-authority'
 import { cn } from '~/app/_libs/utils'
 
 const inputVariants = cva(
-  'flex w-full rounded-md border border-input bg-transparent text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+  'invalid: flex w-full rounded-md border border-input bg-background text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
   {
     variants: {
       variant: {
@@ -17,10 +17,15 @@ const inputVariants = cva(
         sm: 'h-8 px-3 py-1',
         lg: 'h-10 px-4 py-1',
       },
+      isError: {
+        false: '',
+        true: 'border-destructive ring-destructive focus-visible:ring-destructive',
+      },
     },
     defaultVariants: {
       variant: 'default',
       variantSize: 'default',
+      isError: false,
     },
   },
 )
@@ -32,12 +37,14 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ icon, className, variant, variantSize, type, ...props }, ref) => {
+  ({ icon, className, variant, variantSize, isError, type, ...props }, ref) => {
     return (
       <div className='relative'>
         <input
           type={type}
-          className={cn(inputVariants({ variantSize, variant, className }))}
+          className={cn(
+            inputVariants({ variantSize, variant, isError, className }),
+          )}
           ref={ref}
           {...props}
         />

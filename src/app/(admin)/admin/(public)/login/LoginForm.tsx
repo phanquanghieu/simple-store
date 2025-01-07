@@ -29,7 +29,7 @@ export default function LoginForm() {
               id='username'
               name='username'
               defaultValue={loginState.data.username}
-              placeholder={t('Admin.LoginPage.username')}
+              placeholder={t('Admin.Login.username')}
               type='text'
               autoCapitalize='none'
               autoCorrect='off'
@@ -37,7 +37,7 @@ export default function LoginForm() {
             <p className='text-[0.8rem] font-medium text-destructive'>
               {loginState.detail?.username?.[0] &&
                 t(
-                  `Admin.LoginPage.FormError.username.${loginState.detail?.username?.[0]}` as TMessageKey,
+                  `Admin.Login.FormError.username.${loginState.detail?.username?.[0]}` as TMessageKey,
                 )}
             </p>
           </div>
@@ -46,7 +46,7 @@ export default function LoginForm() {
               id='password'
               name='password'
               defaultValue={loginState.data.password}
-              placeholder={t('Admin.LoginPage.password')}
+              placeholder={t('Admin.Login.password')}
               type='password'
               autoCapitalize='none'
               autoCorrect='off'
@@ -54,19 +54,19 @@ export default function LoginForm() {
             <p className='text-[0.8rem] font-medium text-destructive'>
               {loginState.detail?.password?.[0] &&
                 t(
-                  `Admin.LoginPage.FormError.password.${loginState.detail?.password?.[0]}` as TMessageKey,
+                  `Admin.Login.FormError.password.${loginState.detail?.password?.[0]}` as TMessageKey,
                 )}
             </p>
           </div>
           <p className='text-[0.8rem] font-medium text-destructive'>
             {loginState.detail?._error?.[0] &&
               t(
-                `Admin.LoginPage.FormError.${loginState.detail?._error?.[0]}` as TMessageKey,
+                `Admin.Login.FormError.${loginState.detail?._error?.[0]}` as TMessageKey,
               )}
           </p>
           <Button type='submit' disabled={isLoading}>
             {isLoading ? <Spinner /> : <div className='h-4 w-4' />}
-            {t('Admin.LoginPage.signIn')}
+            {t('Admin.Login.signIn')}
             <div className='h-4 w-4' />
           </Button>
         </div>
@@ -77,7 +77,7 @@ export default function LoginForm() {
         </div>
         <div className='relative flex justify-center text-xs uppercase'>
           <span className='bg-primary-foreground px-2'>
-            {t('Admin.LoginPage.orContinueWith')}
+            {t('Admin.Login.orContinueWith')}
           </span>
         </div>
       </div>

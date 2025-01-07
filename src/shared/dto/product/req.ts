@@ -7,6 +7,18 @@ export interface IGetProductQuery extends IListQuery {
   totalVariants?: number
 }
 
+export interface ICreateProductBody {
+  categoryId: string | null
+  brandId: string | null
+  name: string
+  slug: string
+  description: string
+  price: string
+  compareAtPrice: string
+  totalVariants: number
+  status: Extract<E_PRODUCT_STATUS, 'ACTIVE' | 'DRAFT'>
+}
+
 export enum E_BULK_PRODUCT_TYPE {
   ACTIVE = 'ACTIVE',
   DRAFT = 'DRAFT',
