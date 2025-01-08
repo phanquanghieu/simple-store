@@ -7,14 +7,12 @@ import {
   adminGuard,
   bodyValidator,
   idParamValidator,
-  listQueryValidator,
 } from '~/server/middlewares'
 
 export async function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
     idParamValidator,
-    listQueryValidator(productService.GET_SORTABLE_FIELDS),
     productService.getOne,
   )
 }

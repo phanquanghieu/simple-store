@@ -34,12 +34,13 @@
       "username": "Username"
     },
     "Product": {
-      "createProduct": "Create Product",
-      "name": "Name",
-      "slug": "Slug",
-      "description": "Description",
-      "price": "Price",
       "compareAtPrice": "Compare-At Price",
+      "createProduct": "Create Product",
+      "description": "Description",
+      "editProduct": "Edit Product",
+      "name": "Name",
+      "price": "Price",
+      "slug": "Slug",
       "status": "Status"
     },
     "SideBar": {

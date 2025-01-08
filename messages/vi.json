@@ -37,6 +37,7 @@
       "compareAtPrice": "Giá so sánh",
       "createProduct": "Tạo sản phẩm",
       "description": "Mô tả",
+      "editProduct": "Chỉnh sửa sản phẩm",
       "name": "Tên",
       "price": "Giá",
       "slug": "Slug",

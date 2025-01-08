@@ -48,7 +48,7 @@ export default function Page() {
       name: '',
       slug: '',
       description: '',
-      price: '',
+      price: '443.44',
       compareAtPrice: '',
       status: E_PRODUCT_STATUS.ACTIVE,
     },
@@ -60,7 +60,7 @@ export default function Page() {
     console.log(values)
   }
 
-  console.log(form)
+  console.log(form.getValues())
   const t = useTranslations()
 
   return (

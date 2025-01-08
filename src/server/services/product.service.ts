@@ -12,7 +12,6 @@ import {
   IAdminCtx,
   IAdminCtxBody,
   IAdminCtxParam,
-  IAdminCtxParamQuery,
   IAdminCtxQuery,
 } from '../core/ctx'
 import { prisma } from '../infra/db'
@@ -46,11 +45,13 @@ export const productService = {
     return OkListRes(products, total)
   },
 
-  getOne: async ({
-    param,
-    query,
-  }: IAdminCtxParamQuery<IIdParam, IPaginationQuery>) => {
-    return OkRes({ id: param, query })
+  getOne: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
+    const product = await prisma.product
+      .findUniqueOrThrow({ where: { id } })
+      .catch(() => {
+        throw new NotFoundException('Product not found')
+      })
+    return OkRes(product)
   },
 
   create: async ({
