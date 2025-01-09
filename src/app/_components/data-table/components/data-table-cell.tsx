@@ -1,15 +1,12 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { ReactNode } from 'react'
-import { LuPen, LuTrash } from 'react-icons/lu'
+import { PropsWithChildren } from 'react'
 
 import { CellContext } from '@tanstack/react-table'
 
-import {
-  E_COLUMN_ID,
-  E_COMMON_ROW_ACTION_TYPE,
-} from '~/app/_components/data-table/data-table.interface'
+import { E_COLUMN_ID } from '~/app/_components/data-table/data-table.interface'
 
 import { useThrottledCallback } from '~/app/_hooks/common/use-throttled-callback'
 
@@ -19,6 +16,8 @@ import { Checkbox } from '../../ui/checkbox'
 
 export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   const { column, getValue, row } = props
+
+  const t = useTranslations()
 
   if (column.id === E_COLUMN_ID.SELECT) {
     return (
@@ -69,9 +68,10 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   }
 
   if (meta?.cellType === 'badge') {
+    const metaCellBadge = meta.cellBadge?.[getValue<string>()]
     return (
-      <Badge variant={meta.cellBadge?.[getValue<string>()] ?? 'secondary'}>
-        {getValue<string>()}
+      <Badge variant={metaCellBadge?.variant ?? 'secondary'}>
+        {metaCellBadge && t(metaCellBadge.label)}
       </Badge>
     )
   }
@@ -93,8 +93,6 @@ function DataTableCellAction<IData>({
   return (
     <div className='-mx-1 flex'>
       {rowActionDefs?.map(({ type, icon, actionLink }) => {
-        const Icon = DEFAULT_ROW_ACTION_ICON[type] ?? icon
-
         if (actionLink) {
           return (
             <Link key={type} href={actionLink?.(row.original) ?? '#'}>
@@ -103,7 +101,7 @@ function DataTableCellAction<IData>({
                 variant={'ghost'}
                 className='hover:bg-secondary'
               >
-                {Icon}
+                {icon}
               </Button>
             </Link>
           )
@@ -111,11 +109,12 @@ function DataTableCellAction<IData>({
           return (
             <DataTableCellActionButton
               key={type}
-              Icon={Icon}
               onClick={() => {
                 setRowAction?.({ row, type: type })
               }}
-            />
+            >
+              {icon}
+            </DataTableCellActionButton>
           )
         }
       })}
@@ -124,12 +123,9 @@ function DataTableCellAction<IData>({
 }
 
 function DataTableCellActionButton({
-  Icon,
+  children,
   onClick,
-}: {
-  Icon: ReactNode
-  onClick: () => void
-}) {
+}: PropsWithChildren<{ onClick: () => void }>) {
   const onClickThrottled = useThrottledCallback(onClick, 2000)
   return (
     <Button
@@ -138,15 +134,7 @@ function DataTableCellActionButton({
       className='hover:bg-secondary'
       onClick={onClickThrottled}
     >
-      {Icon}
+      {children}
     </Button>
   )
-}
-
-const DEFAULT_ROW_ACTION_ICON: Record<
-  E_COMMON_ROW_ACTION_TYPE | string,
-  ReactNode
-> = {
-  UPDATE: <LuPen className='text-info' />,
-  DELETE: <LuTrash className='text-destructive' />,
 }

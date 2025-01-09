@@ -36,11 +36,13 @@ export function FilterSelect({
   queryField,
   options,
   isSingleSelect = false,
+  isOptionLabelMessageKey = false,
 }: {
-  title: string
+  title: TMessageKey
   queryField: string
   options: IOption[]
   isSingleSelect?: boolean
+  isOptionLabelMessageKey?: boolean
 }) {
   const { table } = useTable()
   const optionValues = useMemo(() => options.map((x) => x.value), [options])
@@ -88,7 +90,7 @@ export function FilterSelect({
       <PopoverTrigger asChild>
         <Button variant='outline' size='sm' className='border-dashed px-2'>
           <LuListFilter />
-          {title}
+          {t(title)}
           {selectedOptionValuesSet.size > 0 && (
             <>
               <Separator orientation='vertical' className='h-4' />
@@ -102,7 +104,9 @@ export function FilterSelect({
                       variant='secondary'
                       className='rounded-sm px-1 font-normal'
                     >
-                      {option.label}
+                      {isOptionLabelMessageKey
+                        ? t(option.label as TMessageKey)
+                        : option.label}
                     </Badge>
                   ))}
               </div>
@@ -130,7 +134,11 @@ export function FilterSelect({
                       variant={isSingleSelect ? 'circle' : 'default'}
                       checked={isSelected}
                     />
-                    <span>{option.label}</span>
+                    <span>
+                      {isOptionLabelMessageKey
+                        ? t(option.label as TMessageKey)
+                        : option.label}
+                    </span>
                   </CommandItem>
                 )
               })}

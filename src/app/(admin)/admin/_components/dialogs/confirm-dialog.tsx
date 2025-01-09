@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { AlertDialogProps } from '@radix-ui/react-alert-dialog'
 
 import {
@@ -13,10 +15,10 @@ import { Button, ButtonProps } from '~/app/_components/ui/button'
 import { Spinner } from '~/app/_components/ui/spinner'
 
 export function ConfirmDialog({
-  title = 'Are you absolutely sure?',
+  title,
   description,
-  cancelTitle = 'Cancel',
-  actionTitle = 'Save',
+  cancelTitle,
+  actionTitle,
   actionVariant = 'default',
   isActionPending = false,
   onAction,
@@ -30,22 +32,26 @@ export function ConfirmDialog({
   isActionPending?: boolean
   onAction?: () => Promise<void>
 } & AlertDialogProps) {
+  const t = useTranslations()
+
   return (
     <AlertDialog {...props}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogTitle>{title ?? t('Common.areYouSure')}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelTitle}</AlertDialogCancel>
+          <AlertDialogCancel>
+            {cancelTitle ?? t('Common.cancel')}
+          </AlertDialogCancel>
           <Button
             variant={actionVariant}
             onClick={onAction}
             disabled={isActionPending}
           >
             {isActionPending && <Spinner />}
-            {actionTitle}
+            {actionTitle ?? t('Common.save')}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

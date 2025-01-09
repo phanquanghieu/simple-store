@@ -20,7 +20,7 @@ export interface ICreateProductBody {
 }
 
 export enum E_BULK_PRODUCT_TYPE {
-  ACTIVE = 'ACTIVE',
+  ACTIVATE = 'ACTIVATE',
   DRAFT = 'DRAFT',
   ARCHIVE = 'ARCHIVE',
   DELETE = 'DELETE',

@@ -49,8 +49,9 @@ export const productService = {
     const product = await prisma.product
       .findUniqueOrThrow({ where: { id } })
       .catch(() => {
-        throw new NotFoundException('Product not found')
+        throw new NotFoundException()
       })
+
     return OkRes(product)
   },
 
@@ -64,7 +65,7 @@ export const productService = {
 
   delete: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
     await prisma.product.findUniqueOrThrow({ where: { id } }).catch(() => {
-      throw new NotFoundException('Product not found')
+      throw new NotFoundException()
     })
 
     await prisma.product.delete({ where: { id } })
@@ -74,7 +75,7 @@ export const productService = {
 
   bulk: async ({ body: { ids, type } }: IAdminCtxBody<IBulkProductBody>) => {
     switch (type) {
-      case E_BULK_PRODUCT_TYPE.ACTIVE: {
+      case E_BULK_PRODUCT_TYPE.ACTIVATE: {
         await prisma.product.updateMany({
           where: { id: { in: ids } },
           data: { status: E_PRODUCT_STATUS.ACTIVE },
@@ -107,4 +108,3 @@ export const productService = {
     return OkRes(true)
   },
 }
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

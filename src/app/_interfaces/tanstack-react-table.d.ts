@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ReactNode } from 'react'
-
 import { RowData } from '@tanstack/react-table'
 
 import {
@@ -21,14 +19,20 @@ declare module '@tanstack/react-table' {
   }
   interface ColumnMeta<TData extends RowData, TValue> {
     sizePercent?: number
-    headerTitle?: ReactNode
+    headerTitle?: TMessageKey | null
     cellType?: 'text' | 'datetime' | 'date' | 'link' | 'money' | 'badge'
     cellLink?: (row: TData) => string
     cellAction?: {
       rowActionDefs?: IRowActionDef<TData>[]
       setRowAction?: (row: IRowAction<TData>) => void
     }
-    cellBadge?: Record<string, BadgeProps['variant']>
+    cellBadge?: Record<
+      string,
+      {
+        variant: BadgeProps['variant']
+        label: TMessageKey
+      }
+    >
   }
   type GlobalFilterState = Record<
     string,

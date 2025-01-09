@@ -17,12 +17,7 @@ export default function ShopPage() {
     <div className='grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 sm:p-20'>
       <div>Shop</div>
       <LanguageToggle />
-      <Button
-        className={cn()}
-        onClick={() => toast({ description: 'dd', title: 'dd' })}
-      >
-        {t('Common.update')}
-      </Button>
+      <Button className={cn()}>{t('Common.update')}</Button>
       <Link href={'/admin'}>admin</Link>
     </div>
   )

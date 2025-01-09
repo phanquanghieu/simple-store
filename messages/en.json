@@ -1,6 +1,20 @@
 {
   "Admin": {
     "Common": {
+      "Api": {
+        "Error": {
+          "BadRequest": "Bad request",
+          "InternalServerError": "Something went wrong. Please try again later",
+          "NotFound": "Not found"
+        },
+        "Success": {
+          "BULK_DELETE": "Bulk delete successfully",
+          "BULK_UPDATE": "Bulk update successfully",
+          "CREATE": "Create successfully",
+          "DELETE": "Delete successfully",
+          "UPDATE": "Update successfully"
+        }
+      },
       "FormError": {
         "REQUIRED": "This field is required",
         "TOO_BIG": "This field must be less than {v1}",
@@ -34,14 +48,40 @@
       "username": "Username"
     },
     "Product": {
+      "BulkAction": {
+        "Confirm": {
+          "ACTIVATE": "Set {count} products as active?",
+          "ARCHIVE": "Archive {count} products?",
+          "DELETE": "Delete {count} products?",
+          "DRAFT": "Set {count} products as draft?"
+        },
+        "Label": {
+          "ACTIVATE": "Set as Active",
+          "ARCHIVE": "Archive",
+          "DELETE": "Delete",
+          "DRAFT": "Set as Draft"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Delete this product?"
+        }
+      },
+      "Status": {
+        "ACTIVE": "Active",
+        "ARCHIVED": "Archived",
+        "DRAFT": "Draft"
+      },
       "compareAtPrice": "Compare-At Price",
       "createProduct": "Create Product",
       "description": "Description",
       "editProduct": "Edit Product",
       "name": "Name",
       "price": "Price",
+      "products": "Products",
       "slug": "Slug",
-      "status": "Status"
+      "status": "Status",
+      "totalVariants": "Total Variants"
     },
     "SideBar": {
       "attributes": "Attributes",
@@ -63,11 +103,15 @@
       "en": "English",
       "vi": "Vietnamese"
     },
+    "areYouSure": "Are you sure?",
+    "bulk": "Bulk",
     "cancel": "Cancel",
     "clear": "Clear",
     "create": "Create",
+    "createdAt": "Created At",
     "delete": "Delete",
     "edit": "Edit",
+    "id": "ID",
     "loading": "Loading",
     "reset": "Reset",
     "save": "Save",

@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { PropsWithChildren } from 'react'
 
 import {
@@ -13,7 +14,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import { toast } from '~/app/_hooks/use-toast'
 
-function makeQueryClient() {
+function makeQueryClient(t: TTranslationFn) {
   return new QueryClient({
     defaultOptions: {
       queries: {
@@ -23,18 +24,22 @@ function makeQueryClient() {
       },
       mutations: {
         onError(error) {
+          const errorMessageKey =
+            `Admin.Common.Api.Error.${error.message}` as TTranslationFnKey
           toast({
             variant: 'destructive',
-            title: error.message,
+            title: t.has(errorMessageKey) ? t(errorMessageKey) : error.message,
           })
         },
       },
     },
     queryCache: new QueryCache({
       onError(error) {
+        const errorMessageKey =
+          `Admin.Common.Api.Error.${error.message}` as TTranslationFnKey
         toast({
           variant: 'destructive',
-          title: error.message,
+          title: t.has(errorMessageKey) ? t(errorMessageKey) : error.message,
         })
       },
     }),
@@ -43,17 +48,18 @@ function makeQueryClient() {
 
 let browserQueryClient: QueryClient | undefined = undefined
 
-function getQueryClient() {
+function getQueryClient(t: TTranslationFn) {
   if (isServer) {
-    return makeQueryClient()
+    return makeQueryClient(t)
   } else {
-    if (!browserQueryClient) browserQueryClient = makeQueryClient()
+    if (!browserQueryClient) browserQueryClient = makeQueryClient(t)
     return browserQueryClient
   }
 }
 
 export function ReactQueryProvider({ children }: PropsWithChildren) {
-  const queryClient = getQueryClient()
+  const t = useTranslations()
+  const queryClient = getQueryClient(t)
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -70,7 +70,7 @@ export class HttpException extends Error {
 
 export class BadRequestException extends HttpException {
   constructor(option?: IExceptionOption) {
-    const { message = 'Bad Request', detail } =
+    const { message = 'BadRequest', detail } =
       HttpException.extractMessageAndDetail(option)
     super(400, 'BadRequest', message, detail)
   }
@@ -94,7 +94,7 @@ export class ForbiddenException extends HttpException {
 
 export class NotFoundException extends HttpException {
   constructor(option?: IExceptionOption) {
-    const { message = 'Not Found', detail } =
+    const { message = 'NotFound', detail } =
       HttpException.extractMessageAndDetail(option)
     super(404, 'NotFound', message, detail)
   }
@@ -102,7 +102,7 @@ export class NotFoundException extends HttpException {
 
 export class InternalServerErrorException extends HttpException {
   constructor(option?: IExceptionOption) {
-    const { message = 'Internal Server Error', detail } =
+    const { message = 'InternalServerError', detail } =
       HttpException.extractMessageAndDetail(option)
     super(500, 'InternalServerError', message, detail)
   }

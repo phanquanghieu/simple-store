@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
-import { LuGrip, LuPen, LuTrash } from 'react-icons/lu'
+import { useTranslations } from 'next-intl'
+import { LuGrip } from 'react-icons/lu'
 
 import { entries } from 'lodash'
 
@@ -23,6 +23,8 @@ export function DataTableBulkAction() {
     .map(([rowId]) => rowId)
   const countSelectedRow = selectedRowIds.length
 
+  const t = useTranslations()
+
   if (countSelectedRow === 0) {
     return null
   }
@@ -32,7 +34,7 @@ export function DataTableBulkAction() {
       <PopoverTrigger asChild>
         <Button variant='outline' size='sm' className='px-2'>
           <LuGrip />
-          {'Bulk'}
+          {t('Common.bulk')}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-fit p-0' align='end'>
@@ -49,19 +51,8 @@ export function DataTableBulkAction() {
                     })
                   }
                 >
-                  {DEFAULT_BULK_ACTION[bulkActionDef.type] ? (
-                    <>
-                      {DEFAULT_BULK_ACTION[bulkActionDef.type].icon}
-                      <span>
-                        {DEFAULT_BULK_ACTION[bulkActionDef.type].label}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      {bulkActionDef.icon && <>{bulkActionDef.icon}</>}
-                      <span>{bulkActionDef.label}</span>
-                    </>
-                  )}
+                  {bulkActionDef.icon && <>{bulkActionDef.icon}</>}
+                  <span>{bulkActionDef.label && t(bulkActionDef.label)}</span>
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -71,15 +62,3 @@ export function DataTableBulkAction() {
     </Popover>
   )
 }
-
-const DEFAULT_BULK_ACTION: Record<string, { label: string; icon: ReactNode }> =
-  {
-    UPDATE: {
-      label: 'Update',
-      icon: <LuPen className='text-info' />,
-    },
-    DELETE: {
-      label: 'Delete',
-      icon: <LuTrash className='text-destructive' />,
-    },
-  }

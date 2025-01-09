@@ -13,18 +13,8 @@ import { TIdParam } from '~/shared/dto/_common/req'
 import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs/zod'
 
 import { Button } from '~/app/_components/ui/button'
-import { Card, CardS } from '~/app/_components/ui/card'
-import { Input } from '~/app/_components/ui/input'
-import { Label } from '~/app/_components/ui/label'
+import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/app/_components/ui/select'
-import { Textarea } from '~/app/_components/ui/textarea'
 
 import { useGetOneProduct } from '~/app/_apis/admin/product/useGetOneProduct'
 
@@ -126,25 +116,6 @@ export default function Page() {
                       />
                     </Grid>
                   </CardS>
-                  <Card className='p-4'>
-                    <Label className='text-muted-foreground'>Title</Label>
-                    <Input placeholder='title' isError />
-                    <Label className='text-muted-foreground'>description</Label>
-                    <Textarea placeholder='title' className='' />
-                    <Label className='text-muted-foreground'>select</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent side='bottom'>
-                        {[1, 3].map((pageSize) => (
-                          <SelectItem key={pageSize} value={`${pageSize}`}>
-                            {pageSize}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </Card>
                 </Grid>
               </Col>
 

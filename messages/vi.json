@@ -1,6 +1,20 @@
 {
   "Admin": {
     "Common": {
+      "Api": {
+        "Error": {
+          "BadRequest": "Yêu cầu không hợp lệ",
+          "InternalServerError": "Đã xảy ra lỗi. Vui lòng thử lại sau",
+          "NotFound": "Không tìm thấy"
+        },
+        "Success": {
+          "BULK_DELETE": "Xóa hàng loạt thành công",
+          "BULK_UPDATE": "Cập nhật hàng loạt thành công",
+          "CREATE": "Tạo thành công",
+          "DELETE": "Xóa thành công",
+          "UPDATE": "Cập nhật thành công"
+        }
+      },
       "FormError": {
         "REQUIRED": "Trường này là bắt buộc",
         "TOO_BIG": "Trường này phải nhỏ hơn {v1}",
@@ -34,14 +48,40 @@
       "username": "Tên người dùng"
     },
     "Product": {
+      "BulkAction": {
+        "Confirm": {
+          "ACTIVATE": "Đặt {count} sản phẩm là đang hoạt động?",
+          "ARCHIVE": "Lưu trữ {count} sản phẩm?",
+          "DELETE": "Xóa {count} sản phẩm?",
+          "DRAFT": "Đặt {count} sản phẩm làm bản nháp?"
+        },
+        "Label": {
+          "ACTIVATE": "Đặt là đang hoạt động",
+          "ARCHIVE": "Lưu trữ",
+          "DELETE": "Xóa bỏ",
+          "DRAFT": "Đặt làm bản nháp"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Xóa sản phẩm này?"
+        }
+      },
+      "Status": {
+        "ACTIVE": "Đang hoạt động",
+        "ARCHIVED": "Đã lưu trữ",
+        "DRAFT": "Bản nháp"
+      },
       "compareAtPrice": "Giá so sánh",
       "createProduct": "Tạo sản phẩm",
       "description": "Mô tả",
       "editProduct": "Chỉnh sửa sản phẩm",
       "name": "Tên",
       "price": "Giá",
+      "products": "Danh sách sản phẩm",
       "slug": "Slug",
-      "status": "Trạng thái"
+      "status": "Trạng thái",
+      "totalVariants": "Tổng số biến thể"
     },
     "SideBar": {
       "attributes": "Thuộc tính",
@@ -63,11 +103,15 @@
       "en": "Tiếng Anh",
       "vi": "Tiếng Việt"
     },
+    "areYouSure": "Bạn có chắc không?",
+    "bulk": "Hàng loạt",
     "cancel": "Hủy bỏ",
     "clear": "Xóa",
     "create": "Tạo mới",
+    "createdAt": "Thời gian tạo",
     "delete": "Xóa bỏ",
     "edit": "Chỉnh sửa",
+    "id": "ID",
     "loading": "Đang tải",
     "reset": "Cài lại",
     "save": "Lưu",

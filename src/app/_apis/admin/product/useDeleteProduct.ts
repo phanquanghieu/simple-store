@@ -19,7 +19,7 @@ export function useDeleteProduct() {
     onSuccess() {
       toast({
         variant: 'success',
-        title: `Delete product success`,
+        title: 'Admin.Common.Api.Success.DELETE',
       })
     },
   })

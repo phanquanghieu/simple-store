@@ -20,34 +20,24 @@ export interface IColumnDefConfig<IData> {
   actionEditLink?: (row: IData) => string
 }
 
-export enum E_COMMON_BULK_ACTION_TYPE {
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE',
-}
-
 export interface IBulkActionDef {
-  label?: string
+  label?: TMessageKey
   icon?: ReactNode
-  type: E_COMMON_BULK_ACTION_TYPE | string
+  type: string
 }
 
 export interface IBulkAction {
   rowIds: string[]
-  type: E_COMMON_BULK_ACTION_TYPE | string
-}
-
-export enum E_COMMON_ROW_ACTION_TYPE {
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE',
+  type: string
 }
 
 export interface IRowActionDef<IData> {
   icon?: ReactNode
-  type: E_COMMON_BULK_ACTION_TYPE | string
+  type: string
   actionLink?: (row: IData) => string
 }
 
 export interface IRowAction<TData> {
   row: Row<TData>
-  type: E_COMMON_ROW_ACTION_TYPE | string
+  type: string
 }

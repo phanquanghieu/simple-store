@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 // Inspired by react-hot-toast library
 import * as React from 'react'
 
@@ -169,8 +170,14 @@ function toast({ ...props }: Toast) {
   }
 }
 
+type TToastTranslatedProps = Omit<Toast, 'title' | 'description'> & {
+  title?: TMessageKey
+  description?: TMessageKey
+}
+
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
+  const t = useTranslations()
 
   React.useEffect(() => {
     listeners.push(setState)
@@ -182,9 +189,25 @@ function useToast() {
     }
   }, [state])
 
+  const toastTranslated = React.useCallback(
+    (props: TToastTranslatedProps) => {
+      const title = props.title ? t(props.title) : props.title
+      const description = props.description
+        ? t(props.description)
+        : props.description
+
+      return toast({
+        ...props,
+        title,
+        description,
+      })
+    },
+    [t],
+  )
+
   return {
     ...state,
-    toast,
+    toast: toastTranslated,
     dismiss: (toastId?: string) => dispatch({ type: 'DISMISS_TOAST', toastId }),
   }
 }

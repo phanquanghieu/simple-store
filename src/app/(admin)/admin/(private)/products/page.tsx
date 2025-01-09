@@ -12,9 +12,9 @@ import { IProductRes } from '~/shared/dto/product/res'
 import { FilterSelect } from '~/app/_components/data-table/components/filter/filter-select'
 import { DataTable } from '~/app/_components/data-table/data-table'
 import {
-  E_COMMON_BULK_ACTION_TYPE,
-  E_COMMON_ROW_ACTION_TYPE,
-} from '~/app/_components/data-table/data-table.interface'
+  BULK_ACTION_COMMON,
+  ROW_ACTION_COMMON,
+} from '~/app/_components/data-table/data-table.constant'
 import {
   IDataTableConfig,
   useDataTable,
@@ -55,16 +55,10 @@ export default function Page() {
   const handleBulkAction = async () => {
     if (!bulkAction) return
 
-    const BULK_TYPE_MAP: Record<string, E_BULK_PRODUCT_TYPE> = {
-      [E_BULK_ACTION_TYPE.ACTIVE]: E_BULK_PRODUCT_TYPE.ACTIVE,
-      [E_BULK_ACTION_TYPE.ARCHIVE]: E_BULK_PRODUCT_TYPE.ARCHIVE,
-      [E_BULK_ACTION_TYPE.DRAFT]: E_BULK_PRODUCT_TYPE.DRAFT,
-      [E_BULK_ACTION_TYPE.DELETE]: E_BULK_PRODUCT_TYPE.DELETE,
-    }
     mutateBulkProducts(
       {
         ids: bulkAction.rowIds,
-        type: BULK_TYPE_MAP[bulkAction.type],
+        type: bulkAction.type as E_BULK_PRODUCT_TYPE,
       },
       {
         onSettled: () => {
@@ -92,7 +86,7 @@ export default function Page() {
 
   return (
     <>
-      <PageHeader title='Products'>
+      <PageHeader title={t('Admin.Product.products')}>
         <Link href='/admin/products/create'>
           <Button>{t('Common.create')}</Button>
         </Link>
@@ -110,12 +104,13 @@ export default function Page() {
         filterNode={
           <>
             <FilterSelect
-              title='Status'
+              title={'Admin.Product.status'}
               queryField='status'
               options={STATUS_OPTIONS}
+              isOptionLabelMessageKey
             />
             <FilterSelect
-              title='Total Variants'
+              title={'Admin.Product.totalVariants'}
               queryField='totalVariants'
               options={TOTAL_VARIANTS_OPTIONS}
               isSingleSelect
@@ -125,33 +120,41 @@ export default function Page() {
       />
 
       <ConfirmDialog
-        open={bulkAction?.type === E_BULK_ACTION_TYPE.ACTIVE}
-        title={`Activate ${bulkAction?.rowIds.length} products?`}
+        open={bulkAction?.type === E_BULK_PRODUCT_TYPE.ACTIVATE}
+        title={t('Admin.Product.BulkAction.Confirm.ACTIVATE', {
+          count: bulkAction?.rowIds.length,
+        })}
         isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
 
       <ConfirmDialog
-        open={bulkAction?.type === E_BULK_ACTION_TYPE.DRAFT}
-        title={`Draft ${bulkAction?.rowIds.length} products?`}
+        open={bulkAction?.type === E_BULK_PRODUCT_TYPE.DRAFT}
+        title={t('Admin.Product.BulkAction.Confirm.DRAFT', {
+          count: bulkAction?.rowIds.length,
+        })}
         isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
 
       <ConfirmDialog
-        open={bulkAction?.type === E_BULK_ACTION_TYPE.ARCHIVE}
-        title={`Archive ${bulkAction?.rowIds.length} products?`}
+        open={bulkAction?.type === E_BULK_PRODUCT_TYPE.ARCHIVE}
+        title={t('Admin.Product.BulkAction.Confirm.ARCHIVE', {
+          count: bulkAction?.rowIds.length,
+        })}
         isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
 
       <ConfirmDialog
-        open={bulkAction?.type === E_BULK_ACTION_TYPE.DELETE}
-        title={`Delete ${bulkAction?.rowIds.length} products?`}
-        actionTitle={'Delete'}
+        open={bulkAction?.type === E_BULK_PRODUCT_TYPE.DELETE}
+        title={t('Admin.Product.BulkAction.Confirm.DELETE', {
+          count: bulkAction?.rowIds.length,
+        })}
+        actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
         isActionPending={isBulkProductsPending}
         onOpenChange={resetBulkAction}
@@ -160,8 +163,8 @@ export default function Page() {
 
       <ConfirmDialog
         open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
-        title={`Delete this product?`}
-        actionTitle={'Delete'}
+        title={t('Admin.Product.RowAction.Confirm.DELETE')}
+        actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
         isActionPending={isDeleteProductPending}
         onOpenChange={resetRowAction}
@@ -171,39 +174,32 @@ export default function Page() {
   )
 }
 
-enum E_BULK_ACTION_TYPE {
-  ACTIVE = 'ACTIVE',
-  DRAFT = 'DRAFT',
-  ARCHIVE = 'ARCHIVE',
-  DELETE = E_COMMON_BULK_ACTION_TYPE.DELETE,
-}
 enum E_ROW_ACTION_TYPE {
-  UPDATE = E_COMMON_ROW_ACTION_TYPE.UPDATE,
-  DELETE = E_COMMON_ROW_ACTION_TYPE.DELETE,
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
 }
 const dataTableConfig: IDataTableConfig<IProductRes> = {
   columnDefs: [
     {
-      accessorKey: 'id',
-      meta: {
-        headerTitle: 'ID',
-      },
-    },
-    {
       accessorKey: 'name',
       enableSorting: true,
       meta: {
+        headerTitle: 'Admin.Product.name',
         cellType: 'link',
         cellLink: (row) => `/admin/products/${row.id}`,
       },
     },
     {
       accessorKey: 'description',
+      meta: {
+        headerTitle: 'Admin.Product.description',
+      },
     },
     {
       accessorKey: 'price',
       enableSorting: true,
       meta: {
+        headerTitle: 'Admin.Product.price',
         cellType: 'money',
       },
     },
@@ -211,22 +207,36 @@ const dataTableConfig: IDataTableConfig<IProductRes> = {
       accessorKey: 'status',
       enableSorting: true,
       meta: {
+        headerTitle: 'Admin.Product.status',
         cellType: 'badge',
         cellBadge: {
-          [E_PRODUCT_STATUS.DRAFT]: 'info',
-          [E_PRODUCT_STATUS.ACTIVE]: 'success',
-          [E_PRODUCT_STATUS.ARCHIVED]: 'secondary',
+          [E_PRODUCT_STATUS.DRAFT]: {
+            variant: 'info',
+            label: 'Admin.Product.Status.DRAFT',
+          },
+          [E_PRODUCT_STATUS.ACTIVE]: {
+            variant: 'success',
+            label: 'Admin.Product.Status.ACTIVE',
+          },
+          [E_PRODUCT_STATUS.ARCHIVED]: {
+            variant: 'secondary',
+            label: 'Admin.Product.Status.ARCHIVED',
+          },
         },
       },
     },
     {
       accessorKey: 'totalVariants',
       enableSorting: true,
+      meta: {
+        headerTitle: 'Admin.Product.totalVariants',
+      },
     },
     {
       accessorKey: 'createdAt',
       enableSorting: true,
       meta: {
+        headerTitle: 'Common.createdAt',
         cellType: 'datetime',
       },
     },
@@ -235,46 +245,51 @@ const dataTableConfig: IDataTableConfig<IProductRes> = {
   filterDefs: FILTER_DEFS,
   bulkActionDefs: [
     {
-      label: 'Set as Active',
+      label: 'Admin.Product.BulkAction.Label.ACTIVATE',
       icon: <LuBox className='text-success' />,
-      type: E_BULK_ACTION_TYPE.ACTIVE,
+      type: E_BULK_PRODUCT_TYPE.ACTIVATE,
     },
     {
-      label: 'Set as Draft',
+      label: 'Admin.Product.BulkAction.Label.DRAFT',
       icon: <LuFilePen className='text-info' />,
-      type: E_BULK_ACTION_TYPE.DRAFT,
+      type: E_BULK_PRODUCT_TYPE.DRAFT,
     },
     {
-      label: 'Archive',
+      label: 'Admin.Product.BulkAction.Label.ARCHIVE',
       icon: <LuArchive />,
-      type: E_BULK_ACTION_TYPE.ARCHIVE,
+      type: E_BULK_PRODUCT_TYPE.ARCHIVE,
     },
-    { type: E_BULK_ACTION_TYPE.DELETE },
+    {
+      ...BULK_ACTION_COMMON.DELETE,
+      type: E_BULK_PRODUCT_TYPE.DELETE,
+    },
   ],
   rowActionDefs: [
     {
+      ...ROW_ACTION_COMMON.UPDATE,
       type: E_ROW_ACTION_TYPE.UPDATE,
       actionLink: (row) => `/admin/products/${row.id}`,
     },
-    { type: E_ROW_ACTION_TYPE.DELETE },
+
+    { ...ROW_ACTION_COMMON.DELETE, type: E_ROW_ACTION_TYPE.DELETE },
   ],
 }
 
-const STATUS_OPTIONS: IOption<E_PRODUCT_STATUS>[] = [
+const STATUS_OPTIONS: IOption<TMessageKey, E_PRODUCT_STATUS>[] = [
   {
-    label: 'Draft',
+    label: 'Admin.Product.Status.DRAFT',
     value: E_PRODUCT_STATUS.DRAFT,
   },
   {
-    label: 'Active',
+    label: 'Admin.Product.Status.ACTIVE',
     value: E_PRODUCT_STATUS.ACTIVE,
   },
   {
-    label: 'Inactive',
+    label: 'Admin.Product.Status.ARCHIVED',
     value: E_PRODUCT_STATUS.ARCHIVED,
   },
 ]
-const TOTAL_VARIANTS_OPTIONS: IOption<number>[] = [
+const TOTAL_VARIANTS_OPTIONS: IOption<string, number>[] = [
   {
     label: '1',
     value: 1,

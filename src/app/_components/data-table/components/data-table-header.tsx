@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { LuArrowDown, LuArrowUp, LuChevronsUpDown } from 'react-icons/lu'
 
 import { HeaderContext } from '@tanstack/react-table'
@@ -15,6 +16,8 @@ export function DataTableHeader<IData>({
   header,
   table,
 }: HeaderContext<IData, unknown>) {
+  const t = useTranslations()
+
   if (column.id === E_COLUMN_ID.SELECT) {
     return (
       <Checkbox
@@ -31,7 +34,9 @@ export function DataTableHeader<IData>({
   }
 
   const headerTitle = column.columnDef.meta?.headerTitle
-  const title = isUndefined(headerTitle) ? column.id : headerTitle
+  const title = isUndefined(headerTitle)
+    ? column.id
+    : headerTitle && t(headerTitle)
 
   if (column.getCanSort()) {
     return (
