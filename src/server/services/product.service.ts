@@ -6,6 +6,7 @@ import {
   IBulkProductBody,
   IGetProductQuery,
 } from '~/shared/dto/product/req'
+import { IProductRes } from '~/shared/dto/product/res'
 
 import { NotFoundException, OkListRes, OkRes, queryUtil } from '../common'
 import {
@@ -42,7 +43,7 @@ export const productService = {
       prisma.product.count({ where }),
     ])
 
-    return OkListRes(products, total)
+    return OkListRes(IProductRes.list(products), total)
   },
 
   getOne: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
@@ -52,7 +53,7 @@ export const productService = {
         throw new NotFoundException()
       })
 
-    return OkRes(product)
+    return OkRes(new IProductRes(product))
   },
 
   create: async ({
@@ -88,6 +89,7 @@ export const productService = {
           where: { id: { in: ids } },
           data: { status: E_PRODUCT_STATUS.DRAFT },
         })
+
         break
       }
       case E_BULK_PRODUCT_TYPE.ARCHIVE: {

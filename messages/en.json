@@ -83,6 +83,26 @@
       "status": "Status",
       "totalVariants": "Total Variants"
     },
+    "Brand": {
+      "BulkAction": {
+        "Confirm": {
+          "DELETE": "Delete {count} brands?"
+        },
+        "Label": {
+          "DELETE": "Delete"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Delete this brand?"
+        }
+      },
+      "createBrand": "Create Brand",
+      "editBrand": "Edit Brand",
+      "name": "Name",
+      "description": "Description",
+      "brands": "Brands"
+    },
     "SideBar": {
       "attributes": "Attributes",
       "brands": "Brands",
@@ -109,6 +129,7 @@
     "clear": "Clear",
     "create": "Create",
     "createdAt": "Created At",
+    "updatedAt": "Updated At",
     "delete": "Delete",
     "edit": "Edit",
     "id": "ID",

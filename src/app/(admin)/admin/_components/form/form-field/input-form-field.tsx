@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
-import { Input } from '~/app/_components/ui/input'
+import { Input, InputProps } from '~/app/_components/ui/input'
 
 import {
   FormControl,
@@ -17,12 +17,13 @@ export function InputFormField({
   label,
   placeholder,
   description,
+  ...props
 }: {
   name: string
   label?: TMessageKey
   placeholder?: TMessageKey
   description?: TMessageKey
-}) {
+} & InputProps) {
   const form = useFormContext()
 
   const t = useTranslations()
@@ -34,7 +35,11 @@ export function InputFormField({
         <FormItem>
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder && t(placeholder)} {...field} />
+            <Input
+              placeholder={placeholder && t(placeholder)}
+              {...field}
+              {...props}
+            />
           </FormControl>
           <FormDescription>{description && t(description)}</FormDescription>
           <FormMessage />

@@ -1,7 +1,13 @@
 import { Prisma } from '@prisma/client'
 
 import { IIdParam, IListQuery } from '~/shared/dto/_common/req'
-import { ICreateBrandBody, IUpdateBrandBody } from '~/shared/dto/brand/req'
+import {
+  E_BULK_BRAND_TYPE,
+  IBulkBrandBody,
+  ICreateBrandBody,
+  IUpdateBrandBody,
+} from '~/shared/dto/brand/req'
+import { IBrandRes } from '~/shared/dto/brand/res'
 
 import { NotFoundException, OkListRes, OkRes, queryUtil } from '../common'
 import {
@@ -16,6 +22,7 @@ export const brandService = {
   GET_SORTABLE_FIELDS: [
     Prisma.BrandScalarFieldEnum.id,
     Prisma.BrandScalarFieldEnum.name,
+    Prisma.BrandScalarFieldEnum.updatedAt,
     Prisma.BrandScalarFieldEnum.createdAt,
   ],
 
@@ -28,23 +35,29 @@ export const brandService = {
       prisma.brand.findMany({
         where,
         ...queryUtil.skipTakeOrder(query),
+        include: {
+          products: true,
+        },
       }),
       prisma.brand.count({ where }),
     ])
 
-    return OkListRes(brands, total)
+    return OkListRes(IBrandRes.list(brands), total)
   },
 
   getOne: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
     const brand = await prisma.brand
       .findUniqueOrThrow({
         where: { id },
+        include: {
+          products: true,
+        },
       })
       .catch(() => {
         throw new NotFoundException()
       })
 
-    return OkRes(brand)
+    return OkRes(new IBrandRes(brand))
   },
 
   create: async ({ body }: IAdminCtxBody<ICreateBrandBody>) => {
@@ -87,5 +100,19 @@ export const brandService = {
     })
 
     return OkRes(deleted)
+  },
+
+  bulk: async ({ body: { ids, type } }: IAdminCtxBody<IBulkBrandBody>) => {
+    switch (type) {
+      case E_BULK_BRAND_TYPE.DELETE: {
+        await prisma.brand.deleteMany({
+          where: { id: { in: ids } },
+        })
+
+        break
+      }
+    }
+
+    return OkRes(true)
   },
 }

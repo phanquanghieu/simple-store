@@ -1,6 +1,6 @@
 import { routeExecutor } from '~/server/core'
 
-import { categoryService } from '~/server/services/category.service'
+import { brandService } from '~/server/services/brand.service'
 
 import { UpdateBrandSchema } from '~/server/dto/brand/req'
 import {
@@ -13,7 +13,7 @@ export async function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
     idParamValidator,
-    categoryService.getOne,
+    brandService.getOne,
   )
 }
 
@@ -22,7 +22,7 @@ export async function PATCH(...args: INextRouteArgs) {
     adminGuard,
     idParamValidator,
     bodyValidator(UpdateBrandSchema),
-    categoryService.update,
+    brandService.update,
   )
 }
 
@@ -30,6 +30,6 @@ export async function DELETE(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
     idParamValidator,
-    categoryService.delete,
+    brandService.delete,
   )
 }

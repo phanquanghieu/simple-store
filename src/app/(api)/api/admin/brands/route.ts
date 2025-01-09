@@ -1,6 +1,6 @@
 import { routeExecutor } from '~/server/core'
 
-import { categoryService } from '~/server/services/category.service'
+import { brandService } from '~/server/services/brand.service'
 
 import { CreateBrandSchema } from '~/server/dto/brand/req'
 import {
@@ -12,8 +12,8 @@ import {
 export function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
-    listQueryValidator(categoryService.GET_SORTABLE_FIELDS),
-    categoryService.get,
+    listQueryValidator(brandService.GET_SORTABLE_FIELDS),
+    brandService.get,
   )
 }
 
@@ -21,6 +21,6 @@ export async function POST(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
     bodyValidator(CreateBrandSchema),
-    categoryService.create,
+    brandService.create,
   )
 }

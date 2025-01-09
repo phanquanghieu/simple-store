@@ -1,12 +1,9 @@
-import { E_PRODUCT_STATUS } from '@prisma/client'
+import { E_PRODUCT_STATUS, Product } from '@prisma/client'
 
-export interface IProductRes {
+export class IProductRes {
   id: string
   categoryId: string | null
   brandId: string | null
-  variantAttribute1Id: string | null
-  variantAttribute2Id: string | null
-  variantAttribute3Id: string | null
   name: string
   slug: string
   description: string
@@ -16,4 +13,23 @@ export interface IProductRes {
   status: E_PRODUCT_STATUS
   updatedAt: string
   createdAt: string
+
+  constructor(data: Product) {
+    this.id = data.id
+    this.categoryId = data.categoryId
+    this.brandId = data.brandId
+    this.name = data.name
+    this.slug = data.slug
+    this.description = data.description
+    this.price = data.price.toString()
+    this.compareAtPrice = data.compareAtPrice && data.compareAtPrice.toString()
+    this.totalVariants = data.totalVariants
+    this.status = data.status
+    this.updatedAt = data.updatedAt.toISOString()
+    this.createdAt = data.createdAt.toISOString()
+  }
+
+  static list(data: Product[]) {
+    return data.map((d) => new IProductRes(d))
+  }
 }

@@ -54,20 +54,30 @@ const colVariants = cva('col-span-1', {
       5: 'lg:col-span-5',
       6: 'lg:col-span-6',
     },
+    start: {
+      1: '',
+      2: 'lg:col-start-2',
+      3: 'lg:col-start-3',
+      4: 'lg:col-start-4',
+      5: 'lg:col-start-5',
+      6: 'lg:col-start-6',
+    },
   },
   defaultVariants: {
     col: 1,
+    start: 1,
   },
 })
 
 const Col = ({
   children,
   col,
+  start,
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof colVariants>) => {
   return (
-    <div className={cn(colVariants({ col }), className)} {...props}>
+    <div className={cn(colVariants({ col, start }), className)} {...props}>
       {children}
     </div>
   )

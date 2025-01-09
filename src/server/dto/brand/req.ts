@@ -1,3 +1,4 @@
+import { E_BULK_BRAND_TYPE } from '~/shared/dto/brand/req'
 import { zod } from '~/shared/libs/zod'
 
 export const CreateBrandSchema = zod.object({
@@ -6,3 +7,8 @@ export const CreateBrandSchema = zod.object({
 })
 
 export const UpdateBrandSchema = CreateBrandSchema.partial()
+
+export const BulkBrandBodySchema = zod.object({
+  ids: zod.array(zod.string().uuid()).min(1),
+  type: zod.nativeEnum(E_BULK_BRAND_TYPE),
+})
