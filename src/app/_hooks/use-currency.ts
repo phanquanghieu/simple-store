@@ -1,8 +1,6 @@
 import { useLocale } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 
-import { isNil } from 'lodash'
-
 import { useNumber } from './use-number'
 
 export function useCurrency() {
@@ -24,22 +22,12 @@ export function useCurrency() {
   }, [currencyCode])
 
   const formatCurrency = useCallback(
-    (value?: number | string | null) => {
-      let _value: number | `${number}`
-
-      if (isNil(value)) {
-        _value = 0
-      } else if (typeof value === 'string') {
-        _value = value as `${number}`
-      } else {
-        _value = value
-      }
-
+    (value: string | number) => {
       const formattedCurrency = new Intl.NumberFormat(locale, {
         style: 'currency',
         currency: currencyCode,
         currencyDisplay: 'narrowSymbol',
-      }).format(_value)
+      }).format(value as `${number}`)
 
       return formattedCurrency
     },
@@ -47,22 +35,12 @@ export function useCurrency() {
     [locale, currencyCode],
   )
 
-  const formatCurrencyWithoutSymbol = useCallback(
-    (value?: number | string | null) => {
-      let _value: number | `${number}`
-
-      if (isNil(value)) {
-        _value = 0
-      } else if (typeof value === 'string') {
-        _value = value as `${number}`
-      } else {
-        _value = value
-      }
-
+  const formatCurrencyNumberString = useCallback(
+    (value: number | string) => {
       const numberFormatParts = new Intl.NumberFormat(locale, {
         style: 'currency',
         currency: currencyCode,
-      }).formatToParts(_value)
+      }).formatToParts(value as `${number}`)
 
       const formattedCurrencyWithoutSymbol = numberFormatParts
         .filter((part) =>
@@ -116,7 +94,7 @@ export function useCurrency() {
   return {
     currencySymbol,
     formatCurrency,
-    formatCurrencyWithoutSymbol,
+    formatCurrencyNumberString,
     transformStringToCurrencyNumberString,
   }
 }

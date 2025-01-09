@@ -9,6 +9,7 @@ import { CellContext } from '@tanstack/react-table'
 import { E_COLUMN_ID } from '~/app/_components/data-table/data-table.interface'
 
 import { useThrottledCallback } from '~/app/_hooks/common/use-throttled-callback'
+import { useCurrency } from '~/app/_hooks/use-currency'
 
 import { Badge } from '../../ui/badge'
 import { Button } from '../../ui/button'
@@ -57,14 +58,7 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   }
 
   if (meta?.cellType === 'money') {
-    return (
-      <div>
-        {Intl.NumberFormat('en', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(parseFloat(getValue<string>()))}
-      </div>
-    )
+    return <DataTableCellMoney {...props} />
   }
 
   if (meta?.cellType === 'badge') {
@@ -81,6 +75,13 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
       {getValue<string>()}
     </div>
   )
+}
+
+function DataTableCellMoney<IData>({ getValue }: CellContext<IData, unknown>) {
+  const { formatCurrency } = useCurrency()
+  const value = getValue<string>()
+
+  return <div>{value && formatCurrency(value)}</div>
 }
 
 function DataTableCellAction<IData>({

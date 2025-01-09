@@ -8,6 +8,7 @@ import {
   FieldPath,
   FieldValues,
   FormProvider,
+  UseFormReturn,
   useFormContext,
 } from 'react-hook-form'
 
@@ -20,7 +21,25 @@ import { Label } from '~/app/_components/ui/label'
 
 import { cn } from '~/app/_libs/utils'
 
-const Form = FormProvider
+const Form = ({
+  children,
+  id,
+  form,
+  onSubmit,
+}: React.PropsWithChildren<{
+  id?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: UseFormReturn<any, any, any>
+  onSubmit: () => void
+}>) => {
+  return (
+    <FormProvider {...form}>
+      <form id={id} onSubmit={onSubmit}>
+        {children}
+      </form>
+    </FormProvider>
+  )
+}
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,

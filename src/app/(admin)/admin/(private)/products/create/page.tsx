@@ -14,10 +14,12 @@ import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
-import { InputFormField } from '../../../_components/form'
-import { Form } from '../../../_components/form/form'
-import { CurrencyFormField } from '../../../_components/form/form-field/currency-form-field'
-import { SelectFormField } from '../../../_components/form/form-field/select-form-field'
+import {
+  CurrencyFormField,
+  Form,
+  InputFormField,
+  SelectFormField,
+} from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
 const CreateProductFormSchema = zod.object({
@@ -30,18 +32,19 @@ const CreateProductFormSchema = zod.object({
 })
 
 type TCreateProductFormValue = z.infer<typeof CreateProductFormSchema>
+const defaultValues: TCreateProductFormValue = {
+  name: '',
+  slug: '',
+  description: '',
+  price: '0',
+  compareAtPrice: '',
+  status: E_PRODUCT_STATUS.ACTIVE,
+}
 
 export default function Page() {
   const form = useForm<TCreateProductFormValue>({
     resolver: zodResolver(CreateProductFormSchema),
-    defaultValues: {
-      name: '',
-      slug: '',
-      description: '',
-      price: '443.44',
-      compareAtPrice: '',
-      status: E_PRODUCT_STATUS.ACTIVE,
-    },
+    defaultValues,
     mode: 'onBlur',
   })
   const formId = useId()
@@ -65,57 +68,49 @@ export default function Page() {
       </PageHeader>
 
       <Container>
-        <Form {...form}>
-          <form id={formId} onSubmit={form.handleSubmit(onSubmit)}>
-            <Grid grid={3}>
-              <Col col={2}>
-                <Grid>
-                  <CardS>
-                    <Grid className='gap-3'>
-                      <InputFormField
-                        name='name'
-                        label={'Admin.Product.name'}
-                      />
-                      <InputFormField
-                        name='slug'
-                        label={'Admin.Product.slug'}
-                      />
-                      <InputFormField
-                        name='description'
-                        label={'Admin.Product.description'}
-                      />
-                    </Grid>
-                  </CardS>
-                  <CardS title={t('Admin.Product.price')}>
-                    <Grid grid={3}>
-                      <CurrencyFormField
-                        name='price'
-                        label={'Admin.Product.price'}
-                      />
-                      <CurrencyFormField
-                        name='compareAtPrice'
-                        label={'Admin.Product.compareAtPrice'}
-                      />
-                    </Grid>
-                  </CardS>
-                </Grid>
-              </Col>
-
-              <Col>
-                <Grid>
-                  <CardS title={t('Admin.Product.status')}>
-                    <SelectFormField
-                      name='status'
-                      options={[
-                        { label: 'Active', value: E_PRODUCT_STATUS.ACTIVE },
-                        { label: 'Draft', value: E_PRODUCT_STATUS.DRAFT },
-                      ]}
+        <Form id={formId} form={form} onSubmit={form.handleSubmit(onSubmit)}>
+          <Grid grid={3}>
+            <Col col={2}>
+              <Grid>
+                <CardS>
+                  <Grid className='gap-3'>
+                    <InputFormField name='name' label={'Admin.Product.name'} />
+                    <InputFormField name='slug' label={'Admin.Product.slug'} />
+                    <InputFormField
+                      name='description'
+                      label={'Admin.Product.description'}
                     />
-                  </CardS>
-                </Grid>
-              </Col>
-            </Grid>
-          </form>
+                  </Grid>
+                </CardS>
+                <CardS title={t('Admin.Product.price')}>
+                  <Grid grid={3}>
+                    <CurrencyFormField
+                      name='price'
+                      label={'Admin.Product.price'}
+                    />
+                    <CurrencyFormField
+                      name='compareAtPrice'
+                      label={'Admin.Product.compareAtPrice'}
+                    />
+                  </Grid>
+                </CardS>
+              </Grid>
+            </Col>
+
+            <Col>
+              <Grid>
+                <CardS title={t('Admin.Product.status')}>
+                  <SelectFormField
+                    name='status'
+                    options={[
+                      { label: 'Active', value: E_PRODUCT_STATUS.ACTIVE },
+                      { label: 'Draft', value: E_PRODUCT_STATUS.DRAFT },
+                    ]}
+                  />
+                </CardS>
+              </Grid>
+            </Col>
+          </Grid>
         </Form>
       </Container>
     </>
