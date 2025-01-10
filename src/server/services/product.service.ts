@@ -6,7 +6,7 @@ import {
   IBulkProductBody,
   IGetProductQuery,
 } from '~/shared/dto/product/req'
-import { IProductRes } from '~/shared/dto/product/res'
+import { IProductDetailRes, IProductRes } from '~/shared/dto/product/res'
 
 import { NotFoundException, OkListRes, OkRes, queryUtil } from '../common'
 import {
@@ -46,14 +46,14 @@ export const productService = {
     return OkListRes(IProductRes.list(products), total)
   },
 
-  getOne: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
+  getDetail: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
     const product = await prisma.product
-      .findUniqueOrThrow({ where: { id } })
+      .findUniqueOrThrow({ where: { id }, include: { brand: true } })
       .catch(() => {
         throw new NotFoundException()
       })
 
-    return OkRes(new IProductRes(product))
+    return OkRes(new IProductDetailRes(product))
   },
 
   create: async ({

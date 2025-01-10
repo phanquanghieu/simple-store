@@ -25,7 +25,7 @@ export function useGetBrands() {
   const query = { ...queryList, ...queryFilter }
 
   return useQuery({
-    queryKey: ['brands', query],
+    queryKey: ['brands', 'list', query],
     queryFn: () =>
       fetcherAdmin.get<IOkListRes<IBrandRes>>('/brands', { query }),
   })

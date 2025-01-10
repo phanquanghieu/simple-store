@@ -1,4 +1,6 @@
-import { E_PRODUCT_STATUS, Product } from '@prisma/client'
+import { E_PRODUCT_STATUS, Prisma, Product } from '@prisma/client'
+
+import { IBrandRes } from '../brand/res'
 
 export class IProductRes {
   id: string
@@ -31,5 +33,18 @@ export class IProductRes {
 
   static list(data: Product[]) {
     return data.map((d) => new IProductRes(d))
+  }
+}
+
+export class IProductDetailRes extends IProductRes {
+  brand: IBrandRes | null
+
+  constructor(
+    data: Prisma.ProductGetPayload<{
+      include: { brand: true }
+    }>,
+  ) {
+    super(data)
+    this.brand = data.brand && new IBrandRes(data.brand)
   }
 }

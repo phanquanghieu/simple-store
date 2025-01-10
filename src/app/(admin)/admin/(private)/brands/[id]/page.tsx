@@ -6,6 +6,7 @@ import { useId } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useToggle } from 'usehooks-ts'
 import { z } from 'zod'
 
 import { TIdParam } from '~/shared/dto/_common/req'
@@ -15,9 +16,11 @@ import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
-import { useGetOneBrand } from '~/app/_apis/admin/brand/useGetOneBrand'
+import { useDeleteBrand } from '~/app/_apis/admin/brand/useDeleteBrand'
+import { useGetDetailBrand } from '~/app/_apis/admin/brand/useGetDetailBrand'
 import { useUpdateBrand } from '~/app/_apis/admin/brand/useUpdateBrand'
 
+import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import { Form, InputFormField } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
@@ -35,9 +38,12 @@ const defaultValues: TUpdateBrandFormValue = {
 export default function Page() {
   const { id } = useParams<TIdParam>()
 
-  const { data: brand } = useGetOneBrand(id)
+  const { data: brand } = useGetDetailBrand(id)
 
-  const { mutate, isPending } = useUpdateBrand()
+  const { mutate: mutateUpdate, isPending: isUpdatePending } = useUpdateBrand()
+  const { mutate: mutateDelete, isPending: isDeletePending } = useDeleteBrand()
+
+  const [openDeleteDialog, toggleOpenDeleteDialog] = useToggle(false)
 
   const form = useForm<TUpdateBrandFormValue>({
     resolver: zodResolver(UpdateBrandFormSchema),
@@ -51,8 +57,8 @@ export default function Page() {
   const formId = useId()
   const router = useRouter()
 
-  function onSubmit(values: TUpdateBrandFormValue) {
-    mutate(
+  const onSubmit = (values: TUpdateBrandFormValue) => {
+    mutateUpdate(
       { id, body: values },
       {
         onSuccess: () => {
@@ -62,12 +68,27 @@ export default function Page() {
     )
   }
 
+  const handleDelete = () => {
+    mutateDelete(id, {
+      onSuccess: () => {
+        router.push('/admin/brands')
+      },
+    })
+  }
+
   const t = useTranslations()
 
   return (
     <>
       <PageHeader title={t('Admin.Brand.editBrand')} backUrl='/admin/brands'>
-        <Button type='submit' form={formId} disabled={isPending}>
+        <Button
+          variant={'destructive'}
+          disabled={isDeletePending}
+          onClick={toggleOpenDeleteDialog}
+        >
+          {t('Common.delete')}
+        </Button>
+        <Button type='submit' form={formId} disabled={isUpdatePending}>
           {t('Common.update')}
         </Button>
       </PageHeader>
@@ -91,6 +112,16 @@ export default function Page() {
           </Grid>
         </Form>
       </Container>
+
+      <ConfirmDialog
+        open={openDeleteDialog}
+        title={t('Admin.Brand.RowAction.Confirm.DELETE')}
+        actionTitle={t('Common.delete')}
+        actionVariant={'destructive'}
+        isActionPending={isDeletePending}
+        onOpenChange={toggleOpenDeleteDialog}
+        onAction={handleDelete}
+      />
     </>
   )
 }

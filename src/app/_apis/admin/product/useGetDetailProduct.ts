@@ -5,7 +5,7 @@ import { IProductRes } from '~/shared/dto/product/res'
 
 import { fetcherAdmin } from '../../fetcher'
 
-export function useGetOneProduct(id: string) {
+export function useGetDetailProduct(id: string) {
   return useQuery({
     queryKey: ['products', id],
     queryFn: () => fetcherAdmin.get<IOkRes<IProductRes>>(`/products/${id}`),

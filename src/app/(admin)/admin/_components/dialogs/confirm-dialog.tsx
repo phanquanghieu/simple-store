@@ -30,7 +30,7 @@ export function ConfirmDialog({
   actionTitle?: string
   actionVariant?: ButtonProps['variant']
   isActionPending?: boolean
-  onAction?: () => Promise<void>
+  onAction?: () => Promise<void> | void
 } & AlertDialogProps) {
   const t = useTranslations()
 

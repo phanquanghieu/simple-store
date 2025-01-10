@@ -15,7 +15,7 @@ export function useCreateBrand() {
     mutationFn: (body: ICreateBrandBody) =>
       fetcherAdmin.post<IOkRes<boolean>>('/brands', { body }),
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['brands'] })
+      queryClient.invalidateQueries({ queryKey: ['brands', 'list'] })
     },
     onSuccess() {
       toast({

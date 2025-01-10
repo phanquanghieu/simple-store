@@ -7,7 +7,7 @@ import {
   ICreateBrandBody,
   IUpdateBrandBody,
 } from '~/shared/dto/brand/req'
-import { IBrandRes } from '~/shared/dto/brand/res'
+import { IBrandDetailRes, IBrandRes } from '~/shared/dto/brand/res'
 
 import { NotFoundException, OkListRes, OkRes, queryUtil } from '../common'
 import {
@@ -35,9 +35,6 @@ export const brandService = {
       prisma.brand.findMany({
         where,
         ...queryUtil.skipTakeOrder(query),
-        include: {
-          products: true,
-        },
       }),
       prisma.brand.count({ where }),
     ])
@@ -45,7 +42,7 @@ export const brandService = {
     return OkListRes(IBrandRes.list(brands), total)
   },
 
-  getOne: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
+  getDetail: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
     const brand = await prisma.brand
       .findUniqueOrThrow({
         where: { id },
@@ -57,7 +54,7 @@ export const brandService = {
         throw new NotFoundException()
       })
 
-    return OkRes(new IBrandRes(brand))
+    return OkRes(new IBrandDetailRes(brand))
   },
 
   create: async ({ body }: IAdminCtxBody<ICreateBrandBody>) => {

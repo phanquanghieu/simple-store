@@ -14,7 +14,7 @@ export function useDeleteBrand() {
     mutationFn: (id: string) =>
       fetcherAdmin.delete<IOkRes<boolean>>(`/brands/${id}`),
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['brands'] })
+      queryClient.invalidateQueries({ queryKey: ['brands', 'list'] })
     },
     onSuccess() {
       toast({

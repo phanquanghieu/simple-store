@@ -1,4 +1,6 @@
-import { Brand } from '@prisma/client'
+import { Brand, Prisma } from '@prisma/client'
+
+import { IProductRes } from '../product/res'
 
 export class IBrandRes {
   id: string
@@ -17,5 +19,18 @@ export class IBrandRes {
 
   static list(data: Brand[]) {
     return data.map((d) => new IBrandRes(d))
+  }
+}
+
+export class IBrandDetailRes extends IBrandRes {
+  products: IProductRes[]
+
+  constructor(
+    data: Prisma.BrandGetPayload<{
+      include: { products: true }
+    }>,
+  ) {
+    super(data)
+    this.products = IProductRes.list(data.products)
   }
 }

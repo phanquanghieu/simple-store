@@ -31,10 +31,8 @@ import { PageHeader } from '../../_components/page-header'
 
 export default function Page() {
   const { data, isFetching, refetch } = useGetBrands()
-  const { mutate: mutateBulkBrands, isPending: isBulkBrandsPending } =
-    useBulkBrands()
-  const { mutate: mutateDeleteBrand, isPending: isDeleteBrandPending } =
-    useDeleteBrand()
+  const { mutate: mutateBulk, isPending: isBulkPending } = useBulkBrands()
+  const { mutate: mutateDelete, isPending: isDeletePending } = useDeleteBrand()
 
   const {
     columns,
@@ -51,7 +49,7 @@ export default function Page() {
   const handleBulkAction = async () => {
     if (!bulkAction) return
 
-    mutateBulkBrands(
+    mutateBulk(
       {
         ids: bulkAction.rowIds,
         type: bulkAction.type as E_BULK_BRAND_TYPE,
@@ -69,7 +67,7 @@ export default function Page() {
     if (!rowAction) return
 
     if (rowAction.type === E_ROW_ACTION_TYPE.DELETE) {
-      mutateDeleteBrand(rowAction.row.id, {
+      mutateDelete(rowAction.row.id, {
         onSettled: () => {
           resetRowAction()
           resetRowSelection()
@@ -106,7 +104,7 @@ export default function Page() {
         })}
         actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
-        isActionPending={isBulkBrandsPending}
+        isActionPending={isBulkPending}
         onOpenChange={resetBulkAction}
         onAction={handleBulkAction}
       />
@@ -116,7 +114,7 @@ export default function Page() {
         title={t('Admin.Brand.RowAction.Confirm.DELETE')}
         actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
-        isActionPending={isDeleteBrandPending}
+        isActionPending={isDeletePending}
         onOpenChange={resetRowAction}
         onAction={handleRowAction}
       />

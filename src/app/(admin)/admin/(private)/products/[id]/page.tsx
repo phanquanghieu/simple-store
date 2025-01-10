@@ -16,7 +16,7 @@ import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
-import { useGetOneProduct } from '~/app/_apis/admin/product/useGetOneProduct'
+import { useGetDetailProduct } from '~/app/_apis/admin/product/useGetDetailProduct'
 
 import {
   CurrencyFormField,
@@ -48,7 +48,7 @@ const defaultValues: TUpdateProductFormValue = {
 export default function Page() {
   const { id } = useParams<TIdParam>()
 
-  const { data: product } = useGetOneProduct(id)
+  const { data: product } = useGetDetailProduct(id)
 
   const form = useForm<TUpdateProductFormValue>({
     resolver: zodResolver(UpdateProductFormSchema),
