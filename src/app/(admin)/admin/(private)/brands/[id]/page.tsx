@@ -21,7 +21,11 @@ import { useGetDetailBrand } from '~/app/_apis/admin/brand/useGetDetailBrand'
 import { useUpdateBrand } from '~/app/_apis/admin/brand/useUpdateBrand'
 
 import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
-import { Form, InputFormField } from '../../../_components/form'
+import {
+  Form,
+  InputFormField,
+  RichTextFormField,
+} from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
 const UpdateBrandFormSchema = zod.object({
@@ -100,8 +104,12 @@ export default function Page() {
               <Grid>
                 <CardS>
                   <Grid className='gap-3'>
-                    <InputFormField name='name' label={'Admin.Brand.name'} />
                     <InputFormField
+                      name='name'
+                      label={'Admin.Brand.name'}
+                      autoFocus
+                    />
+                    <RichTextFormField
                       name='description'
                       label={'Admin.Brand.description'}
                     />

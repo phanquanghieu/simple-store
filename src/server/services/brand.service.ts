@@ -1,10 +1,11 @@
 import { Prisma } from '@prisma/client'
 
-import { IIdParam, IListQuery } from '~/shared/dto/_common/req'
+import { IIdParam } from '~/shared/dto/_common/req'
 import {
   E_BULK_BRAND_TYPE,
   IBulkBrandBody,
   ICreateBrandBody,
+  IGetBrandQuery,
   IUpdateBrandBody,
 } from '~/shared/dto/brand/req'
 import { IBrandDetailRes, IBrandRes } from '~/shared/dto/brand/res'
@@ -26,7 +27,7 @@ export const brandService = {
     Prisma.BrandScalarFieldEnum.createdAt,
   ],
 
-  get: async ({ query }: IAdminCtxQuery<IListQuery>) => {
+  get: async ({ query }: IAdminCtxQuery<IGetBrandQuery>) => {
     const where: Prisma.BrandWhereInput = {
       name: { contains: query.search ?? Prisma.skip },
     }

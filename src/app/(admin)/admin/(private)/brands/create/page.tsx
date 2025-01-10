@@ -16,7 +16,11 @@ import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
 import { useCreateBrand } from '~/app/_apis/admin/brand/useCreateBrand'
 
-import { Form, InputFormField } from '../../../_components/form'
+import {
+  Form,
+  InputFormField,
+  RichTextFormField,
+} from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
 const CreateBrandFormSchema = zod.object({
@@ -71,7 +75,7 @@ export default function Page() {
                       label={'Admin.Brand.name'}
                       autoFocus
                     />
-                    <InputFormField
+                    <RichTextFormField
                       name='description'
                       label={'Admin.Brand.description'}
                     />
