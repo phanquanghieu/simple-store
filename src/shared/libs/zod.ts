@@ -23,8 +23,14 @@ export const zodt = {
   defaultWhenEmpty: (d: any) => (val: unknown) => (isEmpty(val) ? d : val),
 }
 
+export const zodRegex = {
+  KEY: /^[a-z0-9_]+$/,
+}
+
 export enum E_ZOD_ERROR_CODE {
   REQUIRED = 'REQUIRED',
+  KEY_INVALID = 'KEY_INVALID',
+  UNIQUE = 'UNIQUE',
   TOO_BIG = 'TOO_BIG',
   TOO_LONG = 'TOO_LONG',
   TOO_SHORT = 'TOO_SHORT',

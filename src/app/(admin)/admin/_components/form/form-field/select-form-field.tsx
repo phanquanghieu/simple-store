@@ -26,12 +26,16 @@ export function SelectFormField({
   label,
   placeholder,
   description,
+  isOptionLabelMessageKey = false,
+  disabled = false,
 }: {
   name: string
   options: IOption[]
   label?: TMessageKey
   placeholder?: TMessageKey
   description?: TMessageKey
+  isOptionLabelMessageKey?: boolean
+  disabled?: boolean
 }) {
   const form = useFormContext()
 
@@ -45,13 +49,15 @@ export function SelectFormField({
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
             <Select onValueChange={field.onChange} {...field}>
-              <SelectTrigger ref={field.ref}>
+              <SelectTrigger ref={field.ref} disabled={disabled}>
                 <SelectValue placeholder={placeholder && t(placeholder)} />
               </SelectTrigger>
               <SelectContent side='bottom'>
                 {options.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    {isOptionLabelMessageKey
+                      ? t(option.label as TMessageKey)
+                      : option.label}
                   </SelectItem>
                 ))}
               </SelectContent>

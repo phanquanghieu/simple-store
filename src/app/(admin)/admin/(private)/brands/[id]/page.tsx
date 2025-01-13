@@ -29,8 +29,8 @@ import {
 import { PageHeader } from '../../../_components/page-header'
 
 const UpdateBrandFormSchema = zod.object({
-  name: zod.string().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
-  description: zod.string().max(5000),
+  name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
+  description: zod.string().trim().max(5000),
 })
 
 type TUpdateBrandFormValue = z.infer<typeof UpdateBrandFormSchema>

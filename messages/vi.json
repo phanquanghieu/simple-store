@@ -1,8 +1,62 @@
 {
   "Admin": {
+    "Attribute": {
+      "ApiException": {
+        "KEY_EXISTED": "Khóa đã tồn tại"
+      },
+      "BulkAction": {
+        "Confirm": {
+          "DELETE": "Xóa {count} thuộc tính?"
+        },
+        "Label": {
+          "DELETE": "Xóa bỏ"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Xóa thuộc tính này?"
+        }
+      },
+      "Type": {
+        "BOOLEAN": "Có hoặc không",
+        "COLOR": "Màu sắc",
+        "TEXT": "Chữ"
+      },
+      "addOption": "Thêm tùy chọn",
+      "attributes": "Thuộc tính",
+      "createAttribute": "Tạo thuộc tính",
+      "description": "Sự miêu tả",
+      "editAttribute": "Chỉnh sửa thuộc tính",
+      "key": "Chìa khóa",
+      "name": "Tên",
+      "optionKey": "Phím tùy chọn",
+      "optionName": "Tên tùy chọn",
+      "options": "Tùy chọn",
+      "type": "Kiểu"
+    },
+    "Brand": {
+      "BulkAction": {
+        "Confirm": {
+          "DELETE": "Xóa {count} thương hiệu?"
+        },
+        "Label": {
+          "DELETE": "Xóa bỏ"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Xóa thương hiệu này?"
+        }
+      },
+      "brands": "Thương hiệu",
+      "createBrand": "Tạo thương hiệu",
+      "description": "Sự miêu tả",
+      "editBrand": "Chỉnh sửa thương hiệu",
+      "name": "Tên"
+    },
     "Common": {
       "Api": {
-        "Error": {
+        "Exception": {
           "BadRequest": "Yêu cầu không hợp lệ",
           "InternalServerError": "Đã xảy ra lỗi. Vui lòng thử lại sau",
           "NotFound": "Không tìm thấy"
@@ -16,11 +70,13 @@
         }
       },
       "FormError": {
+        "KEY_INVALID": "Trường này chỉ được bao gồm các chữ cái từ a-z, chữ số và dấu gạch dưới",
         "REQUIRED": "Trường này là bắt buộc",
         "TOO_BIG": "Trường này phải nhỏ hơn {v1}",
         "TOO_LONG": "Trường này phải ít hơn {v1} ký tự",
         "TOO_SHORT": "Trường này phải có ít nhất {v1} ký tự",
-        "TOO_SMALL": "Trường này phải lớn hơn hoặc bằng {v1}"
+        "TOO_SMALL": "Trường này phải lớn hơn hoặc bằng {v1}",
+        "UNIQUE": "Trường này phải là duy nhất"
       },
       "Pagination": {
         "pageOf": "Trang {page} trong tổng số {total}",
@@ -116,6 +172,7 @@
     "reset": "Cài lại",
     "save": "Lưu",
     "search": "Tìm kiếm",
-    "update": "Cập nhật"
+    "update": "Cập nhật",
+    "updatedAt": "Cập nhật lúc"
   }
 }

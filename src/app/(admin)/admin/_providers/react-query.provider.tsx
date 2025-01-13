@@ -25,22 +25,26 @@ function makeQueryClient(t: TTranslationFn) {
       mutations: {
         onError(error) {
           const errorMessageKey =
-            `Admin.Common.Api.Error.${error.message}` as TTranslationFnKey
-          toast({
-            variant: 'destructive',
-            title: t.has(errorMessageKey) ? t(errorMessageKey) : error.message,
-          })
+            `Admin.Common.Api.Exception.${error.message}` as TTranslationFnKey
+          if (t.has(errorMessageKey)) {
+            toast({
+              variant: 'destructive',
+              title: t(errorMessageKey),
+            })
+          }
         },
       },
     },
     queryCache: new QueryCache({
       onError(error) {
         const errorMessageKey =
-          `Admin.Common.Api.Error.${error.message}` as TTranslationFnKey
-        toast({
-          variant: 'destructive',
-          title: t.has(errorMessageKey) ? t(errorMessageKey) : error.message,
-        })
+          `Admin.Common.Api.Exception.${error.message}` as TTranslationFnKey
+        if (t.has(errorMessageKey)) {
+          toast({
+            variant: 'destructive',
+            title: t(errorMessageKey),
+          })
+        }
       },
     }),
   })

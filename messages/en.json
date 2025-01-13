@@ -1,8 +1,62 @@
 {
   "Admin": {
+    "Attribute": {
+      "ApiException": {
+        "KEY_EXISTED": "Key already existed"
+      },
+      "BulkAction": {
+        "Confirm": {
+          "DELETE": "Delete {count} attributes?"
+        },
+        "Label": {
+          "DELETE": "Delete"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Delete this attribute?"
+        }
+      },
+      "Type": {
+        "BOOLEAN": "Boolean",
+        "COLOR": "Color",
+        "TEXT": "Text"
+      },
+      "addOption": "Add Option",
+      "attributes": "Attributes",
+      "createAttribute": "Create Attribute",
+      "description": "Description",
+      "editAttribute": "Edit Attribute",
+      "key": "Key",
+      "name": "Name",
+      "optionKey": "Option Key",
+      "optionName": "Option Name",
+      "options": "Options",
+      "type": "Type"
+    },
+    "Brand": {
+      "BulkAction": {
+        "Confirm": {
+          "DELETE": "Delete {count} brands?"
+        },
+        "Label": {
+          "DELETE": "Delete"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Delete this brand?"
+        }
+      },
+      "brands": "Brands",
+      "createBrand": "Create Brand",
+      "description": "Description",
+      "editBrand": "Edit Brand",
+      "name": "Name"
+    },
     "Common": {
       "Api": {
-        "Error": {
+        "Exception": {
           "BadRequest": "Bad request",
           "InternalServerError": "Something went wrong. Please try again later",
           "NotFound": "Not found"
@@ -16,11 +70,13 @@
         }
       },
       "FormError": {
+        "KEY_INVALID": "This field must include only a-z letters, digits and underscores",
         "REQUIRED": "This field is required",
         "TOO_BIG": "This field must be less than {v1}",
         "TOO_LONG": "This field must be less than {v1} characters",
         "TOO_SHORT": "This field must be at least {v1} characters",
-        "TOO_SMALL": "This field must be at least {v1}"
+        "TOO_SMALL": "This field must be at least {v1}",
+        "UNIQUE": "This field must be unique"
       },
       "Pagination": {
         "pageOf": "Page {page} of {total}",
@@ -83,26 +139,6 @@
       "status": "Status",
       "totalVariants": "Total Variants"
     },
-    "Brand": {
-      "BulkAction": {
-        "Confirm": {
-          "DELETE": "Delete {count} brands?"
-        },
-        "Label": {
-          "DELETE": "Delete"
-        }
-      },
-      "RowAction": {
-        "Confirm": {
-          "DELETE": "Delete this brand?"
-        }
-      },
-      "createBrand": "Create Brand",
-      "editBrand": "Edit Brand",
-      "name": "Name",
-      "description": "Description",
-      "brands": "Brands"
-    },
     "SideBar": {
       "attributes": "Attributes",
       "brands": "Brands",
@@ -129,7 +165,6 @@
     "clear": "Clear",
     "create": "Create",
     "createdAt": "Created At",
-    "updatedAt": "Updated At",
     "delete": "Delete",
     "edit": "Edit",
     "id": "ID",
@@ -137,7 +172,8 @@
     "reset": "Reset",
     "save": "Save",
     "search": "Search",
-    "update": "Update"
+    "update": "Update",
+    "updatedAt": "Updated At"
   },
   "Shop": {}
 }

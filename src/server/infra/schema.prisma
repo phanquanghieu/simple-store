@@ -169,7 +169,7 @@ model Attribute {
   variantProduct3s  Product[]          @relation("VariantProductAttribute3")
   productAttributes ProductAttribute[]
   name              String             @db.VarChar(256)
-  key               String             @unique @db.VarChar(256)
+  key               String             @unique @db.VarChar(100)
   description       String
   type              E_ATTRIBUTE_TYPE
   updatedAt         DateTime           @default(now()) @updatedAt @map("updated_at")
@@ -180,8 +180,8 @@ model Attribute {
 
 enum E_ATTRIBUTE_TYPE {
   TEXT
-  BOOLEAN
   COLOR
+  BOOLEAN
 }
 
 model AttributeOption {
@@ -193,8 +193,9 @@ model AttributeOption {
   variantProductVariant3  ProductVariant[]         @relation("VariantProductVariantAttributeOption3")
   productAttributeOptions ProductAttributeOption[]
   name                    String                   @db.VarChar(256)
-  key                     String                   @unique @db.VarChar(256)
-  value                   String                   @db.VarChar(256)
+  key                     String                   @unique @db.VarChar(201)
+  value                   String?                  @db.VarChar(256)
+  position                Int                      @default(1) @db.SmallInt()
   updatedAt               DateTime                 @default(now()) @updatedAt @map("updated_at")
   createdAt               DateTime                 @default(now()) @map("created_at")
 
