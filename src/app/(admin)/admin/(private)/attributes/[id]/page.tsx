@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
+import { LuSave, LuTrash } from 'react-icons/lu'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { E_ATTRIBUTE_TYPE } from '@prisma/client'
@@ -28,6 +29,7 @@ import {
   RichTextFormField,
   SelectFormField,
 } from '../../../_components/form'
+import { ReadonlyDateFormField } from '../../../_components/form/form-field/readonly-date-form-field'
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
 import { OptionFormField } from '../_components/option-form-field'
@@ -36,6 +38,8 @@ const UpdateAttributeFormSchemaBase = zod.object({
   name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
   key: zod.string(),
   description: zod.string().trim().max(5000),
+  updatedAt: zod.string().optional(),
+  createdAt: zod.string().optional(),
 })
 const OptionNameSchema = zod
   .string()
@@ -147,6 +151,8 @@ export default function Page() {
             key: option.key,
             value: option.value,
           })),
+          updatedAt: attribute.updatedAt,
+          createdAt: attribute.createdAt,
         } as TUpdateAttributeFormValue)
       : defaultValues,
     mode: 'onBlur',
@@ -184,11 +190,19 @@ export default function Page() {
         <Button
           onClick={toggleOpenDeleteDialog}
           disabled={isDeletePending}
+          size={'sm-icon'}
           variant={'destructive'}
         >
+          <LuTrash />
           {t('Common.delete')}
         </Button>
-        <Button disabled={isUpdatePending} form={formId} type='submit'>
+        <Button
+          disabled={isUpdatePending}
+          form={formId}
+          size={'sm-icon'}
+          type='submit'
+        >
+          <LuSave />
           {t('Common.update')}
         </Button>
       </PageHeader>
@@ -213,6 +227,17 @@ export default function Page() {
                     label={'Admin.Attribute.description'}
                     name='description'
                   />
+
+                  <Grid grid={2}>
+                    <ReadonlyDateFormField
+                      label={'Common.updatedAt'}
+                      name='updatedAt'
+                    />
+                    <ReadonlyDateFormField
+                      label={'Common.createdAt'}
+                      name='createdAt'
+                    />
+                  </Grid>
                 </Grid>
               </CardS>
             </Col>

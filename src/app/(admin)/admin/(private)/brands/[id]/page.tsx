@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
+import { LuSave, LuTrash } from 'react-icons/lu'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToggle } from 'usehooks-ts'
@@ -26,11 +27,14 @@ import {
   InputFormField,
   RichTextFormField,
 } from '../../../_components/form'
+import { ReadonlyDateFormField } from '../../../_components/form/form-field/readonly-date-form-field'
 import { PageHeader } from '../../../_components/page-header'
 
 const UpdateBrandFormSchema = zod.object({
   name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
   description: zod.string().trim().max(5000),
+  updatedAt: zod.string().optional(),
+  createdAt: zod.string().optional(),
 })
 
 type TUpdateBrandFormValue = z.infer<typeof UpdateBrandFormSchema>
@@ -54,6 +58,8 @@ export default function Page() {
     values: brand && {
       name: brand?.name,
       description: brand?.description,
+      updatedAt: brand?.updatedAt,
+      createdAt: brand?.createdAt,
     },
     defaultValues,
     mode: 'onBlur',
@@ -63,7 +69,13 @@ export default function Page() {
 
   const onSubmit = (values: TUpdateBrandFormValue) => {
     mutateUpdate(
-      { id, body: values },
+      {
+        id,
+        body: {
+          name: values.name,
+          description: values.description,
+        },
+      },
       {
         onSuccess: () => {
           router.push('/admin/brands')
@@ -88,11 +100,19 @@ export default function Page() {
         <Button
           onClick={toggleOpenDeleteDialog}
           disabled={isDeletePending}
+          size={'sm-icon'}
           variant={'destructive'}
         >
+          <LuTrash />
           {t('Common.delete')}
         </Button>
-        <Button disabled={isUpdatePending} form={formId} type='submit'>
+        <Button
+          disabled={isUpdatePending}
+          form={formId}
+          size={'sm-icon'}
+          type='submit'
+        >
+          <LuSave />
           {t('Common.update')}
         </Button>
       </PageHeader>
@@ -101,21 +121,29 @@ export default function Page() {
         <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
           <Grid grid={4}>
             <Col col={2} start={2}>
-              <Grid>
-                <CardS>
-                  <Grid className='gap-3'>
-                    <InputFormField
-                      autoFocus
-                      label={'Admin.Brand.name'}
-                      name='name'
+              <CardS>
+                <Grid className='gap-3'>
+                  <InputFormField
+                    autoFocus
+                    label={'Admin.Brand.name'}
+                    name='name'
+                  />
+                  <RichTextFormField
+                    label={'Admin.Brand.description'}
+                    name='description'
+                  />
+                  <Grid grid={2}>
+                    <ReadonlyDateFormField
+                      label={'Common.updatedAt'}
+                      name='updatedAt'
                     />
-                    <RichTextFormField
-                      label={'Admin.Brand.description'}
-                      name='description'
+                    <ReadonlyDateFormField
+                      label={'Common.createdAt'}
+                      name='createdAt'
                     />
                   </Grid>
-                </CardS>
-              </Grid>
+                </Grid>
+              </CardS>
             </Col>
           </Grid>
         </Form>

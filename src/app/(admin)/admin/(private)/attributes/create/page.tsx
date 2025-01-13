@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useId } from 'react'
 import { useForm } from 'react-hook-form'
+import { LuPlus } from 'react-icons/lu'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { E_ATTRIBUTE_TYPE } from '@prisma/client'
@@ -184,7 +185,13 @@ export default function Page() {
         backUrl='/admin/attributes'
         title={t('Admin.Attribute.createAttribute')}
       >
-        <Button disabled={isPending} form={formId} type='submit'>
+        <Button
+          disabled={isPending}
+          form={formId}
+          size={'sm-icon'}
+          type='submit'
+        >
+          <LuPlus />
           {t('Common.create')}
         </Button>
       </PageHeader>

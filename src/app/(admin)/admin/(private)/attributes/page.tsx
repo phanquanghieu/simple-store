@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { LuPlus } from 'react-icons/lu'
 
 import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 
@@ -87,7 +88,10 @@ export default function Page() {
     <>
       <PageHeader title={t('Admin.Attribute.attributes')}>
         <Link href='/admin/attributes/create'>
-          <Button>{t('Common.create')}</Button>
+          <Button size={'sm-icon'}>
+            <LuPlus />
+            {t('Common.create')}
+          </Button>
         </Link>
       </PageHeader>
       <DataTable

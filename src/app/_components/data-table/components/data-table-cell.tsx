@@ -10,6 +10,7 @@ import { E_COLUMN_ID } from '~/app/_components/data-table/data-table.interface'
 
 import { useThrottledCallback } from '~/app/_hooks/common/use-throttled-callback'
 import { useCurrency } from '~/app/_hooks/use-currency'
+import { useDatetime } from '~/app/_hooks/use-datetime'
 
 import { Badge } from '../../ui/badge'
 import { Button } from '../../ui/button'
@@ -47,14 +48,7 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   }
 
   if (meta?.cellType === 'datetime') {
-    return (
-      <div className='w-32'>
-        {Intl.DateTimeFormat('vi', {
-          dateStyle: 'short',
-          timeStyle: 'short',
-        }).format(new Date(getValue<string>()))}
-      </div>
-    )
+    return <DataTableCellDatetime {...props} />
   }
 
   if (meta?.cellType === 'money') {
@@ -82,6 +76,17 @@ function DataTableCellMoney<IData>({ getValue }: CellContext<IData, unknown>) {
   const value = getValue<string>()
 
   return <div>{value && formatCurrency(value)}</div>
+}
+
+function DataTableCellDatetime<IData>({
+  getValue,
+}: CellContext<IData, unknown>) {
+  const { formatDatetime } = useDatetime()
+  const value = getValue<string>()
+
+  return (
+    <div className='w-32'>{value && formatDatetime(value, 'datetime')}</div>
+  )
 }
 
 function DataTableCellAction<IData>({
