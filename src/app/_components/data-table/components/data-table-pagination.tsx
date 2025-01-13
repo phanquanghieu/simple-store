@@ -51,10 +51,10 @@ export function DataTablePagination({
             {t('Admin.Common.Pagination.rowsPerPage')}
           </p>
           <Select
-            value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
             }}
+            value={`${table.getState().pagination.pageSize}`}
           >
             <SelectTrigger className='h-8 w-[4.5rem]'>
               <SelectValue placeholder={table.getState().pagination.pageSize} />
@@ -76,39 +76,39 @@ export function DataTablePagination({
         </div>
         <div className='flex items-center space-x-2'>
           <Button
-            variant='outline'
-            className='hidden size-8 p-0 lg:flex'
             onClick={() => table.setPageIndex(0)}
+            className='hidden size-8 p-0 lg:flex'
             disabled={!table.getCanPreviousPage()}
+            variant='outline'
           >
-            <LuChevronsLeft className='size-4' aria-hidden='true' />
+            <LuChevronsLeft aria-hidden='true' className='size-4' />
           </Button>
           <Button
-            variant='outline'
-            size='icon'
-            className='size-8'
             onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <LuChevronLeft className='size-4' aria-hidden='true' />
-          </Button>
-          <Button
-            variant='outline'
-            size='icon'
             className='size-8'
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            disabled={!table.getCanPreviousPage()}
+            size='icon'
+            variant='outline'
           >
-            <LuChevronRight className='size-4' aria-hidden='true' />
+            <LuChevronLeft aria-hidden='true' className='size-4' />
           </Button>
           <Button
-            variant='outline'
-            size='icon'
-            className='hidden size-8 lg:flex'
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => table.nextPage()}
+            className='size-8'
             disabled={!table.getCanNextPage()}
+            size='icon'
+            variant='outline'
           >
-            <LuChevronsRight className='size-4' aria-hidden='true' />
+            <LuChevronRight aria-hidden='true' className='size-4' />
+          </Button>
+          <Button
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            className='hidden size-8 lg:flex'
+            disabled={!table.getCanNextPage()}
+            size='icon'
+            variant='outline'
+          >
+            <LuChevronsRight aria-hidden='true' className='size-4' />
           </Button>
         </div>
       </div>

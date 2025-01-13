@@ -160,8 +160,6 @@ function Sortable<TData extends { id: UniqueIdentifier }>({
 
   return (
     <DndContext
-      collisionDetection={collisionDetection}
-      modifiers={modifiers ?? config.modifiers}
       onDragCancel={() => setActiveId(null)}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over?.id) {
@@ -177,6 +175,8 @@ function Sortable<TData extends { id: UniqueIdentifier }>({
         setActiveId(null)
       }}
       onDragStart={({ active }) => setActiveId(active.id)}
+      collisionDetection={collisionDetection}
+      modifiers={modifiers ?? config.modifiers}
       sensors={sensors}
       {...props}
     >

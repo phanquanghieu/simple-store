@@ -181,29 +181,29 @@ export default function Page() {
   return (
     <>
       <PageHeader
-        title={t('Admin.Attribute.createAttribute')}
         backUrl='/admin/attributes'
+        title={t('Admin.Attribute.createAttribute')}
       >
-        <Button type='submit' form={formId} disabled={isPending}>
+        <Button disabled={isPending} form={formId} type='submit'>
           {t('Common.create')}
         </Button>
       </PageHeader>
 
       <Container>
-        <Form id={formId} form={form} onSubmit={form.handleSubmit(onSubmit)}>
+        <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
           <Grid grid={2}>
             <Col>
               <CardS>
                 <Grid className='gap-3'>
                   <InputFormField
-                    name='name'
-                    label={'Admin.Attribute.name'}
                     autoFocus
+                    label={'Admin.Attribute.name'}
+                    name='name'
                   />
-                  <InputFormField name='key' label={'Admin.Attribute.key'} />
+                  <InputFormField label={'Admin.Attribute.key'} name='key' />
                   <RichTextFormField
-                    name='description'
                     label={'Admin.Attribute.description'}
+                    name='description'
                   />
                 </Grid>
               </CardS>
@@ -213,10 +213,10 @@ export default function Page() {
                 <Grid className='gap-3' grid={2}>
                   <Col>
                     <SelectFormField
-                      name='type'
-                      label={'Admin.Attribute.type'}
-                      options={TYPE_OPTIONS}
                       isOptionLabelMessageKey
+                      label={'Admin.Attribute.type'}
+                      name='type'
+                      options={TYPE_OPTIONS}
                     />
                   </Col>
                   <Col col={2}>

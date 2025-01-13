@@ -21,12 +21,12 @@ export function DataTableHeader<IData>({
   if (column.id === E_COLUMN_ID.SELECT) {
     return (
       <Checkbox
+        onCheckedChange={(checked) =>
+          table.toggleAllPageRowsSelected(!!checked)
+        }
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(checked) =>
-          table.toggleAllPageRowsSelected(!!checked)
         }
         className='mx-1'
       />
@@ -41,9 +41,9 @@ export function DataTableHeader<IData>({
   if (column.getCanSort()) {
     return (
       <Button
-        variant={'ghost'}
-        className='-ml-2 gap-1 px-2'
         onClick={header.column.getToggleSortingHandler()}
+        className='-ml-2 gap-1 px-2'
+        variant={'ghost'}
       >
         {title}
         {column.getIsSorted() === 'desc' ? (

@@ -75,39 +75,39 @@ export default function Page() {
   return (
     <>
       <PageHeader
-        title={t('Admin.Product.editProduct')}
         backUrl='/admin/products'
+        title={t('Admin.Product.editProduct')}
       >
         <Button variant={'destructive'}>{t('Common.delete')}</Button>
-        <Button type='submit' form={formId}>
+        <Button form={formId} type='submit'>
           {t('Common.update')}
         </Button>
       </PageHeader>
 
       <Container>
-        <Form id={formId} form={form} onSubmit={form.handleSubmit(onSubmit)}>
+        <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
           <Grid grid={3}>
             <Col col={2}>
               <Grid>
                 <CardS>
                   <Grid className='gap-3'>
-                    <InputFormField name='name' label={'Admin.Product.name'} />
-                    <InputFormField name='slug' label={'Admin.Product.slug'} />
+                    <InputFormField label={'Admin.Product.name'} name='name' />
+                    <InputFormField label={'Admin.Product.slug'} name='slug' />
                     <InputFormField
-                      name='description'
                       label={'Admin.Product.description'}
+                      name='description'
                     />
                   </Grid>
                 </CardS>
                 <CardS title={t('Admin.Product.price')}>
                   <Grid grid={3}>
                     <CurrencyFormField
-                      name='price'
                       label={'Admin.Product.price'}
+                      name='price'
                     />
                     <CurrencyFormField
-                      name='compareAtPrice'
                       label={'Admin.Product.compareAtPrice'}
+                      name='compareAtPrice'
                     />
                   </Grid>
                 </CardS>

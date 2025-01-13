@@ -4,10 +4,22 @@
     "next/typescript",
     "plugin:@tanstack/query/recommended"
   ],
+  "plugins": ["perfectionist"],
   "rules": {
     "@typescript-eslint/no-empty-object-type": "off",
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-explicit-any": ["warn", { "ignoreRestArgs": true }]
+    "@typescript-eslint/no-explicit-any": ["warn", { "ignoreRestArgs": true }],
+    "perfectionist/sort-jsx-props": [
+      "warn",
+      {
+        "type": "alphabetical",
+        "order": "asc",
+        "groups": ["callback"],
+        "customGroups": {
+          "callback": ["^(on|set|handle)+"]
+        }
+      }
+    ]
   }
 }

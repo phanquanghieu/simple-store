@@ -32,24 +32,24 @@ export function DataTableBulkAction() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='px-2'>
+        <Button className='px-2' size='sm' variant='outline'>
           <LuGrip />
           {t('Common.bulk')}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-fit p-0' align='end'>
+      <PopoverContent align='end' className='w-fit p-0'>
         <Command>
           <CommandList className='max-h-full'>
             <CommandGroup className='max-h-[18.75rem] overflow-y-auto overflow-x-hidden'>
               {tableMeta?.bulkActionDefs?.map((bulkActionDef) => (
                 <CommandItem
-                  key={bulkActionDef.type}
                   onSelect={() =>
                     tableMeta.setBulkAction?.({
                       type: bulkActionDef.type,
                       rowIds: selectedRowIds,
                     })
                   }
+                  key={bulkActionDef.type}
                 >
                   {bulkActionDef.icon && <>{bulkActionDef.icon}</>}
                   <span>{bulkActionDef.label && t(bulkActionDef.label)}</span>

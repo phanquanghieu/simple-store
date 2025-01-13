@@ -165,11 +165,11 @@ export function DataTable<IData extends object>({
         <div className='-mx-1 flex items-end justify-between p-1'>
           <div className='flex flex-wrap items-center gap-2'>
             <Button
+              onClick={handleRefetch}
+              className='size-8'
+              disabled={isFetching}
               size={'icon'}
               variant={'outline'}
-              className='size-8'
-              onClick={handleRefetch}
-              disabled={isFetching}
             >
               {isFetching ? <Spinner className='' /> : <LuRotateCw />}
             </Button>
@@ -186,14 +186,14 @@ export function DataTable<IData extends object>({
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
                       className={cn({
                         'sticky left-0 bg-background':
                           header.column.getIsPinned() === 'left',
                         'sticky right-0 bg-background':
                           header.column.getIsPinned() === 'right',
                       })}
+                      colSpan={header.colSpan}
+                      key={header.id}
                       style={{
                         width: `${header.column.columnDef.meta?.sizePercent ?? (header.column.columnDef.size ? 0 : 20)}%`,
                       }}
@@ -216,12 +216,11 @@ export function DataTable<IData extends object>({
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
-                    key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
+                    key={row.id}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
-                        key={cell.id}
                         className={cn({
                           'sticky left-0 bg-background':
                             cell.column.getIsPinned() === 'left',
@@ -229,6 +228,7 @@ export function DataTable<IData extends object>({
                             cell.column.getIsPinned() === 'right',
                           'bg-muted': row.getIsSelected(),
                         })}
+                        key={cell.id}
                       >
                         <div
                           className='flex h-10 items-center truncate px-2'
@@ -246,8 +246,8 @@ export function DataTable<IData extends object>({
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={table.getAllColumns().length}
                     className='h-96 text-center text-lg text-muted-foreground'
+                    colSpan={table.getAllColumns().length}
                   >
                     {isFetching
                       ? t('Common.loading')

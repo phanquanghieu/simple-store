@@ -28,16 +28,16 @@ export default function LanguageToggle({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={hideBorder ? 'ghost' : 'outline'} size='icon'>
+        <Button size='icon' variant={hideBorder ? 'ghost' : 'outline'}>
           <LuLanguages />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         {locales.map((locale) => (
           <DropdownMenuItem
-            key={locale}
             onClick={() => handleChangeLanguage(locale)}
             disabled={locale === currLocale}
+            key={locale}
           >
             {t(`Common.Language.${locale}`)}
           </DropdownMenuItem>

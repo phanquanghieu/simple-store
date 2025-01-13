@@ -49,7 +49,7 @@ export function SelectFormField({
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
             <Select onValueChange={field.onChange} {...field}>
-              <SelectTrigger ref={field.ref} disabled={disabled}>
+              <SelectTrigger disabled={disabled} ref={field.ref}>
                 <SelectValue placeholder={placeholder && t(placeholder)} />
               </SelectTrigger>
               <SelectContent side='bottom'>

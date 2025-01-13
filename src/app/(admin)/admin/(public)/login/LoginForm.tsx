@@ -26,13 +26,13 @@ export default function LoginForm() {
         <div className='grid gap-2'>
           <div className='grid gap-1'>
             <Input
-              id='username'
-              name='username'
-              defaultValue={loginState.data.username}
-              placeholder={t('Admin.Login.username')}
-              type='text'
               autoCapitalize='none'
               autoCorrect='off'
+              defaultValue={loginState.data.username}
+              id='username'
+              name='username'
+              placeholder={t('Admin.Login.username')}
+              type='text'
             />
             <p className='text-[0.8rem] font-medium text-destructive'>
               {loginState.detail?.username?.[0] &&
@@ -43,13 +43,13 @@ export default function LoginForm() {
           </div>
           <div className='grid gap-1'>
             <Input
-              id='password'
-              name='password'
-              defaultValue={loginState.data.password}
-              placeholder={t('Admin.Login.password')}
-              type='password'
               autoCapitalize='none'
               autoCorrect='off'
+              defaultValue={loginState.data.password}
+              id='password'
+              name='password'
+              placeholder={t('Admin.Login.password')}
+              type='password'
             />
             <p className='text-[0.8rem] font-medium text-destructive'>
               {loginState.detail?.password?.[0] &&
@@ -64,7 +64,7 @@ export default function LoginForm() {
                 `Admin.Login.FormError.${loginState.detail?._error?.[0]}` as TMessageKey,
               )}
           </p>
-          <Button type='submit' disabled={isLoading}>
+          <Button disabled={isLoading} type='submit'>
             {isLoading ? <Spinner /> : <div className='h-4 w-4' />}
             {t('Admin.Login.signIn')}
             <div className='h-4 w-4' />
@@ -81,7 +81,7 @@ export default function LoginForm() {
           </span>
         </div>
       </div>
-      <Button variant='outline' type='button' disabled={isLoading}>
+      <Button disabled={isLoading} type='button' variant='outline'>
         <LuGithub /> GitHub
       </Button>
     </div>

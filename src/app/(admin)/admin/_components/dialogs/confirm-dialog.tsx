@@ -46,9 +46,9 @@ export function ConfirmDialog({
             {cancelTitle ?? t('Common.cancel')}
           </AlertDialogCancel>
           <Button
-            variant={actionVariant}
             onClick={onAction}
             disabled={isActionPending}
+            variant={actionVariant}
           >
             {isActionPending && <Spinner />}
             {actionTitle ?? t('Common.save')}

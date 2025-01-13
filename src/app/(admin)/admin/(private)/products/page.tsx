@@ -92,83 +92,83 @@ export default function Page() {
         </Link>
       </PageHeader>
       <DataTable
-        data={data?.data ?? []}
-        total={data?.total ?? 0}
-        columns={columns}
-        isFetching={isFetching}
-        meta={meta}
-        rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
-        getRowId={(row) => row.id}
         onRefetch={refetch}
+        setRowSelection={setRowSelection}
+        columns={columns}
+        data={data?.data ?? []}
         filterNode={
           <>
             <FilterSelect
-              title={'Admin.Product.status'}
-              queryField='status'
-              options={STATUS_OPTIONS}
               isOptionLabelMessageKey
+              options={STATUS_OPTIONS}
+              queryField='status'
+              title={'Admin.Product.status'}
             />
             <FilterSelect
-              title={'Admin.Product.totalVariants'}
-              queryField='totalVariants'
-              options={TOTAL_VARIANTS_OPTIONS}
               isSingleSelect
+              options={TOTAL_VARIANTS_OPTIONS}
+              queryField='totalVariants'
+              title={'Admin.Product.totalVariants'}
             />
           </>
         }
+        getRowId={(row) => row.id}
+        isFetching={isFetching}
+        meta={meta}
+        rowSelection={rowSelection}
+        total={data?.total ?? 0}
       />
 
       <ConfirmDialog
+        onAction={handleBulkAction}
+        onOpenChange={resetBulkAction}
+        isActionPending={isBulkProductsPending}
         open={bulkAction?.type === E_BULK_PRODUCT_TYPE.ACTIVATE}
         title={t('Admin.Product.BulkAction.Confirm.ACTIVATE', {
           count: bulkAction?.rowIds.length,
         })}
-        isActionPending={isBulkProductsPending}
-        onOpenChange={resetBulkAction}
-        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
+        onAction={handleBulkAction}
+        onOpenChange={resetBulkAction}
+        isActionPending={isBulkProductsPending}
         open={bulkAction?.type === E_BULK_PRODUCT_TYPE.DRAFT}
         title={t('Admin.Product.BulkAction.Confirm.DRAFT', {
           count: bulkAction?.rowIds.length,
         })}
-        isActionPending={isBulkProductsPending}
-        onOpenChange={resetBulkAction}
-        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
+        onAction={handleBulkAction}
+        onOpenChange={resetBulkAction}
+        isActionPending={isBulkProductsPending}
         open={bulkAction?.type === E_BULK_PRODUCT_TYPE.ARCHIVE}
         title={t('Admin.Product.BulkAction.Confirm.ARCHIVE', {
           count: bulkAction?.rowIds.length,
         })}
-        isActionPending={isBulkProductsPending}
-        onOpenChange={resetBulkAction}
-        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
+        onAction={handleBulkAction}
+        onOpenChange={resetBulkAction}
+        actionTitle={t('Common.delete')}
+        actionVariant={'destructive'}
+        isActionPending={isBulkProductsPending}
         open={bulkAction?.type === E_BULK_PRODUCT_TYPE.DELETE}
         title={t('Admin.Product.BulkAction.Confirm.DELETE', {
           count: bulkAction?.rowIds.length,
         })}
-        actionTitle={t('Common.delete')}
-        actionVariant={'destructive'}
-        isActionPending={isBulkProductsPending}
-        onOpenChange={resetBulkAction}
-        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
-        open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
-        title={t('Admin.Product.RowAction.Confirm.DELETE')}
+        onAction={handleRowAction}
+        onOpenChange={resetRowAction}
         actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
         isActionPending={isDeleteProductPending}
-        onOpenChange={resetRowAction}
-        onAction={handleRowAction}
+        open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
+        title={t('Admin.Product.RowAction.Confirm.DELETE')}
       />
     </>
   )

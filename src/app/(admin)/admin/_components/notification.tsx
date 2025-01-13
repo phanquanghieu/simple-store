@@ -13,7 +13,7 @@ export default function Notification() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' size='icon' className='relative'>
+        <Button className='relative' size='icon' variant='ghost'>
           <LuBell />
           <div className='absolute bottom-0 right-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground'>
             8

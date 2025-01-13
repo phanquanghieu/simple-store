@@ -20,27 +20,27 @@ export function DataTableFilter({ children }: PropsWithChildren) {
   return (
     <>
       <Input
-        className='w-48'
-        variant={'icon'}
-        variantSize={'sm'}
-        placeholder={t('Common.search')}
-        icon={<LuSearch />}
-        value={globalFilter.search ?? ''}
         onChange={(event) => {
           table.setGlobalFilter({ search: event.target.value || null })
         }}
+        className='w-48'
+        icon={<LuSearch />}
+        placeholder={t('Common.search')}
+        value={globalFilter.search ?? ''}
+        variant={'icon'}
+        variantSize={'sm'}
       />
       {children}
       {hasFilter && (
         <Button
-          size={'icon'}
-          variant={'outline'}
-          className='size-8 border-dashed'
           onClick={() =>
             table.setGlobalFilter((prev: GlobalFilterState) =>
               mapValues(prev, () => null),
             )
           }
+          className='size-8 border-dashed'
+          size={'icon'}
+          variant={'outline'}
         >
           <LuX />
         </Button>

@@ -17,10 +17,10 @@ export function NavHeader() {
         <SidebarMenuItem>
           <Link href={'/'}>
             <SidebarMenuButton
-              size='lg'
               className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+              size='lg'
             >
-              <Image src={'/logo.svg'} alt='logo' width={32} height={32} />
+              <Image alt='logo' height={32} src={'/logo.svg'} width={32} />
               <div className='grid flex-1 text-left text-lg leading-tight'>
                 <span className='truncate font-semibold'>
                   Simple Store Admin

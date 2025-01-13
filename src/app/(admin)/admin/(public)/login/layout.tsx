@@ -25,7 +25,7 @@ export default function Layout({ children }: PropsWithChildren) {
           <div className='text-2xl'>Admin</div>
         </div>
         <div className='relative z-20 flex items-center text-lg font-medium'>
-          <Image src='/logo.svg' alt='logo' width={40} height={40} />
+          <Image alt='logo' height={40} src='/logo.svg' width={40} />
         </div>
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>

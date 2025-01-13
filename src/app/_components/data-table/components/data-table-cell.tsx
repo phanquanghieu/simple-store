@@ -23,8 +23,8 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   if (column.id === E_COLUMN_ID.SELECT) {
     return (
       <Checkbox
-        checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
+        checked={row.getIsSelected()}
         className='mx-1'
       />
     )
@@ -39,7 +39,7 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   if (meta?.cellType === 'link') {
     return (
       <Link href={meta?.cellLink?.(row.original) ?? '#'}>
-        <Button variant={'link'} className='pl-0'>
+        <Button className='pl-0' variant={'link'}>
           {getValue<string>()}
         </Button>
       </Link>
@@ -96,11 +96,11 @@ function DataTableCellAction<IData>({
       {rowActionDefs?.map(({ type, icon, actionLink }) => {
         if (actionLink) {
           return (
-            <Link key={type} href={actionLink?.(row.original) ?? '#'}>
+            <Link href={actionLink?.(row.original) ?? '#'} key={type}>
               <Button
+                className='hover:bg-secondary'
                 size={'icon'}
                 variant={'ghost'}
-                className='hover:bg-secondary'
               >
                 {icon}
               </Button>
@@ -109,10 +109,10 @@ function DataTableCellAction<IData>({
         } else {
           return (
             <DataTableCellActionButton
-              key={type}
               onClick={() => {
                 setRowAction?.({ row, type: type })
               }}
+              key={type}
             >
               {icon}
             </DataTableCellActionButton>
@@ -130,10 +130,10 @@ function DataTableCellActionButton({
   const onClickThrottled = useThrottledCallback(onClick, 2000)
   return (
     <Button
+      onClick={onClickThrottled}
+      className='hover:bg-secondary'
       size={'icon'}
       variant={'ghost'}
-      className='hover:bg-secondary'
-      onClick={onClickThrottled}
     >
       {children}
     </Button>

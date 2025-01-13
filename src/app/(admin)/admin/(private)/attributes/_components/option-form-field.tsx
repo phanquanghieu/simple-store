@@ -106,11 +106,11 @@ function TextOptionFormField() {
             </div>
             <div className='flex-none'>
               <Button
-                className='border-destructive'
-                disabled={options.length === 1}
                 onClick={() => {
                   remove(index)
                 }}
+                className='border-destructive'
+                disabled={options.length === 1}
                 size={'icon'}
                 variant={'outline'}
               >
@@ -121,10 +121,10 @@ function TextOptionFormField() {
         </SortableItem>
       ))}
       <Button
-        className='hover:text-info-hover border-info pl-2 font-normal text-info'
         onClick={() => {
           append({ name: '', key: '' })
         }}
+        className='hover:text-info-hover border-info pl-2 font-normal text-info'
         size={'sm'}
         type='button'
         variant={'outline'}
@@ -209,11 +209,11 @@ function ColorOptionFormField() {
             </div>
             <div className='flex-none'>
               <Button
-                className='border-destructive'
-                disabled={options.length === 1}
                 onClick={() => {
                   remove(index)
                 }}
+                className='border-destructive'
+                disabled={options.length === 1}
                 size={'icon'}
                 variant={'outline'}
               >
@@ -224,10 +224,10 @@ function ColorOptionFormField() {
         </SortableItem>
       ))}
       <Button
-        className='hover:text-info-hover border-info pl-2 font-normal text-info'
         onClick={() => {
           append({ name: '', key: '', value: '' })
         }}
+        className='hover:text-info-hover border-info pl-2 font-normal text-info'
         size={'sm'}
         type='button'
         variant={'outline'}

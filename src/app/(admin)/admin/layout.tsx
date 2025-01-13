@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   const messages = await getMessages()
 
   return (
-    <html lang={locale} className={inter.className} suppressHydrationWarning>
+    <html className={inter.className} lang={locale} suppressHydrationWarning>
       <body>
         <Suspense>
           <NextIntlClientProvider messages={messages}>

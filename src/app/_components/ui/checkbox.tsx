@@ -31,8 +31,8 @@ const Checkbox = React.forwardRef<
   CheckboxProps
 >(({ className, variant, ...props }, ref) => (
   <CheckboxPrimitive.Root
-    ref={ref}
     className={cn(checkboxVariants({ variant, className }))}
+    ref={ref}
     {...props}
   >
     <CheckboxPrimitive.Indicator

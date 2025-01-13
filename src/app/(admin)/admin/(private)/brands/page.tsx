@@ -86,37 +86,37 @@ export default function Page() {
         </Link>
       </PageHeader>
       <DataTable
-        data={data?.data ?? []}
-        total={data?.total ?? 0}
+        onRefetch={refetch}
+        setRowSelection={setRowSelection}
         columns={columns}
+        data={data?.data ?? []}
+        getRowId={(row) => row.id}
         isFetching={isFetching}
         meta={meta}
         rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
-        getRowId={(row) => row.id}
-        onRefetch={refetch}
+        total={data?.total ?? 0}
       />
 
       <ConfirmDialog
+        onAction={handleBulkAction}
+        onOpenChange={resetBulkAction}
+        actionTitle={t('Common.delete')}
+        actionVariant={'destructive'}
+        isActionPending={isBulkPending}
         open={bulkAction?.type === E_BULK_BRAND_TYPE.DELETE}
         title={t('Admin.Brand.BulkAction.Confirm.DELETE', {
           count: bulkAction?.rowIds.length,
         })}
-        actionTitle={t('Common.delete')}
-        actionVariant={'destructive'}
-        isActionPending={isBulkPending}
-        onOpenChange={resetBulkAction}
-        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
-        open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
-        title={t('Admin.Brand.RowAction.Confirm.DELETE')}
+        onAction={handleRowAction}
+        onOpenChange={resetRowAction}
         actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
         isActionPending={isDeletePending}
-        onOpenChange={resetRowAction}
-        onAction={handleRowAction}
+        open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
+        title={t('Admin.Brand.RowAction.Confirm.DELETE')}
       />
     </>
   )

@@ -41,11 +41,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className='relative'>
         <input
-          type={type}
           className={cn(
             inputVariants({ variantSize, variant, isError, className }),
           )}
           ref={ref}
+          type={type}
           {...props}
         />
         {icon && (

@@ -57,27 +57,27 @@ export default function Page() {
 
   return (
     <>
-      <PageHeader title={t('Admin.Brand.createBrand')} backUrl='/admin/brands'>
-        <Button type='submit' form={formId} disabled={isPending}>
+      <PageHeader backUrl='/admin/brands' title={t('Admin.Brand.createBrand')}>
+        <Button disabled={isPending} form={formId} type='submit'>
           {t('Common.create')}
         </Button>
       </PageHeader>
 
       <Container>
-        <Form id={formId} form={form} onSubmit={form.handleSubmit(onSubmit)}>
+        <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
           <Grid grid={4}>
             <Col col={2} start={2}>
               <Grid>
                 <CardS>
                   <Grid className='gap-3'>
                     <InputFormField
-                      name='name'
-                      label={'Admin.Brand.name'}
                       autoFocus
+                      label={'Admin.Brand.name'}
+                      name='name'
                     />
                     <RichTextFormField
-                      name='description'
                       label={'Admin.Brand.description'}
+                      name='description'
                     />
                   </Grid>
                 </CardS>

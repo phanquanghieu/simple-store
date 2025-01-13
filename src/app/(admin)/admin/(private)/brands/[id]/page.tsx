@@ -84,34 +84,34 @@ export default function Page() {
 
   return (
     <>
-      <PageHeader title={t('Admin.Brand.editBrand')} backUrl='/admin/brands'>
+      <PageHeader backUrl='/admin/brands' title={t('Admin.Brand.editBrand')}>
         <Button
-          variant={'destructive'}
-          disabled={isDeletePending}
           onClick={toggleOpenDeleteDialog}
+          disabled={isDeletePending}
+          variant={'destructive'}
         >
           {t('Common.delete')}
         </Button>
-        <Button type='submit' form={formId} disabled={isUpdatePending}>
+        <Button disabled={isUpdatePending} form={formId} type='submit'>
           {t('Common.update')}
         </Button>
       </PageHeader>
 
       <Container>
-        <Form id={formId} form={form} onSubmit={form.handleSubmit(onSubmit)}>
+        <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
           <Grid grid={4}>
             <Col col={2} start={2}>
               <Grid>
                 <CardS>
                   <Grid className='gap-3'>
                     <InputFormField
-                      name='name'
-                      label={'Admin.Brand.name'}
                       autoFocus
+                      label={'Admin.Brand.name'}
+                      name='name'
                     />
                     <RichTextFormField
-                      name='description'
                       label={'Admin.Brand.description'}
+                      name='description'
                     />
                   </Grid>
                 </CardS>
@@ -122,13 +122,13 @@ export default function Page() {
       </Container>
 
       <ConfirmDialog
-        open={openDeleteDialog}
-        title={t('Admin.Brand.RowAction.Confirm.DELETE')}
+        onAction={handleDelete}
+        onOpenChange={toggleOpenDeleteDialog}
         actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
         isActionPending={isDeletePending}
-        onOpenChange={toggleOpenDeleteDialog}
-        onAction={handleDelete}
+        open={openDeleteDialog}
+        title={t('Admin.Brand.RowAction.Confirm.DELETE')}
       />
     </>
   )

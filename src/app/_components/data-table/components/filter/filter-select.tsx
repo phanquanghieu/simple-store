@@ -88,21 +88,21 @@ export function FilterSelect({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='border-dashed px-2'>
+        <Button className='border-dashed px-2' size='sm' variant='outline'>
           <LuListFilter />
           {t(title)}
           {selectedOptionValuesSet.size > 0 && (
             <>
-              <Separator orientation='vertical' className='h-4' />
+              <Separator className='h-4' orientation='vertical' />
 
               <div className='space-x-1'>
                 {options
                   .filter((option) => selectedOptionValuesSet.has(option.value))
                   .map((option) => (
                     <Badge
+                      className='rounded-sm px-1 font-normal'
                       key={option.value}
                       variant='secondary'
-                      className='rounded-sm px-1 font-normal'
                     >
                       {isOptionLabelMessageKey
                         ? t(option.label as TMessageKey)
@@ -114,7 +114,7 @@ export function FilterSelect({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-fit max-w-md p-0' align='start'>
+      <PopoverContent align='start' className='w-fit max-w-md p-0'>
         <Command>
           {options.length > OPTION_LENGTH_SHOW_SEARCH && (
             <CommandInput placeholder={t('Common.search')} />
@@ -127,12 +127,12 @@ export function FilterSelect({
 
                 return (
                   <CommandItem
-                    key={option.value}
                     onSelect={() => handleSelect(option.value)}
+                    key={option.value}
                   >
                     <Checkbox
-                      variant={isSingleSelect ? 'circle' : 'default'}
                       checked={isSelected}
+                      variant={isSingleSelect ? 'circle' : 'default'}
                     />
                     <span>
                       {isOptionLabelMessageKey

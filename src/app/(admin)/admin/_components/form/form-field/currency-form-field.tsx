@@ -93,16 +93,16 @@ export function CurrencyFormField({
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
             <Input
-              variant={'icon'}
-              placeholder={placeholder && t(placeholder)}
+              {...field}
+              onBlur={(e) => handleBlur(e.target.value)}
+              onChange={(e) => handleChange(e.target.value)}
               icon={
                 <div className='flex w-4 justify-center'>{currencySymbol}</div>
               }
-              {...field}
-              value={value}
               maxLength={20}
-              onChange={(e) => handleChange(e.target.value)}
-              onBlur={(e) => handleBlur(e.target.value)}
+              placeholder={placeholder && t(placeholder)}
+              value={value}
+              variant={'icon'}
             />
           </FormControl>
           <FormDescription>{description && t(description)}</FormDescription>

@@ -91,47 +91,47 @@ export default function Page() {
         </Link>
       </PageHeader>
       <DataTable
-        data={data?.data ?? []}
-        total={data?.total ?? 0}
-        columns={columns}
-        isFetching={isFetching}
-        meta={meta}
-        rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
-        getRowId={(row) => row.id}
         onRefetch={refetch}
+        setRowSelection={setRowSelection}
+        columns={columns}
+        data={data?.data ?? []}
         filterNode={
           <>
             <FilterSelect
-              title={'Admin.Attribute.type'}
-              queryField='type'
-              options={TYPE_OPTIONS}
               isOptionLabelMessageKey
+              options={TYPE_OPTIONS}
+              queryField='type'
+              title={'Admin.Attribute.type'}
             />
           </>
         }
+        getRowId={(row) => row.id}
+        isFetching={isFetching}
+        meta={meta}
+        rowSelection={rowSelection}
+        total={data?.total ?? 0}
       />
 
       <ConfirmDialog
+        onAction={handleBulkAction}
+        onOpenChange={resetBulkAction}
+        actionTitle={t('Common.delete')}
+        actionVariant={'destructive'}
+        isActionPending={isBulkPending}
         open={bulkAction?.type === E_BULK_ATTRIBUTE_TYPE.DELETE}
         title={t('Admin.Attribute.BulkAction.Confirm.DELETE', {
           count: bulkAction?.rowIds.length,
         })}
-        actionTitle={t('Common.delete')}
-        actionVariant={'destructive'}
-        isActionPending={isBulkPending}
-        onOpenChange={resetBulkAction}
-        onAction={handleBulkAction}
       />
 
       <ConfirmDialog
-        open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
-        title={t('Admin.Attribute.RowAction.Confirm.DELETE')}
+        onAction={handleRowAction}
+        onOpenChange={resetRowAction}
         actionTitle={t('Common.delete')}
         actionVariant={'destructive'}
         isActionPending={isDeletePending}
-        onOpenChange={resetRowAction}
-        onAction={handleRowAction}
+        open={rowAction?.type === E_ROW_ACTION_TYPE.DELETE}
+        title={t('Admin.Attribute.RowAction.Confirm.DELETE')}
       />
     </>
   )
