@@ -6,6 +6,11 @@ import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 import { snakeCase } from 'lodash'
 
 import { Button } from '~/app/_components/ui/button'
+import {
+  Sortable,
+  SortableDragHandle,
+  SortableItem,
+} from '~/app/_components/ui/sortable'
 
 import { useDeepCompareEffect } from '~/app/_hooks/common/use-deep-compare-effect'
 import { usePrevious } from '~/app/_hooks/common/use-previous'
@@ -33,7 +38,7 @@ export function OptionFormField({ label }: { label: TMessageKey }) {
 
 function TextOptionFormField() {
   const { control, watch, trigger, setValue } = useFormContext<TFormValue>()
-  const { fields, remove, append } = useFieldArray({
+  const { fields, remove, append, move } = useFieldArray({
     control: control,
     keyName: '_id',
     name: 'options',
@@ -69,66 +74,71 @@ function TextOptionFormField() {
 
   const t = useTranslations()
   return (
-    <>
+    <Sortable
+      onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
+      value={fields.map(({ _id }) => ({ id: _id }))}
+    >
       {fields.map((field, index) => (
-        <div key={field._id} className='flex w-full gap-3 pb-1'>
-          <div className='flex-none'>
-            <Button
-              size={'icon'}
-              variant={'outline'}
-              className='text-muted-foreground'
-              onClick={() => {}}
-            >
-              <LuArrowDownUp />
-            </Button>
+        <SortableItem asChild key={field._id} value={field._id}>
+          <div className='flex w-full gap-3 pb-1'>
+            <div className='flex-none'>
+              <SortableDragHandle
+                className='text-muted-foreground hover:cursor-move'
+                size={'icon'}
+                type='button'
+                variant={'outline'}
+              >
+                <LuArrowDownUp />
+              </SortableDragHandle>
+            </div>
+            <div className='flex-1'>
+              <InputFormField
+                name={`options.${index}.name`}
+                placeholder={'Admin.Attribute.optionName'}
+              />
+            </div>
+            <div className='flex-1'>
+              <InputFormField
+                disabled={!!field.id}
+                name={`options.${index}.key`}
+                placeholder={'Admin.Attribute.optionKey'}
+              />
+            </div>
+            <div className='flex-none'>
+              <Button
+                className='border-destructive'
+                disabled={options.length === 1}
+                onClick={() => {
+                  remove(index)
+                }}
+                size={'icon'}
+                variant={'outline'}
+              >
+                <LuTrash className='text-destructive' />
+              </Button>
+            </div>
           </div>
-          <div className='flex-1'>
-            <InputFormField
-              name={`options.${index}.name`}
-              placeholder={'Admin.Attribute.optionName'}
-            />
-          </div>
-          <div className='flex-1'>
-            <InputFormField
-              name={`options.${index}.key`}
-              placeholder={'Admin.Attribute.optionKey'}
-              disabled={!!field.id}
-            />
-          </div>
-          <div className='flex-none'>
-            <Button
-              size={'icon'}
-              variant={'outline'}
-              className='border-destructive'
-              disabled={options.length === 1}
-              onClick={() => {
-                remove(index)
-              }}
-            >
-              <LuTrash className='text-destructive' />
-            </Button>
-          </div>
-        </div>
+        </SortableItem>
       ))}
       <Button
-        type='button'
-        variant={'outline'}
-        size={'sm'}
         className='hover:text-info-hover border-info pl-2 font-normal text-info'
         onClick={() => {
           append({ name: '', key: '' })
         }}
+        size={'sm'}
+        type='button'
+        variant={'outline'}
       >
         <LuPlus />
         {t('Admin.Attribute.addOption')}
       </Button>
-    </>
+    </Sortable>
   )
 }
 
 function ColorOptionFormField() {
   const { control, watch, trigger, setValue } = useFormContext<TFormValue>()
-  const { fields, remove, append } = useFieldArray({
+  const { fields, remove, append, move } = useFieldArray({
     control: control,
     keyName: '_id',
     name: 'options',
@@ -164,103 +174,113 @@ function ColorOptionFormField() {
 
   const t = useTranslations()
   return (
-    <>
+    <Sortable
+      onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
+      value={fields.map(({ _id }) => ({ id: _id }))}
+    >
       {fields.map((field, index) => (
-        <div key={field._id} className='flex w-full gap-3 pb-1'>
-          <div className='flex-none'>
-            <Button
-              size={'icon'}
-              variant={'outline'}
-              className='text-muted-foreground'
-              onClick={() => {}}
-            >
-              <LuArrowDownUp />
-            </Button>
+        <SortableItem asChild key={field._id} value={field._id}>
+          <div className='flex w-full gap-3 pb-1'>
+            <div className='flex-none'>
+              <SortableDragHandle
+                className='text-muted-foreground hover:cursor-move'
+                size={'icon'}
+                type='button'
+                variant={'outline'}
+              >
+                <LuArrowDownUp />
+              </SortableDragHandle>
+            </div>
+            <div className='flex-1'>
+              <InputFormField
+                name={`options.${index}.name`}
+                placeholder={'Admin.Attribute.optionName'}
+              />
+            </div>
+            <div className='flex-1'>
+              <InputFormField
+                disabled={!!field.id}
+                name={`options.${index}.key`}
+                placeholder={'Admin.Attribute.optionKey'}
+              />
+            </div>
+            <div className='flex-1'>
+              <InputFormField name={`options.${index}.value`} type='color' />
+            </div>
+            <div className='flex-none'>
+              <Button
+                className='border-destructive'
+                disabled={options.length === 1}
+                onClick={() => {
+                  remove(index)
+                }}
+                size={'icon'}
+                variant={'outline'}
+              >
+                <LuTrash className='text-destructive' />
+              </Button>
+            </div>
           </div>
-          <div className='flex-1'>
-            <InputFormField
-              name={`options.${index}.name`}
-              placeholder={'Admin.Attribute.optionName'}
-            />
-          </div>
-          <div className='flex-1'>
-            <InputFormField
-              name={`options.${index}.key`}
-              placeholder={'Admin.Attribute.optionKey'}
-              disabled={!!field.id}
-            />
-          </div>
-          <div className='flex-1'>
-            <InputFormField type='color' name={`options.${index}.value`} />
-          </div>
-          <div className='flex-none'>
-            <Button
-              size={'icon'}
-              variant={'outline'}
-              className='border-destructive'
-              disabled={options.length === 1}
-              onClick={() => {
-                remove(index)
-              }}
-            >
-              <LuTrash className='text-destructive' />
-            </Button>
-          </div>
-        </div>
+        </SortableItem>
       ))}
       <Button
-        type='button'
-        variant={'outline'}
-        size={'sm'}
         className='hover:text-info-hover border-info pl-2 font-normal text-info'
         onClick={() => {
           append({ name: '', key: '', value: '' })
         }}
+        size={'sm'}
+        type='button'
+        variant={'outline'}
       >
         <LuPlus />
         {t('Admin.Attribute.addOption')}
       </Button>
-    </>
+    </Sortable>
   )
 }
 
 function BooleanOptionFormField() {
   const { control } = useFormContext<TFormValue>()
-  const { fields } = useFieldArray({
+  const { fields, move } = useFieldArray({
     control: control,
     keyName: '_id',
     name: 'options',
   })
 
   return (
-    <>
+    <Sortable
+      onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
+      value={fields.map(({ _id }) => ({ id: _id }))}
+    >
       {fields.map((field, index) => (
-        <div key={field._id} className='flex w-full gap-3 pb-1'>
-          <div className='flex-none'>
-            <Button
-              size={'icon'}
-              variant={'outline'}
-              className='text-muted-foreground'
-              onClick={() => {}}
-            >
-              <LuArrowDownUp />
-            </Button>
+        <SortableItem asChild key={field._id} value={field._id}>
+          <div className='flex w-full gap-3 pb-1'>
+            <div className='flex-none'>
+              <SortableDragHandle
+                className='text-muted-foreground hover:cursor-move'
+                size={'icon'}
+                type='button'
+                variant={'outline'}
+              >
+                <LuArrowDownUp />
+              </SortableDragHandle>
+            </div>
+            <div className='flex-1'>
+              <InputFormField
+                name={`options.${index}.name`}
+                placeholder={'Admin.Attribute.optionName'}
+              />
+            </div>
+            <div className='flex-1'>
+              <InputFormField
+                disabled
+                name={`options.${index}.key`}
+                placeholder={'Admin.Attribute.optionKey'}
+              />
+            </div>
           </div>
-          <div className='flex-1'>
-            <InputFormField
-              name={`options.${index}.name`}
-              placeholder={'Admin.Attribute.optionName'}
-            />
-          </div>
-          <div className='flex-1'>
-            <InputFormField
-              name={`options.${index}.key`}
-              placeholder={'Admin.Attribute.optionKey'}
-              disabled
-            />
-          </div>
-        </div>
+        </SortableItem>
       ))}
-    </>
+    </Sortable>
   )
 }
