@@ -45,8 +45,8 @@ import { E_COLUMN_ID } from './data-table.interface'
 const DEBOUNCE_DELAY = 500
 
 export function DataTable<IData extends object>({
-  data,
-  total,
+  data = [],
+  total = 0,
   columns,
   isFetching,
   meta,
@@ -56,8 +56,8 @@ export function DataTable<IData extends object>({
   onRefetch,
   filterNode,
 }: {
-  data: IData[]
-  total: number
+  data?: IData[]
+  total?: number
   columns: ColumnDef<IData>[]
   isFetching: boolean
   meta: TableMeta<IData>

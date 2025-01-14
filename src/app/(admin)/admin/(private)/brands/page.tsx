@@ -24,14 +24,14 @@ import { useDeleteBrand } from '~/app/_apis/admin/brand/useDeleteBrand'
 import {
   FILTER_DEFS,
   SORT_DEFAULTS,
-  useGetBrands,
-} from '~/app/_apis/admin/brand/useGetBrands'
+  useGetListBrands,
+} from '~/app/_apis/admin/brand/useGetListBrands'
 
 import { ConfirmDialog } from '../../_components/dialogs/confirm-dialog'
 import { PageHeader } from '../../_components/page-header'
 
 export default function Page() {
-  const { data, isFetching, refetch } = useGetBrands()
+  const { data, isFetching, refetch } = useGetListBrands()
   const { mutate: mutateBulk, isPending: isBulkPending } = useBulkBrands()
   const { mutate: mutateDelete, isPending: isDeletePending } = useDeleteBrand()
 
@@ -93,12 +93,12 @@ export default function Page() {
         onRefetch={refetch}
         setRowSelection={setRowSelection}
         columns={columns}
-        data={data?.data ?? []}
+        data={data?.data}
         getRowId={(row) => row.id}
         isFetching={isFetching}
         meta={meta}
         rowSelection={rowSelection}
-        total={data?.total ?? 0}
+        total={data?.total}
       />
 
       <ConfirmDialog

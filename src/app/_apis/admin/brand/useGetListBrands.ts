@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { IOkListRes } from '~/shared/dto/_common/res'
-import { IGetAttributeQuery } from '~/shared/dto/attribute/req'
-import { IAttributeRes } from '~/shared/dto/attribute/res'
+import { IGetBrandQuery } from '~/shared/dto/brand/req'
+import { IBrandRes } from '~/shared/dto/brand/res'
 
 import { IFilterDef } from '~/app/_components/data-table/data-table.interface'
 
@@ -11,26 +11,22 @@ import { useQueryList } from '~/app/_hooks/query/use-query-list'
 
 import { fetcherAdmin } from '../../fetcher'
 
-export const SORT_DEFAULTS = [['createdAt', 'desc']]
-export const FILTER_DEFS: IFilterDef<IGetAttributeQuery>[] = [
+export const SORT_DEFAULTS = [['name', 'asc']]
+export const FILTER_DEFS: IFilterDef<IGetBrandQuery>[] = [
   {
     queryField: 'search',
     dataType: 'string',
   },
-  {
-    queryField: 'type',
-    dataType: 'string[]',
-  },
 ]
 
-export function useGetAttributes() {
+export function useGetListBrands() {
   const [queryList] = useQueryList(SORT_DEFAULTS)
   const [queryFilter] = useQueryFilter(FILTER_DEFS)
   const query = { ...queryList, ...queryFilter }
 
   return useQuery({
-    queryKey: ['attributes', 'list', query],
+    queryKey: ['brands', 'list', query],
     queryFn: () =>
-      fetcherAdmin.get<IOkListRes<IAttributeRes>>('/attributes', { query }),
+      fetcherAdmin.get<IOkListRes<IBrandRes>>('/brands', { query }),
   })
 }

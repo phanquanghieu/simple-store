@@ -26,15 +26,15 @@ import { useDeleteProduct } from '~/app/_apis/admin/product/useDeleteProduct'
 import {
   FILTER_DEFS,
   SORT_DEFAULTS,
-  useGetProducts,
-} from '~/app/_apis/admin/product/useGetProducts'
+  useGetListProducts,
+} from '~/app/_apis/admin/product/useGetListProducts'
 import { IOption } from '~/app/_interfaces/common.interface'
 
 import { ConfirmDialog } from '../../_components/dialogs/confirm-dialog'
 import { PageHeader } from '../../_components/page-header'
 
 export default function Page() {
-  const { data, isFetching, refetch } = useGetProducts()
+  const { data, isFetching, refetch } = useGetListProducts()
   const { mutate: mutateBulkProducts, isPending: isBulkProductsPending } =
     useBulkProducts()
   const { mutate: mutateDeleteProduct, isPending: isDeleteProductPending } =
@@ -95,7 +95,7 @@ export default function Page() {
         onRefetch={refetch}
         setRowSelection={setRowSelection}
         columns={columns}
-        data={data?.data ?? []}
+        data={data?.data}
         filterNode={
           <>
             <FilterSelect
@@ -116,7 +116,7 @@ export default function Page() {
         isFetching={isFetching}
         meta={meta}
         rowSelection={rowSelection}
-        total={data?.total ?? 0}
+        total={data?.total}
       />
 
       <ConfirmDialog

@@ -55,12 +55,12 @@ const menuItems: IMenuItem[] = [
         url: '/admin/categories',
       },
       {
-        title: 'Admin.SideBar.collections',
-        url: '/admin/collections',
-      },
-      {
         title: 'Admin.SideBar.attributes',
         url: '/admin/attributes',
+      },
+      {
+        title: 'Admin.SideBar.collections',
+        url: '/admin/collections',
       },
       {
         title: 'Admin.SideBar.inventories',

@@ -27,15 +27,15 @@ import { useDeleteAttribute } from '~/app/_apis/admin/attribute/useDeleteAttribu
 import {
   FILTER_DEFS,
   SORT_DEFAULTS,
-  useGetAttributes,
-} from '~/app/_apis/admin/attribute/useGetAttributes'
+  useGetListAttributes,
+} from '~/app/_apis/admin/attribute/useGetListAttributes'
 
 import { ConfirmDialog } from '../../_components/dialogs/confirm-dialog'
 import { PageHeader } from '../../_components/page-header'
 import { TYPE_OPTIONS } from './_common'
 
 export default function Page() {
-  const { data, isFetching, refetch } = useGetAttributes()
+  const { data, isFetching, refetch } = useGetListAttributes()
   const { mutate: mutateBulk, isPending: isBulkPending } = useBulkAttributes()
   const { mutate: mutateDelete, isPending: isDeletePending } =
     useDeleteAttribute()
@@ -98,7 +98,7 @@ export default function Page() {
         onRefetch={refetch}
         setRowSelection={setRowSelection}
         columns={columns}
-        data={data?.data ?? []}
+        data={data?.data}
         filterNode={
           <>
             <FilterSelect
@@ -113,7 +113,7 @@ export default function Page() {
         isFetching={isFetching}
         meta={meta}
         rowSelection={rowSelection}
-        total={data?.total ?? 0}
+        total={data?.total}
       />
 
       <ConfirmDialog
