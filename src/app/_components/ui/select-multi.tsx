@@ -198,6 +198,7 @@ export const SelectMulti = forwardRef<HTMLButtonElement, ISelectMultiProps>(
                       onSelect={() => toggleOption(option)}
                       className='cursor-pointer'
                       key={option.value}
+                      value={option.value}
                     >
                       <Checkbox checked={isSelected} />
                       <span>{option.label}</span>

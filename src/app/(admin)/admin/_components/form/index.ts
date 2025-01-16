@@ -1,6 +1,11 @@
 export * from './form'
 export * from './form-field/currency-form-field'
 export * from './form-field/input-form-field'
+export * from './form-field/readonly-date-form-field'
 export * from './form-field/rich-text-form-field'
 export * from './form-field/select-form-field'
 export * from './form-field/select-multi-form-field'
+export * from './form-field/select-tree-form-field'
+
+export * from './resource-form-field/attribute-form-field'
+export * from './resource-form-field/category-form-field'

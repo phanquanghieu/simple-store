@@ -9,12 +9,18 @@ import {
   ICreateCategoryBody,
   IUpdateCategoryBody,
 } from '~/shared/dto/category/req'
-import { ICategoryDetailRes, ICategoryRes } from '~/shared/dto/category/res'
+import {
+  E_CATEGORY_EXCEPTION,
+  ICategoryDetailRes,
+  ICategoryLiteTreeRes,
+  ICategoryRes,
+} from '~/shared/dto/category/res'
 
 import {
   BadRequestException,
   NotFoundException,
   OkListRes,
+  OkLiteRes,
   OkRes,
   queryUtil,
 } from '../common'
@@ -52,6 +58,35 @@ export const categoryService = {
     ])
 
     return OkListRes(ICategoryRes.list(categories), total)
+  },
+
+  getTree: async () => {
+    const categories = await prisma.category.findMany({
+      where: { parentId: null },
+      include: {
+        children: {
+          include: {
+            children: {
+              include: {
+                children: {
+                  include: {
+                    children: {
+                      orderBy: { name: 'asc' },
+                    },
+                  },
+                  orderBy: { name: 'asc' },
+                },
+              },
+              orderBy: { name: 'asc' },
+            },
+          },
+          orderBy: { name: 'asc' },
+        },
+      },
+      orderBy: { name: 'asc' },
+    })
+
+    return OkLiteRes(ICategoryLiteTreeRes.list(categories))
   },
 
   getOne: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
@@ -97,7 +132,7 @@ export const categoryService = {
       if (
         categoryParent.pathIds.length >= categoryService.CATEGORY_TREE_HEIGHT
       ) {
-        throw new BadRequestException('Category tree height exceeded.')
+        throw new BadRequestException(E_CATEGORY_EXCEPTION.TREE_HEIGHT_EXCEEDED)
       }
 
       pathIds.unshift(...categoryParent.pathIds)
@@ -191,7 +226,9 @@ export const categoryService = {
           categoryParent.pathIds.length +
           (maxDepthOfDescendants - currCategory.pathIds.length + 1)
         if (newHeight > categoryService.CATEGORY_TREE_HEIGHT) {
-          throw new BadRequestException('Category tree height exceeded.')
+          throw new BadRequestException(
+            E_CATEGORY_EXCEPTION.TREE_HEIGHT_EXCEEDED,
+          )
         }
 
         pathIds.push(...categoryParent.pathIds)

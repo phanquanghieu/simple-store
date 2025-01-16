@@ -55,6 +55,9 @@
       "name": "Tên"
     },
     "Category": {
+      "ApiException": {
+        "TREE_HEIGHT_EXCEEDED": "Chiều cao của cây danh mục phải nhỏ hơn 5"
+      },
       "BulkAction": {
         "Confirm": {
           "DELETE": "Xóa {count} danh mục?"

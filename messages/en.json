@@ -55,6 +55,9 @@
       "name": "Name"
     },
     "Category": {
+      "ApiException": {
+        "TREE_HEIGHT_EXCEEDED": "Category tree height must be less than 5"
+      },
       "BulkAction": {
         "Confirm": {
           "DELETE": "Delete {count} categories?"

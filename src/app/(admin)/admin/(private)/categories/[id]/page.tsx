@@ -11,6 +11,7 @@ import { useToggle } from 'usehooks-ts'
 import { z } from 'zod'
 
 import { TIdParam } from '~/shared/dto/_common/req'
+import { E_CATEGORY_EXCEPTION } from '~/shared/dto/category/res'
 import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs/zod'
 
 import { Button } from '~/app/_components/ui/button'
@@ -20,16 +21,17 @@ import { Col, Container, Grid } from '~/app/_components/ui/layout'
 import { useDeleteCategory } from '~/app/_apis/admin/category/useDeleteCategory'
 import { useGetDetailCategory } from '~/app/_apis/admin/category/useGetDetailCategory'
 import { useUpdateCategory } from '~/app/_apis/admin/category/useUpdateCategory'
+import { SPECIAL_STRING } from '~/app/_constant/common.constant'
 
 import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import {
+  AttributeFormField,
+  CategoryFormField,
   Form,
   InputFormField,
+  ReadonlyDateFormField,
   RichTextFormField,
-  SelectFormField,
 } from '../../../_components/form'
-import { ReadonlyDateFormField } from '../../../_components/form/form-field/readonly-date-form-field'
-import { AttributeFormField } from '../../../_components/form/resource-form-field/attribute-form-field'
 import { PageHeader } from '../../../_components/page-header'
 
 const UpdateCategoryFormSchema = zod.object({
@@ -43,7 +45,7 @@ const UpdateCategoryFormSchema = zod.object({
 
 type TUpdateCategoryFormValue = z.infer<typeof UpdateCategoryFormSchema>
 const defaultValues: TUpdateCategoryFormValue = {
-  parentId: '_null',
+  parentId: SPECIAL_STRING.null,
   attributeIds: [],
   name: '',
   description: '',
@@ -65,7 +67,7 @@ export default function Page() {
     resolver: zodResolver(UpdateCategoryFormSchema),
     values: category
       ? {
-          parentId: category.parentId ?? '_null',
+          parentId: category.parentId ?? SPECIAL_STRING.null,
           attributeIds: category.attributes.map((attribute) => attribute.id),
           name: category.name,
           description: category.description,
@@ -83,7 +85,8 @@ export default function Page() {
       {
         id,
         body: {
-          parentId: values.parentId === '_null' ? null : values.parentId,
+          parentId:
+            values.parentId === SPECIAL_STRING.null ? null : values.parentId,
           attributeIds: values.attributeIds,
           name: values.name,
           description: values.description,
@@ -92,6 +95,13 @@ export default function Page() {
       {
         onSuccess: () => {
           router.push('/admin/categories')
+        },
+        onError(error) {
+          if (error.message in E_CATEGORY_EXCEPTION) {
+            form.setError('parentId', {
+              message: `Admin.Category.ApiException.${error.message}`,
+            })
+          }
         },
       },
     )
@@ -169,11 +179,17 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <SelectFormField
-                    hasNullOption
+                  <CategoryFormField
+                    defaultOption={
+                      category?.parent && {
+                        value: category.parent.id,
+                        label: category.parent.name,
+                      }
+                    }
+                    disableValue={category?.id}
+                    hasOptionNull
                     label={'Admin.Category.parent'}
                     name='parentId'
-                    options={[{ value: '1', label: '111' }]}
                   />
                   <AttributeFormField
                     defaultOptions={category?.attributes.map((attribute) => ({

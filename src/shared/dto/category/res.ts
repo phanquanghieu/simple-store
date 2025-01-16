@@ -2,6 +2,10 @@ import { Attribute, Category, Prisma } from '@prisma/client'
 
 import { IAttributeLiteRes } from '../attribute/res'
 
+export enum E_CATEGORY_EXCEPTION {
+  TREE_HEIGHT_EXCEEDED = 'TREE_HEIGHT_EXCEEDED',
+}
+
 export class ICategoryLiteRes {
   id: string
   parentId: string | null
@@ -40,33 +44,33 @@ export class ICategoryRes extends ICategoryLiteRes {
   }
 }
 
-type ICategoryWithChildrenResParam = Category & {
-  children?: ICategoryWithChildrenResParam[]
+type ICategoryLiteTreeResParam = Category & {
+  children?: ICategoryLiteTreeResParam[]
 }
-export class ICategoryWithChildrenRes extends ICategoryLiteRes {
-  children: ICategoryWithChildrenRes[]
-  constructor(data: ICategoryWithChildrenResParam) {
+export class ICategoryLiteTreeRes extends ICategoryLiteRes {
+  children: ICategoryLiteTreeRes[]
+  constructor(data: ICategoryLiteTreeResParam) {
     super(data)
     this.children = data.children
-      ? ICategoryWithChildrenRes.list(data.children)
+      ? ICategoryLiteTreeRes.list(data.children)
       : []
   }
 
-  static list(data: ICategoryWithChildrenResParam[]) {
-    return data.map((d) => new ICategoryWithChildrenRes(d))
+  static list(data: ICategoryLiteTreeResParam[]) {
+    return data.map((d) => new ICategoryLiteTreeRes(d))
   }
 }
 
-type ICategoryDetailResParam = ICategoryWithChildrenResParam & {
+type ICategoryDetailResParam = ICategoryLiteTreeResParam & {
   parent: Category | null
   attributes: Attribute[]
 }
 export class ICategoryDetailRes extends ICategoryRes {
   attributes: IAttributeLiteRes[]
-  children: ICategoryWithChildrenRes[]
+  children: ICategoryLiteTreeRes[]
   constructor(data: ICategoryDetailResParam) {
     super(data)
     this.attributes = IAttributeLiteRes.list(data.attributes)
-    this.children = ICategoryWithChildrenRes.list(data.children ?? [])
+    this.children = ICategoryLiteTreeRes.list(data.children ?? [])
   }
 }

@@ -16,14 +16,15 @@ import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
 import { useCreateCategory } from '~/app/_apis/admin/category/useCreateCategory'
+import { SPECIAL_STRING } from '~/app/_constant/common.constant'
 
 import {
+  AttributeFormField,
+  CategoryFormField,
   Form,
   InputFormField,
   RichTextFormField,
-  SelectFormField,
 } from '../../../_components/form'
-import { AttributeFormField } from '../../../_components/form/resource-form-field/attribute-form-field'
 import { PageHeader } from '../../../_components/page-header'
 
 const CreateCategoryFormSchema = zod.object({
@@ -35,7 +36,7 @@ const CreateCategoryFormSchema = zod.object({
 
 type TCreateCategoryFormValue = z.infer<typeof CreateCategoryFormSchema>
 const defaultValues: TCreateCategoryFormValue = {
-  parentId: '_null',
+  parentId: SPECIAL_STRING.null,
   attributeIds: [],
   name: '',
   description: '',
@@ -55,7 +56,8 @@ export default function Page() {
   const handleCreate = (values: TCreateCategoryFormValue) => {
     mutate(
       {
-        parentId: values.parentId === '_null' ? null : values.parentId,
+        parentId:
+          values.parentId === SPECIAL_STRING.null ? null : values.parentId,
         attributeIds: values.attributeIds,
         name: values.name,
         description: values.description,
@@ -113,11 +115,10 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <SelectFormField
-                    hasNullOption
+                  <CategoryFormField
+                    hasOptionNull
                     label={'Admin.Category.parent'}
                     name='parentId'
-                    options={[{ value: '1', label: '111' }]}
                   />
                   <AttributeFormField
                     label={'Admin.Attribute.attributes'}

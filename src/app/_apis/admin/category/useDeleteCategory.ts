@@ -14,7 +14,7 @@ export function useDeleteCategory() {
     mutationFn: (id: string) =>
       fetcherAdmin.delete<IOkRes<boolean>>(`/categories/${id}`),
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['categories', 'list'] })
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
     },
     onSuccess() {
       toast({

@@ -15,7 +15,7 @@ export function useCreateCategory() {
     mutationFn: (body: ICreateCategoryBody) =>
       fetcherAdmin.post<IOkRes<boolean>>('/categories', { body }),
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['categories', 'list'] })
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
     },
     onSuccess() {
       toast({

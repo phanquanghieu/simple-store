@@ -2,7 +2,7 @@ import { E_BULK_CATEGORY_TYPE } from '~/shared/dto/category/req'
 import { zod } from '~/shared/libs/zod'
 
 export const CreateCategoryBodySchema = zod.object({
-  parentId: zod.string().nullable(),
+  parentId: zod.string().uuid().nullable(),
   attributeIds: zod.array(zod.string().uuid()),
   name: zod.string().trim().min(1).max(256),
   description: zod.string().trim(),

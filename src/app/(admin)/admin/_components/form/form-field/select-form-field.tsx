@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '~/app/_components/ui/select'
 
+import { SPECIAL_OPTION } from '~/app/_constant/common.constant'
 import { IOption } from '~/app/_interfaces/common.interface'
 
 import {
@@ -28,7 +29,7 @@ export function SelectFormField({
   description,
   isOptionLabelMessageKey = false,
   disabled = false,
-  hasNullOption = false,
+  hasOptionNull = false,
 }: {
   name: string
   options: IOption[]
@@ -37,7 +38,7 @@ export function SelectFormField({
   description?: TMessageKey
   isOptionLabelMessageKey?: boolean
   disabled?: boolean
-  hasNullOption?: boolean
+  hasOptionNull?: boolean
 }) {
   const { control, getFieldState, formState } = useFormContext()
   const { error } = getFieldState(name, formState)
@@ -61,9 +62,12 @@ export function SelectFormField({
                 <SelectValue placeholder={placeholder && t(placeholder)} />
               </SelectTrigger>
               <SelectContent side='bottom'>
-                {hasNullOption && (
-                  <SelectItem key={NullOption.value} value={NullOption.value}>
-                    {t(NullOption.label)}
+                {hasOptionNull && (
+                  <SelectItem
+                    key={SPECIAL_OPTION.null.value}
+                    value={SPECIAL_OPTION.null.value}
+                  >
+                    {t(SPECIAL_OPTION.null.label)}
                   </SelectItem>
                 )}
                 {options.map((option) => (
@@ -82,9 +86,4 @@ export function SelectFormField({
       )}
     />
   )
-}
-
-const NullOption: IOption<TMessageKey, string> = {
-  label: 'Admin.Common.null',
-  value: '_null',
 }

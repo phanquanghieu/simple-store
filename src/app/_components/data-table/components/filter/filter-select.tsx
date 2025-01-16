@@ -129,6 +129,7 @@ export function FilterSelect({
                   <CommandItem
                     onSelect={() => handleSelect(option.value)}
                     key={option.value}
+                    value={option.value}
                   >
                     <Checkbox
                       checked={isSelected}
