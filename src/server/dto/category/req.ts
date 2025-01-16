@@ -1,9 +1,16 @@
+import { E_BULK_CATEGORY_TYPE } from '~/shared/dto/category/req'
 import { zod } from '~/shared/libs/zod'
 
-export const CreateCategorySchema = zod.object({
+export const CreateCategoryBodySchema = zod.object({
   parentId: zod.string().nullable(),
+  attributeIds: zod.array(zod.string().uuid()),
   name: zod.string().trim().min(1).max(256),
   description: zod.string().trim(),
 })
 
-export const UpdateCategorySchema = CreateCategorySchema.partial()
+export const UpdateCategoryBodySchema = CreateCategoryBodySchema.partial()
+
+export const BulkCategoryBodySchema = zod.object({
+  ids: zod.array(zod.string().uuid()).min(1),
+  type: zod.nativeEnum(E_BULK_CATEGORY_TYPE),
+})

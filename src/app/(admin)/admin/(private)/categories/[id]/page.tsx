@@ -17,28 +17,34 @@ import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
-import { useDeleteBrand } from '~/app/_apis/admin/brand/useDeleteBrand'
-import { useGetDetailBrand } from '~/app/_apis/admin/brand/useGetDetailBrand'
-import { useUpdateBrand } from '~/app/_apis/admin/brand/useUpdateBrand'
+import { useDeleteCategory } from '~/app/_apis/admin/category/useDeleteCategory'
+import { useGetDetailCategory } from '~/app/_apis/admin/category/useGetDetailCategory'
+import { useUpdateCategory } from '~/app/_apis/admin/category/useUpdateCategory'
 
 import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import {
   Form,
   InputFormField,
   RichTextFormField,
+  SelectFormField,
 } from '../../../_components/form'
 import { ReadonlyDateFormField } from '../../../_components/form/form-field/readonly-date-form-field'
+import { AttributeFormField } from '../../../_components/form/resource-form-field/attribute-form-field'
 import { PageHeader } from '../../../_components/page-header'
 
-const UpdateBrandFormSchema = zod.object({
+const UpdateCategoryFormSchema = zod.object({
+  parentId: zod.string(),
+  attributeIds: zod.array(zod.string()),
   name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
   description: zod.string().trim().max(5000),
   updatedAt: zod.string().optional(),
   createdAt: zod.string().optional(),
 })
 
-type TUpdateBrandFormValue = z.infer<typeof UpdateBrandFormSchema>
-const defaultValues: TUpdateBrandFormValue = {
+type TUpdateCategoryFormValue = z.infer<typeof UpdateCategoryFormSchema>
+const defaultValues: TUpdateCategoryFormValue = {
+  parentId: '_null',
+  attributeIds: [],
   name: '',
   description: '',
 }
@@ -46,39 +52,46 @@ const defaultValues: TUpdateBrandFormValue = {
 export default function Page() {
   const { id } = useParams<TIdParam>()
 
-  const { data: brand } = useGetDetailBrand(id)
+  const { data: category } = useGetDetailCategory(id)
 
-  const { mutate: mutateUpdate, isPending: isUpdatePending } = useUpdateBrand()
-  const { mutate: mutateDelete, isPending: isDeletePending } = useDeleteBrand()
+  const { mutate: mutateUpdate, isPending: isUpdatePending } =
+    useUpdateCategory()
+  const { mutate: mutateDelete, isPending: isDeletePending } =
+    useDeleteCategory()
 
   const [openDeleteDialog, toggleOpenDeleteDialog] = useToggle(false)
 
-  const form = useForm<TUpdateBrandFormValue>({
-    resolver: zodResolver(UpdateBrandFormSchema),
-    values: brand && {
-      name: brand?.name,
-      description: brand?.description,
-      updatedAt: brand?.updatedAt,
-      createdAt: brand?.createdAt,
-    },
-    defaultValues,
+  const form = useForm<TUpdateCategoryFormValue>({
+    resolver: zodResolver(UpdateCategoryFormSchema),
+    values: category
+      ? {
+          parentId: category.parentId ?? '_null',
+          attributeIds: category.attributes.map((attribute) => attribute.id),
+          name: category.name,
+          description: category.description,
+          updatedAt: category.updatedAt,
+          createdAt: category.createdAt,
+        }
+      : defaultValues,
     mode: 'onBlur',
   })
   const formId = useId()
   const router = useRouter()
 
-  const handleUpdate = (values: TUpdateBrandFormValue) => {
+  const handleUpdate = (values: TUpdateCategoryFormValue) => {
     mutateUpdate(
       {
         id,
         body: {
+          parentId: values.parentId === '_null' ? null : values.parentId,
+          attributeIds: values.attributeIds,
           name: values.name,
           description: values.description,
         },
       },
       {
         onSuccess: () => {
-          router.push('/admin/brands')
+          router.push('/admin/categories')
         },
       },
     )
@@ -87,7 +100,7 @@ export default function Page() {
   const handleDelete = () => {
     mutateDelete(id, {
       onSuccess: () => {
-        router.push('/admin/brands')
+        router.push('/admin/categories')
       },
     })
   }
@@ -96,7 +109,10 @@ export default function Page() {
 
   return (
     <>
-      <PageHeader backUrl='/admin/brands' title={t('Admin.Brand.editBrand')}>
+      <PageHeader
+        backUrl='/admin/categories'
+        title={t('Admin.Category.editCategory')}
+      >
         <Button
           onClick={toggleOpenDeleteDialog}
           disabled={isDeletePending}
@@ -123,17 +139,18 @@ export default function Page() {
           form={form}
           id={formId}
         >
-          <Grid grid={4}>
-            <Col col={2} start={2}>
+          <Grid grid={2}>
+            <Col>
               <CardS>
                 <Grid className='gap-3'>
                   <InputFormField
                     autoFocus
-                    label={'Admin.Brand.name'}
+                    label={'Admin.Category.name'}
                     name='name'
+                    placeholder={'Admin.Category.name'}
                   />
                   <RichTextFormField
-                    label={'Admin.Brand.description'}
+                    label={'Admin.Category.description'}
                     name='description'
                   />
                   <Grid grid={2}>
@@ -149,6 +166,26 @@ export default function Page() {
                 </Grid>
               </CardS>
             </Col>
+            <Col>
+              <CardS>
+                <Grid className='gap-3'>
+                  <SelectFormField
+                    hasNullOption
+                    label={'Admin.Category.parent'}
+                    name='parentId'
+                    options={[{ value: '1', label: '111' }]}
+                  />
+                  <AttributeFormField
+                    defaultOptions={category?.attributes.map((attribute) => ({
+                      value: attribute.id,
+                      label: attribute.name,
+                    }))}
+                    label={'Admin.Attribute.attributes'}
+                    name='attributeIds'
+                  />
+                </Grid>
+              </CardS>
+            </Col>
           </Grid>
         </Form>
       </Container>
@@ -160,7 +197,7 @@ export default function Page() {
         actionVariant={'destructive'}
         isActionPending={isDeletePending}
         open={openDeleteDialog}
-        title={t('Admin.Brand.RowAction.Confirm.DELETE')}
+        title={t('Admin.Category.RowAction.Confirm.DELETE')}
       />
     </>
   )

@@ -29,7 +29,7 @@ import { IOption } from '~/app/_interfaces/common.interface'
 
 import { useTable } from '../../data-table.context'
 
-const OPTION_LENGTH_SHOW_SEARCH = 2
+const OPTION_LENGTH_SHOW_SEARCH = 10
 
 export function FilterSelect({
   title,
@@ -145,7 +145,7 @@ export function FilterSelect({
             </CommandGroup>
             {selectedOptionValuesSet.size > 0 && (
               <>
-                <CommandSeparator />
+                <CommandSeparator alwaysRender />
                 <CommandGroup>
                   <CommandItem
                     onSelect={handleClear}

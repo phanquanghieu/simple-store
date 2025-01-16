@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { difference } from 'lodash'
 
-import { IIdParam } from '~/shared/dto/_common/req'
+import { IIdParam, ILiteQuery } from '~/shared/dto/_common/req'
 import {
   E_BULK_ATTRIBUTE_TYPE,
   IBulkAttributeBody,
@@ -12,6 +12,7 @@ import {
 import {
   E_ATTRIBUTE_EXCEPTION,
   IAttributeDetailRes,
+  IAttributeLiteRes,
   IAttributeRes,
 } from '~/shared/dto/attribute/res'
 
@@ -19,6 +20,7 @@ import {
   BadRequestException,
   NotFoundException,
   OkListRes,
+  OkLiteRes,
   OkRes,
   queryUtil,
 } from '../common'
@@ -38,6 +40,10 @@ export const attributeService = {
     Prisma.AttributeScalarFieldEnum.updatedAt,
     Prisma.AttributeScalarFieldEnum.createdAt,
   ],
+  GET_LITE_SORTABLE_FIELDS: [
+    Prisma.AttributeScalarFieldEnum.id,
+    Prisma.AttributeScalarFieldEnum.name,
+  ],
 
   get: async ({ query }: IAdminCtxQuery<IGetAttributeQuery>) => {
     const where: Prisma.AttributeWhereInput = {
@@ -54,6 +60,19 @@ export const attributeService = {
     ])
 
     return OkListRes(IAttributeRes.list(attributes), total)
+  },
+
+  getLite: async ({ query }: IAdminCtxQuery<ILiteQuery>) => {
+    const where: Prisma.AttributeWhereInput = {
+      name: { contains: query.search ?? Prisma.skip },
+    }
+
+    const attributes = await prisma.attribute.findMany({
+      where,
+      ...queryUtil.skipTakeOrder(query),
+    })
+
+    return OkLiteRes(IAttributeLiteRes.list(attributes))
   },
 
   getDetail: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {

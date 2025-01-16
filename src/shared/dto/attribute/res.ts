@@ -6,21 +6,32 @@ export enum E_ATTRIBUTE_EXCEPTION {
   KEY_EXISTED = 'KEY_EXISTED',
 }
 
-export class IAttributeRes {
+export class IAttributeLiteRes {
   id: string
   name: string
   key: string
-  description: string
   type: E_ATTRIBUTE_TYPE
-  updatedAt: string
-  createdAt: string
 
   constructor(data: Attribute) {
     this.id = data.id
     this.name = data.name
     this.key = data.key
-    this.description = data.description
     this.type = data.type
+  }
+
+  static list(data: Attribute[]) {
+    return data.map((d) => new IAttributeLiteRes(d))
+  }
+}
+
+export class IAttributeRes extends IAttributeLiteRes {
+  description: string
+  updatedAt: string
+  createdAt: string
+
+  constructor(data: Attribute) {
+    super(data)
+    this.description = data.description
     this.updatedAt = data.updatedAt.toISOString()
     this.createdAt = data.createdAt.toISOString()
   }
@@ -30,18 +41,18 @@ export class IAttributeRes {
   }
 }
 
-type TDetailParam = Prisma.AttributeGetPayload<{
+type IAttributeDetailResParam = Prisma.AttributeGetPayload<{
   include: { attributeOptions: true }
 }>
 export class IAttributeDetailRes extends IAttributeRes {
   options: IAttributeOptionRes[]
 
-  constructor(data: TDetailParam) {
+  constructor(data: IAttributeDetailResParam) {
     super(data)
     this.options = IAttributeOptionRes.list(data.attributeOptions)
   }
 
-  static list(data: TDetailParam[]) {
+  static list(data: IAttributeDetailResParam[]) {
     return data.map((d) => new IAttributeDetailRes(d))
   }
 }

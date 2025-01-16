@@ -10,6 +10,7 @@ import { ICtx, IMiddlewareArgNext, IMiddlewareArgs } from '~/server/core'
 import {
   ISortQuerySchemaParams,
   ListQuerySchema,
+  LiteQuerySchema,
   PaginationQuerySchema,
 } from '~/server/dto/_common/req'
 
@@ -51,16 +52,22 @@ export function bodyValidator(schema: ZodSchema) {
   }
 }
 
-export async function idParamValidator(...args: IMiddlewareArgs) {
-  await paramValidator(['id'])(...args)
+export function idParamValidator(...args: IMiddlewareArgs) {
+  return paramValidator(['id'])(...args)
 }
 
-export async function paginationQueryValidator(...args: IMiddlewareArgs) {
+export function paginationQueryValidator(...args: IMiddlewareArgs) {
   queryValidator(PaginationQuerySchema)(...args)
 }
 
 export function listQueryValidator(...sortArgs: ISortQuerySchemaParams) {
   return (...args: IMiddlewareArgs) => {
     queryValidator(ListQuerySchema(...sortArgs))(...args)
+  }
+}
+
+export function liteQueryValidator(...sortArgs: ISortQuerySchemaParams) {
+  return (...args: IMiddlewareArgs) => {
+    queryValidator(LiteQuerySchema(...sortArgs))(...args)
   }
 }

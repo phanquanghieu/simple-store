@@ -10,6 +10,8 @@ import { Dialog, DialogContent } from '~/app/_components/ui/dialog'
 
 import { cn } from '~/app/_libs/utils'
 
+import { Spinner } from './spinner'
+
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive>
@@ -39,10 +41,16 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+    isLoading?: boolean
+  }
+>(({ className, isLoading, ...props }, ref) => (
   <div className='flex items-center border-b px-3' cmdk-input-wrapper=''>
-    <LuSearch className='mr-2 h-4 w-4 shrink-0 opacity-50' />
+    {isLoading ? (
+      <Spinner className='mr-2 h-4 w-4 shrink-0 opacity-50' />
+    ) : (
+      <LuSearch className='mr-2 h-4 w-4 shrink-0 opacity-50' />
+    )}
     <CommandPrimitive.Input
       className={cn(
         'flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',

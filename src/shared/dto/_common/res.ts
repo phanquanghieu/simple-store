@@ -7,6 +7,10 @@ export interface IOkListRes<IRes = object> {
   total: number
 }
 
+export interface IOkLiteRes<IRes = object> {
+  data: IRes[]
+}
+
 export interface IErrorRes<IDetail = object> {
   error: string
   message: string

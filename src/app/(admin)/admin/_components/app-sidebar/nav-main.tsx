@@ -42,9 +42,9 @@ export function NavMain({ menuItems }: { menuItems: IMenuItem[] }) {
                 asChild
                 className='group/collapsible'
                 open={
-                  menuItem.url === pathname ||
-                  menuItem.subMenuItems.some(
-                    (subMenuItem) => subMenuItem.url === pathname,
+                  pathname.startsWith(menuItem.url) ||
+                  menuItem.subMenuItems.some((subMenuItem) =>
+                    pathname.startsWith(subMenuItem.url),
                   )
                 }
               >

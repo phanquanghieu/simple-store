@@ -25,11 +25,11 @@
       "addOption": "Thêm tùy chọn",
       "attributes": "Thuộc tính",
       "createAttribute": "Tạo thuộc tính",
-      "description": "Sự miêu tả",
+      "description": "Mô tả",
       "editAttribute": "Chỉnh sửa thuộc tính",
       "key": "Chìa khóa",
       "name": "Tên",
-      "optionKey": "Phím tùy chọn",
+      "optionKey": "Khoá tùy chọn",
       "optionName": "Tên tùy chọn",
       "options": "Tùy chọn",
       "type": "Kiểu"
@@ -50,9 +50,30 @@
       },
       "brands": "Thương hiệu",
       "createBrand": "Tạo thương hiệu",
-      "description": "Sự miêu tả",
+      "description": "Mô tả",
       "editBrand": "Chỉnh sửa thương hiệu",
       "name": "Tên"
+    },
+    "Category": {
+      "BulkAction": {
+        "Confirm": {
+          "DELETE": "Xóa {count} danh mục?"
+        },
+        "Label": {
+          "DELETE": "Xóa bỏ"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Xóa danh mục này?"
+        }
+      },
+      "categories": "Danh sách danh mục",
+      "createCategory": "Tạo danh mục",
+      "description": "Mô tả",
+      "editCategory": "Chỉnh sửa danh mục",
+      "name": "Tên",
+      "parent": "Danh mục cha"
     },
     "Common": {
       "Api": {
@@ -83,7 +104,9 @@
         "rowSelected": "{count} trong số {total} hàng đã được chọn",
         "rowsPerPage": "Số hàng trên mỗi trang"
       },
-      "noResultFound": "Không tìm thấy kết quả"
+      "loadMore": "Tải thêm",
+      "noResultFound": "Không tìm thấy kết quả",
+      "null": "(không có giá trị)"
     },
     "Login": {
       "FormError": {
@@ -163,6 +186,7 @@
     "bulk": "Hàng loạt",
     "cancel": "Hủy bỏ",
     "clear": "Xóa",
+    "close": "Đóng",
     "create": "Tạo mới",
     "createdAt": "Thời gian tạo",
     "delete": "Xóa bỏ",

@@ -160,7 +160,7 @@ export default function Page() {
   const formId = useId()
   const router = useRouter()
 
-  const onSubmit = (values: TUpdateAttributeFormValue) => {
+  const handleUpdate = (values: TUpdateAttributeFormValue) => {
     mutateUpdate(
       { id, body: values },
       {
@@ -208,7 +208,11 @@ export default function Page() {
       </PageHeader>
 
       <Container>
-        <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
+        <Form
+          onSubmit={form.handleSubmit(handleUpdate)}
+          form={form}
+          id={formId}
+        >
           <Grid grid={2}>
             <Col>
               <CardS>

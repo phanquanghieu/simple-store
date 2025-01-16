@@ -2,7 +2,7 @@ import { routeExecutor } from '~/server/core'
 
 import { categoryService } from '~/server/services/category.service'
 
-import { UpdateCategorySchema } from '~/server/dto/category/req'
+import { UpdateCategoryBodySchema } from '~/server/dto/category/req'
 import {
   adminGuard,
   bodyValidator,
@@ -21,7 +21,7 @@ export async function PATCH(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
     idParamValidator,
-    bodyValidator(UpdateCategorySchema),
+    bodyValidator(UpdateCategoryBodySchema),
     categoryService.update,
   )
 }

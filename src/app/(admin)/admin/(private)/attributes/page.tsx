@@ -8,7 +8,6 @@ import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 
 import { E_BULK_ATTRIBUTE_TYPE } from '~/shared/dto/attribute/req'
 import { IAttributeRes } from '~/shared/dto/attribute/res'
-import { E_BULK_PRODUCT_TYPE } from '~/shared/dto/product/req'
 
 import { FilterSelect } from '~/app/_components/data-table/components/filter/filter-select'
 import { DataTable } from '~/app/_components/data-table/data-table'
@@ -212,7 +211,7 @@ const dataTableConfig: IDataTableConfig<IAttributeRes> = {
   bulkActionDefs: [
     {
       ...BULK_ACTION_COMMON.DELETE,
-      type: E_BULK_PRODUCT_TYPE.DELETE,
+      type: E_BULK_ATTRIBUTE_TYPE.DELETE,
     },
   ],
   rowActionDefs: [

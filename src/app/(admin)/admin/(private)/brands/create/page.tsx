@@ -46,7 +46,7 @@ export default function Page() {
   const formId = useId()
   const router = useRouter()
 
-  function onSubmit(values: TCreateBrandFormValue) {
+  const handleCreate = (values: TCreateBrandFormValue) => {
     mutate(values, {
       onSuccess: () => {
         router.push('/admin/brands')
@@ -71,7 +71,11 @@ export default function Page() {
       </PageHeader>
 
       <Container>
-        <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
+        <Form
+          onSubmit={form.handleSubmit(handleCreate)}
+          form={form}
+          id={formId}
+        >
           <Grid grid={4}>
             <Col col={2} start={2}>
               <Grid>

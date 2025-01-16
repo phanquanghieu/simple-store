@@ -28,6 +28,7 @@ export function SelectFormField({
   description,
   isOptionLabelMessageKey = false,
   disabled = false,
+  hasNullOption = false,
 }: {
   name: string
   options: IOption[]
@@ -36,23 +37,35 @@ export function SelectFormField({
   description?: TMessageKey
   isOptionLabelMessageKey?: boolean
   disabled?: boolean
+  hasNullOption?: boolean
 }) {
-  const form = useFormContext()
+  const { control, getFieldState, formState } = useFormContext()
+  const { error } = getFieldState(name, formState)
 
   const t = useTranslations()
+
   return (
     <FormField
-      control={form.control}
+      control={control}
       name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
             <Select onValueChange={field.onChange} {...field}>
-              <SelectTrigger disabled={disabled} ref={field.ref}>
+              <SelectTrigger
+                disabled={disabled}
+                isError={!!error}
+                ref={field.ref}
+              >
                 <SelectValue placeholder={placeholder && t(placeholder)} />
               </SelectTrigger>
               <SelectContent side='bottom'>
+                {hasNullOption && (
+                  <SelectItem key={NullOption.value} value={NullOption.value}>
+                    {t(NullOption.label)}
+                  </SelectItem>
+                )}
                 {options.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {isOptionLabelMessageKey
@@ -69,4 +82,9 @@ export function SelectFormField({
       )}
     />
   )
+}
+
+const NullOption: IOption<TMessageKey, string> = {
+  label: 'Admin.Common.null',
+  value: '_null',
 }

@@ -2,7 +2,7 @@ import { routeExecutor } from '~/server/core'
 
 import { categoryService } from '~/server/services/category.service'
 
-import { CreateCategorySchema } from '~/server/dto/category/req'
+import { CreateCategoryBodySchema } from '~/server/dto/category/req'
 import {
   adminGuard,
   bodyValidator,
@@ -20,7 +20,7 @@ export function GET(...args: INextRouteArgs) {
 export async function POST(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
-    bodyValidator(CreateCategorySchema),
+    bodyValidator(CreateCategoryBodySchema),
     categoryService.create,
   )
 }

@@ -163,7 +163,7 @@ export default function Page() {
     )
   }, [type, form])
 
-  function onSubmit(values: TCreateAttributeFormValue) {
+  const handleCreate = (values: TCreateAttributeFormValue) => {
     mutateCreate(values, {
       onSuccess: () => {
         router.push('/admin/attributes')
@@ -197,7 +197,11 @@ export default function Page() {
       </PageHeader>
 
       <Container>
-        <Form onSubmit={form.handleSubmit(onSubmit)} form={form} id={formId}>
+        <Form
+          onSubmit={form.handleSubmit(handleCreate)}
+          form={form}
+          id={formId}
+        >
           <Grid grid={2}>
             <Col>
               <CardS>

@@ -54,6 +54,27 @@
       "editBrand": "Edit Brand",
       "name": "Name"
     },
+    "Category": {
+      "BulkAction": {
+        "Confirm": {
+          "DELETE": "Delete {count} categories?"
+        },
+        "Label": {
+          "DELETE": "Delete"
+        }
+      },
+      "RowAction": {
+        "Confirm": {
+          "DELETE": "Delete this category?"
+        }
+      },
+      "categories": "Categories",
+      "createCategory": "Create Category",
+      "description": "Description",
+      "editCategory": "Edit Category",
+      "name": "Name",
+      "parent": "Parent"
+    },
     "Common": {
       "Api": {
         "Exception": {
@@ -83,7 +104,9 @@
         "rowSelected": "{count} of {total} rows selected",
         "rowsPerPage": "Rows per page"
       },
-      "noResultFound": "No result found"
+      "loadMore": "Load More",
+      "noResultFound": "No result found",
+      "null": "(null)"
     },
     "Login": {
       "FormError": {
@@ -163,6 +186,7 @@
     "bulk": "Bulk",
     "cancel": "Cancel",
     "clear": "Clear",
+    "close": "Close",
     "create": "Create",
     "createdAt": "Created At",
     "delete": "Delete",

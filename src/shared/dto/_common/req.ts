@@ -23,3 +23,8 @@ export interface IListQuery
   extends IPaginationQuery,
     ISortQuery,
     ISearchQuery {}
+
+export interface ILiteQuery
+  extends IPaginationQuery,
+    ISortQuery,
+    ISearchQuery {}

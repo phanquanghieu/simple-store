@@ -54,3 +54,9 @@ export const ListQuerySchema = (...args: ISortQuerySchemaParams) => {
     SortQuerySchema(...args),
   )
 }
+
+export const LiteQuerySchema = (...args: ISortQuerySchemaParams) => {
+  return PaginationQuerySchema.merge(SearchQuerySchema).merge(
+    SortQuerySchema(...args),
+  )
+}

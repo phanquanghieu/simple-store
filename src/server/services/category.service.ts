@@ -1,12 +1,15 @@
 import { Prisma } from '@prisma/client'
-import { isUndefined } from 'lodash'
+import { difference, isUndefined } from 'lodash'
 import { v7 } from 'uuid'
 
 import { IIdParam, IListQuery } from '~/shared/dto/_common/req'
 import {
+  E_BULK_CATEGORY_TYPE,
+  IBulkCategoryBody,
   ICreateCategoryBody,
   IUpdateCategoryBody,
 } from '~/shared/dto/category/req'
+import { ICategoryDetailRes, ICategoryRes } from '~/shared/dto/category/res'
 
 import {
   BadRequestException,
@@ -27,6 +30,7 @@ export const categoryService = {
   GET_SORTABLE_FIELDS: [
     Prisma.CategoryScalarFieldEnum.id,
     Prisma.CategoryScalarFieldEnum.name,
+    Prisma.CategoryScalarFieldEnum.updatedAt,
     Prisma.CategoryScalarFieldEnum.createdAt,
   ],
   CATEGORY_TREE_HEIGHT: 5,
@@ -40,11 +44,14 @@ export const categoryService = {
       prisma.category.findMany({
         where,
         ...queryUtil.skipTakeOrder(query),
+        include: {
+          parent: true,
+        },
       }),
       prisma.category.count({ where }),
     ])
 
-    return OkListRes(categories, total)
+    return OkListRes(ICategoryRes.list(categories), total)
   },
 
   getOne: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
@@ -52,6 +59,8 @@ export const categoryService = {
       .findUniqueOrThrow({
         where: { id },
         include: {
+          parent: true,
+          attributes: true,
           children: {
             include: {
               children: {
@@ -71,7 +80,7 @@ export const categoryService = {
         throw new NotFoundException()
       })
 
-    return OkRes(category)
+    return OkRes(new ICategoryDetailRes(category))
   },
 
   create: async ({ body }: IAdminCtxBody<ICreateCategoryBody>) => {
@@ -101,6 +110,13 @@ export const categoryService = {
         parentId: body.parentId,
         name: body.name,
         description: body.description,
+        attributes: {
+          connect: body.attributeIds.length
+            ? body.attributeIds.map((attributeId) => ({
+                id: attributeId,
+              }))
+            : Prisma.skip,
+        },
       },
     })
 
@@ -111,18 +127,48 @@ export const categoryService = {
     param: { id },
     body,
   }: IAdminCtxParamBody<IIdParam, IUpdateCategoryBody>) => {
-    const category = await prisma.category
-      .findUniqueOrThrow({ where: { id } })
+    const currCategory = await prisma.category
+      .findUniqueOrThrow({ where: { id }, include: { attributes: true } })
       .catch(() => {
         throw new NotFoundException()
       })
 
-    if (isUndefined(body.parentId) || category.parentId === body.parentId) {
+    let updateDataAttributes:
+      | Prisma.AttributeUpdateManyWithoutCategoriesNestedInput
+      | undefined
+
+    if (body.attributeIds) {
+      const currAttributeIds = currCategory.attributes.map((x) => x.id)
+      const attributeConnectIds = difference(
+        body.attributeIds,
+        currAttributeIds,
+      )
+      const attributeDisconnectIds = difference(
+        currAttributeIds,
+        body.attributeIds,
+      )
+
+      updateDataAttributes = {
+        connect: attributeConnectIds.length
+          ? attributeConnectIds.map((attributeId) => ({
+              id: attributeId,
+            }))
+          : Prisma.skip,
+        disconnect: attributeDisconnectIds.length
+          ? attributeDisconnectIds.map((attributeId) => ({
+              id: attributeId,
+            }))
+          : Prisma.skip,
+      }
+    }
+
+    if (isUndefined(body.parentId) || currCategory.parentId === body.parentId) {
       const updated = await prisma.category.update({
         where: { id },
         data: {
           name: body.name ?? Prisma.skip,
           description: body.description ?? Prisma.skip,
+          attributes: updateDataAttributes ?? Prisma.skip,
         },
       })
 
@@ -139,11 +185,11 @@ export const categoryService = {
           })
 
         const maxDepthOfDescendants =
-          await categoryService._findMaxDepthOfDescendants(category.id)
+          await categoryService._findMaxDepthOfDescendants(id)
 
         const newHeight =
           categoryParent.pathIds.length +
-          (maxDepthOfDescendants - category.pathIds.length + 1)
+          (maxDepthOfDescendants - currCategory.pathIds.length + 1)
         if (newHeight > categoryService.CATEGORY_TREE_HEIGHT) {
           throw new BadRequestException('Category tree height exceeded.')
         }
@@ -165,6 +211,7 @@ export const categoryService = {
             parentId: body.parentId,
             name: body.name ?? Prisma.skip,
             description: body.description ?? Prisma.skip,
+            attributes: updateDataAttributes ?? Prisma.skip,
           },
         }),
       ])
@@ -183,6 +230,20 @@ export const categoryService = {
     })
 
     return OkRes(deleted)
+  },
+
+  bulk: async ({ body: { ids, type } }: IAdminCtxBody<IBulkCategoryBody>) => {
+    switch (type) {
+      case E_BULK_CATEGORY_TYPE.DELETE: {
+        await prisma.category.deleteMany({
+          where: { id: { in: ids } },
+        })
+
+        break
+      }
+    }
+
+    return OkRes(true)
   },
 
   _findMaxDepthOfDescendants: async (id: string) => {

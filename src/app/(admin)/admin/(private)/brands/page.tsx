@@ -6,7 +6,6 @@ import { LuPlus } from 'react-icons/lu'
 
 import { E_BULK_BRAND_TYPE } from '~/shared/dto/brand/req'
 import { IBrandRes } from '~/shared/dto/brand/res'
-import { E_BULK_PRODUCT_TYPE } from '~/shared/dto/product/req'
 
 import { DataTable } from '~/app/_components/data-table/data-table'
 import {
@@ -169,7 +168,7 @@ const dataTableConfig: IDataTableConfig<IBrandRes> = {
   bulkActionDefs: [
     {
       ...BULK_ACTION_COMMON.DELETE,
-      type: E_BULK_PRODUCT_TYPE.DELETE,
+      type: E_BULK_BRAND_TYPE.DELETE,
     },
   ],
   rowActionDefs: [
