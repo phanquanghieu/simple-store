@@ -6,7 +6,7 @@ import { PropsWithChildren } from 'react'
 
 import { CellContext } from '@tanstack/react-table'
 
-import { E_COLUMN_ID } from '~/app/_components/data-table/data-table.interface'
+import { E_COLUMN_ID } from '~/app/_components/data-table'
 
 import { useThrottledCallback } from '~/app/_hooks/common/use-throttled-callback'
 import { useCurrency } from '~/app/_hooks/use-currency'
@@ -18,8 +18,6 @@ import { Checkbox } from '../../ui/checkbox'
 
 export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   const { column, getValue, row } = props
-
-  const t = useTranslations()
 
   if (column.id === E_COLUMN_ID.SELECT) {
     return (
@@ -38,13 +36,7 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   const meta = column.columnDef.meta
 
   if (meta?.cellType === 'link') {
-    return (
-      <Link href={meta?.cellLink?.(row.original) ?? '#'}>
-        <Button className='pl-0' variant={'link'}>
-          {getValue<string>()}
-        </Button>
-      </Link>
-    )
+    return <DataTableCellLink {...props} />
   }
 
   if (meta?.cellType === 'datetime') {
@@ -56,18 +48,32 @@ export function DataTableCell<IData>(props: CellContext<IData, unknown>) {
   }
 
   if (meta?.cellType === 'badge') {
-    const metaCellBadge = meta.cellBadge?.[getValue<string>()]
-    return (
-      <Badge variant={metaCellBadge?.variant ?? 'secondary'}>
-        {metaCellBadge && t(metaCellBadge.label)}
-      </Badge>
-    )
+    return <DataTableCellBadge {...props} />
   }
 
   return (
     <div className='truncate' style={{ maxWidth: column.columnDef.maxSize }}>
       {getValue<string>()}
     </div>
+  )
+}
+
+function DataTableCellLink<IData>({
+  getValue,
+  column,
+  row,
+}: CellContext<IData, unknown>) {
+  const meta = column.columnDef.meta
+  return (
+    <Link href={meta?.cellLink?.(row.original) ?? '#'}>
+      <Button
+        className='pl-0'
+        style={{ maxWidth: column.columnDef.maxSize }}
+        variant={'link'}
+      >
+        <span className='truncate'>{getValue<string>()}</span>
+      </Button>
+    </Link>
   )
 }
 
@@ -86,6 +92,21 @@ function DataTableCellDatetime<IData>({
 
   return (
     <div className='w-32'>{value && formatDatetime(value, 'datetime')}</div>
+  )
+}
+
+function DataTableCellBadge<IData>({
+  getValue,
+  column,
+}: CellContext<IData, unknown>) {
+  const t = useTranslations()
+
+  const metaCellBadge = column.columnDef.meta?.cellBadge?.[getValue<string>()]
+
+  return (
+    <Badge variant={metaCellBadge?.variant ?? 'secondary'}>
+      {metaCellBadge && t(metaCellBadge.label)}
+    </Badge>
   )
 }
 

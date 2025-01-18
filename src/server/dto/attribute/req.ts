@@ -5,7 +5,10 @@ import { zod, zodRegex, zodt } from '~/shared/libs/zod'
 
 export const GetAttributeQuerySchema = zod.object({
   type: zod
-    .preprocess(zodt.toArray, zod.nativeEnum(E_ATTRIBUTE_TYPE).array())
+    .preprocess(
+      zodt.toArray,
+      zod.array(zod.nativeEnum(E_ATTRIBUTE_TYPE)).nonempty(),
+    )
     .optional(),
 })
 

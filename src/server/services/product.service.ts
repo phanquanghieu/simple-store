@@ -32,7 +32,7 @@ export const productService = {
     const where: Prisma.ProductWhereInput = {
       name: { contains: query.search ?? Prisma.skip, mode: 'insensitive' },
       status: { in: query.status ?? Prisma.skip },
-      totalVariants: query.totalVariants ?? Prisma.skip,
+      brandId: { in: query.brandIds ?? Prisma.skip },
     }
 
     const [products, total] = await Promise.all([

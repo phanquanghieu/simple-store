@@ -10,7 +10,10 @@ import {
 
 import { IFilterDef } from '~/app/_components/data-table/data-table.interface'
 
-export function useQueryFilter<IQuery>(filterDefs: IFilterDef<IQuery>[] = []) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useQueryFilter<IQuery = any>(
+  filterDefs: IFilterDef<IQuery>[] = [],
+) {
   const parseAsFilters = useMemo(() => {
     return filterDefs.reduce(
       (parseAsFilters, { queryField, dataType }) => {
@@ -29,7 +32,7 @@ export function useQueryFilter<IQuery>(filterDefs: IFilterDef<IQuery>[] = []) {
         return parseAsFilters
       },
       {} as Record<
-        string,
+        Extract<keyof IQuery, string>,
         Parser<string> | Parser<string[]> | Parser<number> | Parser<number[]>
       >,
     )

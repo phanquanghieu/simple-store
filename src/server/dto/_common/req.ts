@@ -2,6 +2,12 @@ import { isArray } from 'lodash'
 
 import { zod, zodt } from '~/shared/libs/zod'
 
+export const IdsQuerySchema = zod.object({
+  ids: zod
+    .preprocess(zodt.toArray, zod.array(zod.string().uuid()).nonempty())
+    .optional(),
+})
+
 export const PaginationQuerySchema = zod.object({
   page: zod.coerce.number().positive().default(1),
   size: zod.coerce.number().positive().max(100).default(10),
@@ -56,7 +62,7 @@ export const ListQuerySchema = (...args: ISortQuerySchemaParams) => {
 }
 
 export const LiteQuerySchema = (...args: ISortQuerySchemaParams) => {
-  return PaginationQuerySchema.merge(SearchQuerySchema).merge(
-    SortQuerySchema(...args),
-  )
+  return IdsQuerySchema.merge(PaginationQuerySchema)
+    .merge(SearchQuerySchema)
+    .merge(SortQuerySchema(...args))
 }

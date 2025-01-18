@@ -9,16 +9,14 @@ import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 import { E_BULK_ATTRIBUTE_TYPE } from '~/shared/dto/attribute/req'
 import { IAttributeRes } from '~/shared/dto/attribute/res'
 
-import { FilterSelect } from '~/app/_components/data-table/components/filter/filter-select'
-import { DataTable } from '~/app/_components/data-table/data-table'
 import {
   BULK_ACTION_COMMON,
-  ROW_ACTION_COMMON,
-} from '~/app/_components/data-table/data-table.constant'
-import {
+  DataTable,
+  FSelect,
   IDataTableConfig,
+  ROW_ACTION_COMMON,
   useDataTable,
-} from '~/app/_components/data-table/hooks/use-data-table'
+} from '~/app/_components/data-table'
 import { Button } from '~/app/_components/ui/button'
 
 import { useBulkAttributes } from '~/app/_apis/admin/attribute/useBulkAttributes'
@@ -100,11 +98,12 @@ export default function Page() {
         data={data?.data}
         filterNode={
           <>
-            <FilterSelect
+            <FSelect
+              isMultiSelect
               isOptionLabelMessageKey
               options={TYPE_OPTIONS}
+              placeholder={'Admin.Attribute.type'}
               queryField='type'
-              title={'Admin.Attribute.type'}
             />
           </>
         }

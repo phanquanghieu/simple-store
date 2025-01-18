@@ -24,6 +24,7 @@
       },
       "addOption": "Add Option",
       "attributes": "Attributes",
+      "attribute": "Attribute",
       "createAttribute": "Create Attribute",
       "description": "Description",
       "editAttribute": "Edit Attribute",
@@ -49,6 +50,7 @@
         }
       },
       "brands": "Brands",
+      "brand": "Brand",
       "createBrand": "Create Brand",
       "description": "Description",
       "editBrand": "Edit Brand",
@@ -72,6 +74,7 @@
         }
       },
       "categories": "Categories",
+      "category": "Category",
       "createCategory": "Create Category",
       "description": "Description",
       "editCategory": "Edit Category",

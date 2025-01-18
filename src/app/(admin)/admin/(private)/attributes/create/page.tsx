@@ -24,7 +24,7 @@ import {
   Form,
   InputFormField,
   RichTextFormField,
-  SelectFormField,
+  Select2FormField,
 } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
@@ -223,7 +223,7 @@ export default function Page() {
               <CardS>
                 <Grid className='gap-3' grid={2}>
                   <Col>
-                    <SelectFormField
+                    <Select2FormField
                       isOptionLabelMessageKey
                       label={'Admin.Attribute.type'}
                       name='type'

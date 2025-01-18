@@ -9,16 +9,15 @@ import { E_PRODUCT_STATUS } from '@prisma/client'
 import { E_BULK_PRODUCT_TYPE } from '~/shared/dto/product/req'
 import { IProductRes } from '~/shared/dto/product/res'
 
-import { FilterSelect } from '~/app/_components/data-table/components/filter/filter-select'
-import { DataTable } from '~/app/_components/data-table/data-table'
 import {
   BULK_ACTION_COMMON,
-  ROW_ACTION_COMMON,
-} from '~/app/_components/data-table/data-table.constant'
-import {
+  DataTable,
+  FSelect,
+  FSelectBrand,
   IDataTableConfig,
+  ROW_ACTION_COMMON,
   useDataTable,
-} from '~/app/_components/data-table/hooks/use-data-table'
+} from '~/app/_components/data-table'
 import { Button } from '~/app/_components/ui/button'
 
 import { useBulkProducts } from '~/app/_apis/admin/product/useBulkProducts'
@@ -28,10 +27,10 @@ import {
   SORT_DEFAULTS,
   useGetListProducts,
 } from '~/app/_apis/admin/product/useGetListProducts'
-import { IOption } from '~/app/_interfaces/common.interface'
 
 import { ConfirmDialog } from '../../_components/dialogs/confirm-dialog'
 import { PageHeader } from '../../_components/page-header'
+import { STATUS_OPTIONS } from './_common'
 
 export default function Page() {
   const { data, isFetching, refetch } = useGetListProducts()
@@ -98,18 +97,14 @@ export default function Page() {
         data={data?.data}
         filterNode={
           <>
-            <FilterSelect
+            <FSelect
+              isMultiSelect
               isOptionLabelMessageKey
               options={STATUS_OPTIONS}
+              placeholder={'Admin.Product.status'}
               queryField='status'
-              title={'Admin.Product.status'}
             />
-            <FilterSelect
-              isSingleSelect
-              options={TOTAL_VARIANTS_OPTIONS}
-              queryField='totalVariants'
-              title={'Admin.Product.totalVariants'}
-            />
+            <FSelectBrand isMultiSelect isSearchable queryField='brandIds' />
           </>
         }
         getRowId={(row) => row.id}
@@ -274,32 +269,3 @@ const dataTableConfig: IDataTableConfig<IProductRes> = {
     { ...ROW_ACTION_COMMON.DELETE, type: E_ROW_ACTION_TYPE.DELETE },
   ],
 }
-
-const STATUS_OPTIONS: IOption<TMessageKey, E_PRODUCT_STATUS>[] = [
-  {
-    label: 'Admin.Product.Status.DRAFT',
-    value: E_PRODUCT_STATUS.DRAFT,
-  },
-  {
-    label: 'Admin.Product.Status.ACTIVE',
-    value: E_PRODUCT_STATUS.ACTIVE,
-  },
-  {
-    label: 'Admin.Product.Status.ARCHIVED',
-    value: E_PRODUCT_STATUS.ARCHIVED,
-  },
-]
-const TOTAL_VARIANTS_OPTIONS: IOption<string, number>[] = [
-  {
-    label: '1',
-    value: 1,
-  },
-  {
-    label: '2',
-    value: 2,
-  },
-  {
-    label: '3',
-    value: 3,
-  },
-]

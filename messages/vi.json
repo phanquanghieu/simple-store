@@ -23,6 +23,7 @@
         "TEXT": "Chữ"
       },
       "addOption": "Thêm tùy chọn",
+      "attribute": "Thuộc tính",
       "attributes": "Thuộc tính",
       "createAttribute": "Tạo thuộc tính",
       "description": "Mô tả",
@@ -48,6 +49,7 @@
           "DELETE": "Xóa thương hiệu này?"
         }
       },
+      "brand": "Thương hiệu",
       "brands": "Thương hiệu",
       "createBrand": "Tạo thương hiệu",
       "description": "Mô tả",
@@ -72,6 +74,7 @@
         }
       },
       "categories": "Danh sách danh mục",
+      "category": "Danh mục",
       "createCategory": "Tạo danh mục",
       "description": "Mô tả",
       "editCategory": "Chỉnh sửa danh mục",

@@ -43,7 +43,7 @@ import { Collapsible, CollapsibleContent } from './collapsible'
 export interface ISelectTreeProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
   options: IOptionTree[]
-  defaultOption?: IOptionTree | null
+  initOption?: IOptionTree | null
   value?: string
   onChange: (value: string) => void
   disableValue?: string // value of root tree must be disabled
@@ -61,7 +61,7 @@ export const SelectTree = forwardRef<HTMLButtonElement, ISelectTreeProps>(
   (
     {
       options: propOptions,
-      defaultOption,
+      initOption,
       value,
       onChange,
       disableValue,
@@ -109,8 +109,8 @@ export const SelectTree = forwardRef<HTMLButtonElement, ISelectTreeProps>(
       setSelectedOption((prevSelectedOption) => {
         let _selectedOption = null
         if (value) {
-          if (defaultOption && defaultOption.value === value) {
-            _selectedOption = defaultOption
+          if (initOption && initOption.value === value) {
+            _selectedOption = initOption
           } else if (prevSelectedOption && prevSelectedOption.value === value) {
             _selectedOption = prevSelectedOption
           } else {
@@ -119,7 +119,7 @@ export const SelectTree = forwardRef<HTMLButtonElement, ISelectTreeProps>(
         }
         return _selectedOption
       })
-    }, [value, options, defaultOption])
+    }, [value, options, initOption])
 
     const handleSelect = (option: IOptionTree) => {
       if (option.value !== selectedOption?.value) {

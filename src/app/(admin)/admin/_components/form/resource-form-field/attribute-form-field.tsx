@@ -5,12 +5,12 @@ import { useDebounceValue } from 'usehooks-ts'
 import { useGetInfinityAttributes } from '~/app/_apis/admin/attribute/useGetInfiniteAttributes'
 
 import {
-  ISelectMultiFormFieldProps,
-  SelectMultiFormField,
-} from '../form-field/select-multi-form-field'
+  ISelect2FormFieldProps,
+  Select2FormField,
+} from '../form-field/select2-form-field'
 
 export function AttributeFormField(
-  props: Omit<ISelectMultiFormFieldProps, 'options'>,
+  props: Omit<ISelect2FormFieldProps, 'options'>,
 ) {
   const [search, setSearch] = useState('')
   const [searchDebounced] = useDebounceValue(search, 500)
@@ -33,16 +33,17 @@ export function AttributeFormField(
   )
 
   return (
-    <SelectMultiFormField
-      {...props}
+    <Select2FormField
       onLoadMore={fetchNextPage}
-      onSearchChange={setSearch}
       setIsPopoverOpen={setIsPopoverOpen}
+      setSearch={setSearch}
       hasMore={hasNextPage}
       isFetching={isFetching}
+      isMultiSelect
       isPopoverOpen={isPopoverOpen}
       options={options}
       search={search}
+      {...props}
     />
   )
 }

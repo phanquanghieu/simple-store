@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-import { IIdParam } from '~/shared/dto/_common/req'
+import { IIdParam, ILiteQuery } from '~/shared/dto/_common/req'
 import {
   E_BULK_BRAND_TYPE,
   IBulkBrandBody,
@@ -8,9 +8,19 @@ import {
   IGetBrandQuery,
   IUpdateBrandBody,
 } from '~/shared/dto/brand/req'
-import { IBrandDetailRes, IBrandRes } from '~/shared/dto/brand/res'
+import {
+  IBrandDetailRes,
+  IBrandLiteRes,
+  IBrandRes,
+} from '~/shared/dto/brand/res'
 
-import { NotFoundException, OkListRes, OkRes, queryUtil } from '../common'
+import {
+  NotFoundException,
+  OkListRes,
+  OkLiteRes,
+  OkRes,
+  queryUtil,
+} from '../common'
 import {
   IAdminCtxBody,
   IAdminCtxParam,
@@ -27,6 +37,15 @@ export const brandService = {
     Prisma.BrandScalarFieldEnum.createdAt,
   ],
 
+  GET_LITE_SORTABLE_FIELDS: [
+    Prisma.BrandScalarFieldEnum.id,
+    Prisma.BrandScalarFieldEnum.name,
+  ],
+  GET_LITE_SORT_DEFAULTS: [
+    ['name', 'asc'],
+    ['id', 'desc'],
+  ],
+
   get: async ({ query }: IAdminCtxQuery<IGetBrandQuery>) => {
     const where: Prisma.BrandWhereInput = {
       name: { contains: query.search ?? Prisma.skip },
@@ -41,6 +60,19 @@ export const brandService = {
     ])
 
     return OkListRes(IBrandRes.list(brands), total)
+  },
+
+  getLite: async ({ query }: IAdminCtxQuery<ILiteQuery>) => {
+    const brands = await prisma.brand.findMany({
+      where: query.ids
+        ? { id: { in: query.ids } }
+        : {
+            name: { contains: query.search ?? Prisma.skip },
+          },
+      ...queryUtil.skipTakeOrder(query),
+    })
+
+    return OkLiteRes(IBrandLiteRes.list(brands))
   },
 
   getDetail: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {

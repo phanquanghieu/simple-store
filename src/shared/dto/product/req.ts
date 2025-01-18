@@ -4,7 +4,7 @@ import { IListQuery } from '../_common/req'
 
 export interface IGetProductQuery extends IListQuery {
   status?: E_PRODUCT_STATUS[]
-  totalVariants?: number
+  brandIds?: string[]
 }
 
 export interface ICreateProductBody {

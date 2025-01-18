@@ -39,7 +39,7 @@ import { Checkbox } from './checkbox'
 export interface ISelectMultiProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
   options: IOption[]
-  defaultOptions?: IOption[]
+  initOptions?: IOption[]
   value?: string[]
   onChange: (value: string[]) => void
   search?: string
@@ -59,7 +59,7 @@ export const SelectMulti = forwardRef<HTMLButtonElement, ISelectMultiProps>(
   (
     {
       options,
-      defaultOptions = [],
+      initOptions = [],
       value = [],
       onChange,
       search,
@@ -88,13 +88,13 @@ export const SelectMulti = forwardRef<HTMLButtonElement, ISelectMultiProps>(
     useDeepCompareEffect(() => {
       setSelectedOptions((prevSelectedOptions) =>
         uniqBy(
-          [...defaultOptions, ...prevSelectedOptions, ...options].filter(
+          [...initOptions, ...prevSelectedOptions, ...options].filter(
             (option) => value.includes(option.value),
           ),
           'value',
         ),
       )
-    }, [value, options, defaultOptions])
+    }, [value, options, initOptions])
 
     const toggleOption = (option: IOption) => {
       const newValue = value.includes(option.value)

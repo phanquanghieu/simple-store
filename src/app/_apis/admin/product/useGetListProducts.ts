@@ -22,8 +22,8 @@ export const FILTER_DEFS: IFilterDef<IGetProductQuery>[] = [
     dataType: 'string[]',
   },
   {
-    queryField: 'totalVariants',
-    dataType: 'number',
+    queryField: 'brandIds',
+    dataType: 'string[]',
   },
 ]
 

@@ -5,9 +5,14 @@ import { zod, zodt } from '~/shared/libs/zod'
 
 export const GetProductQuerySchema = zod.object({
   status: zod
-    .preprocess(zodt.toArray, zod.nativeEnum(E_PRODUCT_STATUS).array())
+    .preprocess(
+      zodt.toArray,
+      zod.array(zod.nativeEnum(E_PRODUCT_STATUS)).nonempty(),
+    )
     .optional(),
-  totalVariants: zod.coerce.number().min(0).optional(),
+  brandIds: zod
+    .preprocess(zodt.toArray, zod.array(zod.string().uuid()).nonempty())
+    .optional(),
 })
 
 export const CreateProductBodySchema = zod.object({

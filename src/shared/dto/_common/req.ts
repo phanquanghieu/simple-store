@@ -24,7 +24,6 @@ export interface IListQuery
     ISortQuery,
     ISearchQuery {}
 
-export interface ILiteQuery
-  extends IPaginationQuery,
-    ISortQuery,
-    ISearchQuery {}
+export interface ILiteQuery extends IPaginationQuery, ISortQuery, ISearchQuery {
+  ids?: string[]
+}

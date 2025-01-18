@@ -63,12 +63,12 @@ export const attributeService = {
   },
 
   getLite: async ({ query }: IAdminCtxQuery<ILiteQuery>) => {
-    const where: Prisma.AttributeWhereInput = {
-      name: { contains: query.search ?? Prisma.skip },
-    }
-
     const attributes = await prisma.attribute.findMany({
-      where,
+      where: query.ids
+        ? { id: { in: query.ids } }
+        : {
+            name: { contains: query.search ?? Prisma.skip },
+          },
       ...queryUtil.skipTakeOrder(query),
     })
 

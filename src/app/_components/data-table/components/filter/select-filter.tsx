@@ -31,7 +31,7 @@ import { useTable } from '../../data-table.context'
 
 const OPTION_LENGTH_SHOW_SEARCH = 10
 
-export function FilterSelect({
+export function SelectFilter({
   title,
   queryField,
   options,

@@ -180,19 +180,19 @@ export default function Page() {
               <CardS>
                 <Grid className='gap-3'>
                   <CategoryFormField
-                    defaultOption={
+                    disableValue={category?.id}
+                    hasOptionNull
+                    initOption={
                       category?.parent && {
                         value: category.parent.id,
                         label: category.parent.name,
                       }
                     }
-                    disableValue={category?.id}
-                    hasOptionNull
                     label={'Admin.Category.parent'}
                     name='parentId'
                   />
                   <AttributeFormField
-                    defaultOptions={category?.attributes.map((attribute) => ({
+                    initOption={category?.attributes.map((attribute) => ({
                       value: attribute.id,
                       label: attribute.name,
                     }))}
