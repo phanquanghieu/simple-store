@@ -48,8 +48,11 @@ export function FSelectBrand({
       setSearch={setSearch}
       hasMore={hasNextPage}
       initOption={liteBrandsData?.options}
+      isClearable
       isFetching={isFetching}
+      isMultiSelect
       isPopoverOpen={isPopoverOpen}
+      isSearchable
       options={brandsData?.options}
       placeholder={'Admin.Brand.brand'}
       value={globalFilterValue}

@@ -98,13 +98,11 @@ export default function Page() {
         filterNode={
           <>
             <FSelect
-              isMultiSelect
-              isOptionLabelMessageKey
               options={STATUS_OPTIONS}
               placeholder={'Admin.Product.status'}
               queryField='status'
             />
-            <FSelectBrand isMultiSelect isSearchable queryField='brandIds' />
+            <FSelectBrand queryField='brandIds' />
           </>
         }
         getRowId={(row) => row.id}

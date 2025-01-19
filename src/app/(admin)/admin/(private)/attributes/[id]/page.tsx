@@ -26,10 +26,10 @@ import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import {
   Form,
   InputFormField,
+  ReadonlyDateFormField,
   RichTextFormField,
-  SelectFormField,
+  Select2FormField,
 } from '../../../_components/form'
-import { ReadonlyDateFormField } from '../../../_components/form/form-field/readonly-date-form-field'
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
 import { OptionFormField } from '../_components/option-form-field'
@@ -249,7 +249,7 @@ export default function Page() {
               <CardS>
                 <Grid className='gap-3' grid={2}>
                   <Col>
-                    <SelectFormField
+                    <Select2FormField
                       disabled
                       isOptionLabelMessageKey
                       label={'Admin.Attribute.type'}

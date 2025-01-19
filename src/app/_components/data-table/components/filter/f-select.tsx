@@ -14,6 +14,9 @@ export function FSelect({
   return (
     <Select2
       onChange={setGlobalFilterValue}
+      isClearable
+      isMultiSelect
+      isOptionLabelMessageKey
       value={globalFilterValue}
       variant='filter'
       {...props}

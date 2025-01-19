@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { useDebounceValue } from 'usehooks-ts'
 
@@ -16,21 +16,8 @@ export function AttributeFormField(
   const [searchDebounced] = useDebounceValue(search, 500)
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
-  const {
-    data: attributes,
-    hasNextPage,
-    fetchNextPage,
-    isFetching,
-  } = useGetInfinityAttributes({ search: searchDebounced }, isPopoverOpen)
-
-  const options = useMemo(
-    () =>
-      attributes?.map((attribute) => ({
-        value: attribute.id,
-        label: attribute.name,
-      })) ?? [],
-    [attributes],
-  )
+  const { data, hasNextPage, fetchNextPage, isFetching } =
+    useGetInfinityAttributes({ search: searchDebounced }, isPopoverOpen)
 
   return (
     <Select2FormField
@@ -38,10 +25,12 @@ export function AttributeFormField(
       setIsPopoverOpen={setIsPopoverOpen}
       setSearch={setSearch}
       hasMore={hasNextPage}
+      isClearable
       isFetching={isFetching}
       isMultiSelect
       isPopoverOpen={isPopoverOpen}
-      options={options}
+      isSearchable
+      options={data?.options}
       search={search}
       {...props}
     />

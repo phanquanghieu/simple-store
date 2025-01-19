@@ -7,7 +7,10 @@ import { adminGuard, liteQueryValidator } from '~/server/middlewares'
 export function GET(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
-    liteQueryValidator(attributeService.GET_LITE_SORTABLE_FIELDS),
+    liteQueryValidator(
+      attributeService.GET_LITE_SORTABLE_FIELDS,
+      attributeService.GET_LITE_SORT_DEFAULTS,
+    ),
     attributeService.getLite,
   )
 }

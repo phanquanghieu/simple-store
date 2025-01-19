@@ -40,9 +40,14 @@ export const attributeService = {
     Prisma.AttributeScalarFieldEnum.updatedAt,
     Prisma.AttributeScalarFieldEnum.createdAt,
   ],
+
   GET_LITE_SORTABLE_FIELDS: [
     Prisma.AttributeScalarFieldEnum.id,
     Prisma.AttributeScalarFieldEnum.name,
+  ],
+  GET_LITE_SORT_DEFAULTS: [
+    ['name', 'asc'],
+    ['id', 'desc'],
   ],
 
   get: async ({ query }: IAdminCtxQuery<IGetAttributeQuery>) => {
