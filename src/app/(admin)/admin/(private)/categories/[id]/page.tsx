@@ -21,7 +21,6 @@ import { Col, Container, Grid } from '~/app/_components/ui/layout'
 import { useDeleteCategory } from '~/app/_apis/admin/category/useDeleteCategory'
 import { useGetDetailCategory } from '~/app/_apis/admin/category/useGetDetailCategory'
 import { useUpdateCategory } from '~/app/_apis/admin/category/useUpdateCategory'
-import { SPECIAL_STRING } from '~/app/_constant/common.constant'
 
 import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import {
@@ -35,7 +34,7 @@ import {
 import { PageHeader } from '../../../_components/page-header'
 
 const UpdateCategoryFormSchema = zod.object({
-  parentId: zod.string(),
+  parentId: zod.string().nullable(),
   attributeIds: zod.array(zod.string()),
   name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
   description: zod.string().trim().max(5000),
@@ -45,7 +44,7 @@ const UpdateCategoryFormSchema = zod.object({
 
 type TUpdateCategoryFormValue = z.infer<typeof UpdateCategoryFormSchema>
 const defaultValues: TUpdateCategoryFormValue = {
-  parentId: SPECIAL_STRING.null,
+  parentId: null,
   attributeIds: [],
   name: '',
   description: '',
@@ -54,7 +53,7 @@ const defaultValues: TUpdateCategoryFormValue = {
 export default function Page() {
   const { id } = useParams<TIdParam>()
 
-  const { data: category } = useGetDetailCategory(id)
+  const { data } = useGetDetailCategory(id)
 
   const { mutate: mutateUpdate, isPending: isUpdatePending } =
     useUpdateCategory()
@@ -65,14 +64,14 @@ export default function Page() {
 
   const form = useForm<TUpdateCategoryFormValue>({
     resolver: zodResolver(UpdateCategoryFormSchema),
-    values: category
+    values: data
       ? {
-          parentId: category.parentId ?? SPECIAL_STRING.null,
-          attributeIds: category.attributes.map((attribute) => attribute.id),
-          name: category.name,
-          description: category.description,
-          updatedAt: category.updatedAt,
-          createdAt: category.createdAt,
+          parentId: data.category.parentId,
+          attributeIds: data.attributeIds,
+          name: data.category.name,
+          description: data.category.description,
+          updatedAt: data.category.updatedAt,
+          createdAt: data.category.createdAt,
         }
       : defaultValues,
     mode: 'onBlur',
@@ -85,8 +84,7 @@ export default function Page() {
       {
         id,
         body: {
-          parentId:
-            values.parentId === SPECIAL_STRING.null ? null : values.parentId,
+          parentId: values.parentId,
           attributeIds: values.attributeIds,
           name: values.name,
           description: values.description,
@@ -180,22 +178,13 @@ export default function Page() {
               <CardS>
                 <Grid className='gap-3'>
                   <FFCategory
-                    disableValue={category?.id}
-                    hasOptionNull
-                    initOption={
-                      category?.parent && {
-                        value: category.parent.id,
-                        label: category.parent.name,
-                      }
-                    }
+                    disableValue={data?.category.id}
+                    initOption={data?.parentOption}
                     label={'Admin.Category.parent'}
                     name='parentId'
                   />
                   <FFAttribute
-                    initOption={category?.attributes.map((attribute) => ({
-                      value: attribute.id,
-                      label: attribute.name,
-                    }))}
+                    initOption={data?.attributeOptions}
                     label={'Admin.Attribute.attributes'}
                     name='attributeIds'
                   />

@@ -31,28 +31,28 @@ export function FSelectBrand({
 
   const [search, setSearch] = useState('')
   const [searchDebounced] = useDebounceValue(search, 500)
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+  const [openSelect, setOpenSelect] = useState(false)
 
   const {
     data: brandsData,
     hasNextPage,
     fetchNextPage,
     isFetching,
-  } = useGetInfiniteBrands({ search: searchDebounced }, isPopoverOpen)
+  } = useGetInfiniteBrands({ search: searchDebounced }, openSelect)
 
   return (
     <Select2
       onChange={setGlobalFilterValue}
       onLoadMore={fetchNextPage}
-      setIsPopoverOpen={setIsPopoverOpen}
+      setOpenSelect={setOpenSelect}
       setSearch={setSearch}
       hasMore={hasNextPage}
       initOption={liteBrandsData?.options}
       isClearable
       isFetching={isFetching}
       isMultiSelect
-      isPopoverOpen={isPopoverOpen}
       isSearchable
+      openSelect={openSelect}
       options={brandsData?.options}
       placeholder={'Admin.Brand.brand'}
       search={search}

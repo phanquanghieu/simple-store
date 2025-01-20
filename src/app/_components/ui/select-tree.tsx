@@ -7,12 +7,13 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { LuChevronDown, LuChevronRight, LuX } from 'react-icons/lu'
+import { LuChevronRight } from 'react-icons/lu'
 
 import { CollapsibleTrigger } from '@radix-ui/react-collapsible'
-import { range } from 'lodash'
+import { isEmpty, isNull, range, uniqBy } from 'lodash'
 
-import { Button } from '~/app/_components/ui/button'
+import { sortByKeys, zodt } from '~/shared/libs'
+
 import {
   Command,
   CommandGroup,
@@ -26,32 +27,37 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '~/app/_components/ui/popover'
-import { Separator } from '~/app/_components/ui/separator'
 
 import { useDeepCompareEffect, useFallbackState } from '~/app/_hooks'
 
 import { treeUtil } from '~/app/_libs/tree'
 import { cn } from '~/app/_libs/utils'
 
-import { SPECIAL_OPTION, SPECIAL_STRING } from '~/app/_constant/common.constant'
 import { IOptionTree } from '~/app/_interfaces/common.interface'
 
 import { Checkbox } from './checkbox'
 import { Collapsible, CollapsibleContent } from './collapsible'
+import { SelectButtonDefault, SelectButtonFilter } from './select2'
 
-export interface ISelectTreeProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'name'> {
+export interface ISelectTreeProps<TValue = string | string[] | null>
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    'onChange' | 'value' | 'name'
+  > {
+  variant?: 'default' | 'filter'
+  isMultiSelect?: boolean
   options?: IOptionTree[]
-  initOption?: IOptionTree | null
-  value?: string
-  onChange: (value: string) => void
-  disableValue?: string // value of root tree must be disabled
-  disableNodeLevel?: number // nodeLevel of tree must be disabled
+  initOption?: IOptionTree[] | IOptionTree
+  value?: TValue
+  onChange?: (value: TValue) => void
   isFetching?: boolean
-  isPopoverOpen?: boolean
-  setIsPopoverOpen?: Dispatch<SetStateAction<boolean>>
-  hasOptionNull?: boolean
-  className?: string
+  openSelect?: boolean
+  setOpenSelect?: Dispatch<SetStateAction<boolean>>
+  disableValue?: string // root node value of tree must be disabled
+  disableNodeLevel?: number // nodeLevel of tree must be disabled
+  isClearable?: boolean
+  isSearchable?: boolean
+  isOptionLabelMessageKey?: boolean
   isError?: boolean
   placeholder?: TMessageKey
 }
@@ -59,177 +65,173 @@ export interface ISelectTreeProps
 export const SelectTree = forwardRef<HTMLButtonElement, ISelectTreeProps>(
   (
     {
-      options: propOptions,
+      variant = 'default',
+      isMultiSelect = false,
+      options,
       initOption,
       value,
       onChange,
+      isFetching,
+      openSelect: propOpenSelect,
+      setOpenSelect: propsSetOpenSelect,
       disableValue,
       disableNodeLevel,
-      isFetching,
-      isPopoverOpen: propIsPopoverOpen,
-      setIsPopoverOpen: propsSetIsPopoverOpen,
-      hasOptionNull = false,
-      className,
+      isClearable,
+      isSearchable,
+      isOptionLabelMessageKey,
       isError,
       placeholder,
+      className,
       ...props
     },
     ref,
   ) => {
-    const [selectedOption, setSelectedOption] = useState<IOptionTree | null>(
-      null,
-    )
+    const [selectedOptions, setSelectedOptions] = useState<IOptionTree[]>([])
+
     const [search, setSearch] = useState('')
-    const [isPopoverOpen, setIsPopoverOpen] = useFallbackState(
-      propIsPopoverOpen,
-      propsSetIsPopoverOpen,
+    const [openSelect, setOpenSelect] = useFallbackState(
+      propOpenSelect,
+      propsSetOpenSelect,
       false,
     )
 
-    const t = useTranslations()
-
-    const options = useMemo(() => {
-      let options = treeUtil.search(propOptions, search)
-
-      if (hasOptionNull) {
-        options = [
-          {
-            label: t(SPECIAL_OPTION.null.label),
-            value: SPECIAL_OPTION.null.value,
-          },
-          ...options,
-        ]
-      }
-
-      return options
-    }, [propOptions, hasOptionNull, t, search])
+    const searchedOptions = useMemo(
+      () => treeUtil.search(options, search),
+      [options, search],
+    )
 
     useDeepCompareEffect(() => {
-      setSelectedOption((prevSelectedOption) => {
-        let _selectedOption = null
-        if (value) {
-          if (initOption && initOption.value === value) {
-            _selectedOption = initOption
-          } else if (prevSelectedOption && prevSelectedOption.value === value) {
-            _selectedOption = prevSelectedOption
-          } else {
-            _selectedOption = treeUtil.findNode(options, value, 'value')
-          }
-        }
-        return _selectedOption
+      const initOptions = initOption ? zodt.toArray(initOption) : []
+      const values = value ? zodt.toArray(value) : []
+
+      setSelectedOptions((prevSelectedOptions) => {
+        const _options = uniqBy(
+          [
+            ...initOptions,
+            ...prevSelectedOptions,
+            ...values
+              .map((v) => treeUtil.findNode(options, v, 'value'))
+              .filter((option) => !isNull(option)),
+          ],
+          'value',
+        )
+        return sortByKeys(
+          _options.filter((option) => values.includes(option.value)),
+          values,
+          'value',
+        )
       })
     }, [value, options, initOption])
 
-    const handleSelect = (option: IOptionTree) => {
-      if (option.value !== selectedOption?.value) {
-        onChange(option.value)
+    const handleSelectOption = (option: IOptionTree) => {
+      if (isMultiSelect) {
+        let _value = value ? [...(value as string[])] : []
+        if (_value.includes(option.value)) {
+          _value = _value.filter((value) => value !== option.value)
+        } else {
+          _value.push(option.value)
+        }
+
+        onChange?.(_value)
+      } else {
+        if (value !== option.value) {
+          onChange?.(option.value)
+        }
       }
     }
 
-    const handleClear = () => {
-      onChange(SPECIAL_STRING.null)
+    const handleClearOption = (option?: IOptionTree) => {
+      if (option) {
+        if (isMultiSelect) {
+          onChange?.((value as string[]).filter((v) => v !== option.value))
+        } else {
+          onChange?.(null)
+        }
+      } else {
+        onChange?.(isMultiSelect ? [] : null)
+      }
     }
 
+    const t = useTranslations()
     return (
-      <Popover onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            ref={ref}
-            {...props}
-            onClick={() => setIsPopoverOpen((prev) => !prev)}
-            className={cn(
-              'flex h-auto min-h-9 w-full items-center justify-between rounded-md border px-3 py-1.5 text-sm shadow-sm ring-offset-background hover:bg-background focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-auto',
-              {
-                'border-destructive ring-destructive focus:ring-destructive focus-visible:ring-destructive':
-                  isError,
-              },
-              className,
-            )}
-            variant={'outline'}
-          >
-            {selectedOption ? (
-              <div className='flex w-full items-center justify-between'>
-                <div className='flex flex-wrap items-center gap-1.5 font-normal'>
-                  {selectedOption.label}
-                </div>
-                <div className='ml-2 flex items-center justify-between'>
-                  <LuX
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      handleClear()
-                    }}
-                    className='cursor-pointer text-muted-foreground transition-colors hover:text-destructive'
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className='mx-auto flex w-full items-center justify-between'>
-                <span className='text-sm font-normal text-muted-foreground'>
-                  {placeholder}
-                </span>
-                <LuChevronDown className='cursor-pointer text-muted-foreground' />
-              </div>
-            )}
-          </Button>
+      <Popover onOpenChange={setOpenSelect} open={openSelect}>
+        <PopoverTrigger
+          onClick={() => setOpenSelect((prev) => !prev)}
+          asChild
+          className={cn(className, {
+            'border-destructive ring-destructive focus:ring-destructive focus-visible:ring-destructive':
+              isError,
+          })}
+          ref={ref}
+          {...props}
+        >
+          {variant === 'filter' ? (
+            <SelectButtonFilter
+              isOptionLabelMessageKey={isOptionLabelMessageKey}
+              placeholder={placeholder}
+              selectedOptions={selectedOptions}
+            />
+          ) : (
+            <SelectButtonDefault
+              onClearOption={handleClearOption}
+              isClearable={isClearable}
+              isMultiSelect={isMultiSelect}
+              isOptionLabelMessageKey={isOptionLabelMessageKey}
+              placeholder={placeholder}
+              selectedOptions={selectedOptions}
+            />
+          )}
         </PopoverTrigger>
         <PopoverContent
-          onEscapeKeyDown={() => setIsPopoverOpen(false)}
+          onEscapeKeyDown={() => setOpenSelect(false)}
           align='start'
-          className='w-auto p-0'
+          className='w-auto min-w-60 p-0'
         >
           <Command shouldFilter={false}>
-            <CommandInput
-              onValueChange={setSearch}
-              isLoading={isFetching}
-              placeholder={t('Common.search')}
-              value={search}
-            />
+            {isSearchable && (
+              <CommandInput
+                onValueChange={setSearch}
+                isLoading={isFetching}
+                placeholder={t('Common.search')}
+                value={search}
+              />
+            )}
             <CommandList>
-              {options.length === 0 && (
-                <div className='flex h-20 items-center justify-center text-muted-foreground'>
-                  {isFetching
-                    ? t('Common.loading')
-                    : t('Admin.Common.noResultFound')}
-                </div>
-              )}
               <CommandGroup>
-                {options.map((option) => (
+                {searchedOptions.length === 0 && (
+                  <div className='flex h-20 items-center justify-center text-muted-foreground'>
+                    {isFetching
+                      ? t('Common.loading')
+                      : t('Admin.Common.noResultFound')}
+                  </div>
+                )}
+                {searchedOptions.map((option) => (
                   <TreeNode
-                    onSelect={handleSelect}
+                    onSelectOption={handleSelectOption}
                     disableNodeLevel={disableNodeLevel}
                     disableValue={disableValue}
+                    isMultiSelect={isMultiSelect}
+                    isOptionLabelMessageKey={isOptionLabelMessageKey}
                     key={option.value}
                     option={option}
-                    value={selectedOption?.value}
+                    value={value}
                   />
                 ))}
               </CommandGroup>
             </CommandList>
-            <CommandSeparator alwaysRender />
-            <CommandGroup>
-              <div className='flex items-center justify-between'>
-                {value && value !== SPECIAL_STRING.null && (
-                  <>
-                    <CommandItem
-                      onSelect={handleClear}
-                      className='flex-1 cursor-pointer justify-center'
-                    >
-                      {t('Common.clear')}
-                    </CommandItem>
-                    <Separator
-                      className='flex h-full min-h-6'
-                      orientation='vertical'
-                    />
-                  </>
-                )}
-                <CommandItem
-                  onSelect={() => setIsPopoverOpen(false)}
-                  className='max-w-full flex-1 cursor-pointer justify-center'
-                >
-                  {t('Common.close')}
-                </CommandItem>
-              </div>
-            </CommandGroup>
+            {isClearable && !isEmpty(value) && (
+              <>
+                <CommandSeparator alwaysRender />
+                <CommandGroup>
+                  <CommandItem
+                    onSelect={() => handleClearOption()}
+                    className='cursor-pointer justify-center'
+                  >
+                    {t('Common.clear')}
+                  </CommandItem>
+                </CommandGroup>
+              </>
+            )}
           </Command>
         </PopoverContent>
       </Popover>
@@ -239,26 +241,42 @@ export const SelectTree = forwardRef<HTMLButtonElement, ISelectTreeProps>(
 
 SelectTree.displayName = 'SelectTree'
 
-const TreeNode = ({
-  value,
-  option,
-  onSelect,
-  disableValue,
-  disableNodeLevel,
-  disabled = false,
-  nodeLevel = 1,
-}: {
-  value: string
+interface ITreeNodeProps
+  extends Pick<
+    ISelectTreeProps,
+    | 'isMultiSelect'
+    | 'value'
+    | 'disableValue'
+    | 'disableNodeLevel'
+    | 'isOptionLabelMessageKey'
+  > {
   option: IOptionTree
-  onSelect: (option: IOptionTree) => void
-  disableValue?: string
-  disableNodeLevel?: number
+  onSelectOption: (option: IOptionTree) => void
   disabled?: boolean
   nodeLevel?: number
-}) => {
-  const [isOpen, setIsOpen] = useState(false)
+}
+const TreeNode = (props: ITreeNodeProps) => {
+  const {
+    isMultiSelect,
+    value,
+    disableValue,
+    disableNodeLevel,
+    isOptionLabelMessageKey,
+    option,
+    onSelectOption,
+    nodeLevel = 1,
+    disabled = false,
+  } = props
 
-  const isSelected = value === option.value
+  const [isOpen, setIsOpen] = useState(false)
+  const t = useTranslations()
+
+  const isSelected = !value
+    ? false
+    : isMultiSelect
+      ? (value as string[]).includes(option.value)
+      : (value as string) === option.value
+
   const isDisabled =
     disabled === true ||
     disableValue === option.value ||
@@ -286,28 +304,32 @@ const TreeNode = ({
           </CollapsibleTrigger>
         )}
         <CommandItem
-          onSelect={() => onSelect(option)}
+          onSelect={() => onSelectOption(option)}
           className='cursor-pointer'
           disabled={isDisabled}
           value={option.value}
         >
           {range(nodeLevel).map((index) => (
-            <div className='size-4' key={index} />
+            <div className='size-4 flex-shrink-0' key={index} />
           ))}
-          <Checkbox checked={isSelected} variant={'circle'} />
-          <span className='truncate'>{option.label}</span>
+          <Checkbox
+            checked={isSelected}
+            variant={isMultiSelect ? 'default' : 'circle'}
+          />
+          <span className='max-w-full truncate'>
+            {isOptionLabelMessageKey
+              ? t(option.label as TMessageKey)
+              : option.label}
+          </span>
         </CommandItem>
         <CollapsibleContent>
           {option.children?.map((optionChild) => (
             <TreeNode
-              onSelect={onSelect}
+              {...props}
               disabled={isDisabled}
-              disableNodeLevel={disableNodeLevel}
-              disableValue={disableValue}
               key={optionChild.value}
               nodeLevel={nodeLevel + 1}
               option={optionChild}
-              value={value}
             />
           ))}
         </CollapsibleContent>

@@ -10,6 +10,22 @@ export function useGetDetailCategory(id: string) {
     queryKey: ['categories', 'detail', id],
     queryFn: () =>
       fetcherAdmin.get<IOkRes<ICategoryDetailRes>>(`/categories/${id}`),
-    select: (data) => data.data,
+    select: (data) => {
+      const category = data.data
+      return {
+        category,
+        attributeIds: category.attributes.map((attribute) => attribute.id),
+        parentOption: category.parent
+          ? {
+              value: category.parent.id,
+              label: category.parent.name,
+            }
+          : undefined,
+        attributeOptions: category.attributes.map((attribute) => ({
+          value: attribute.id,
+          label: attribute.name,
+        })),
+      }
+    },
   })
 }

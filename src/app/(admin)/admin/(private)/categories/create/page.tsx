@@ -16,7 +16,6 @@ import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
 import { useCreateCategory } from '~/app/_apis/admin/category/useCreateCategory'
-import { SPECIAL_STRING } from '~/app/_constant/common.constant'
 
 import {
   FFAttribute,
@@ -28,7 +27,7 @@ import {
 import { PageHeader } from '../../../_components/page-header'
 
 const CreateCategoryFormSchema = zod.object({
-  parentId: zod.string(),
+  parentId: zod.string().nullable(),
   attributeIds: zod.array(zod.string()),
   name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
   description: zod.string().trim().max(5000),
@@ -36,7 +35,7 @@ const CreateCategoryFormSchema = zod.object({
 
 type TCreateCategoryFormValue = z.infer<typeof CreateCategoryFormSchema>
 const defaultValues: TCreateCategoryFormValue = {
-  parentId: SPECIAL_STRING.null,
+  parentId: null,
   attributeIds: [],
   name: '',
   description: '',
@@ -56,8 +55,7 @@ export default function Page() {
   const handleCreate = (values: TCreateCategoryFormValue) => {
     mutate(
       {
-        parentId:
-          values.parentId === SPECIAL_STRING.null ? null : values.parentId,
+        parentId: values.parentId,
         attributeIds: values.attributeIds,
         name: values.name,
         description: values.description,
@@ -115,11 +113,7 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <FFCategory
-                    hasOptionNull
-                    label={'Admin.Category.parent'}
-                    name='parentId'
-                  />
+                  <FFCategory label={'Admin.Category.parent'} name='parentId' />
                   <FFAttribute
                     label={'Admin.Attribute.attributes'}
                     name='attributeIds'

@@ -13,9 +13,7 @@ import {
 } from '../form'
 import { IFormFieldProps } from '../form.interface'
 
-export interface IFFSelectTreeProps
-  extends Omit<ISelectTreeProps, 'onChange'>,
-    IFormFieldProps {}
+export interface IFFSelectTreeProps extends ISelectTreeProps, IFormFieldProps {}
 
 export function FFSelectTree({
   name,

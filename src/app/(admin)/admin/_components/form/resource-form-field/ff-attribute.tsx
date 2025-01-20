@@ -9,22 +9,22 @@ import { FFSelect2, IFFSelect2Props } from '../form-field/ff-select2'
 export function FFAttribute(props: IFFSelect2Props) {
   const [search, setSearch] = useState('')
   const [searchDebounced] = useDebounceValue(search, 500)
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+  const [openSelect, setOpenSelect] = useState(false)
 
   const { data, hasNextPage, fetchNextPage, isFetching } =
-    useGetInfinityAttributes({ search: searchDebounced }, isPopoverOpen)
+    useGetInfinityAttributes({ search: searchDebounced }, openSelect)
 
   return (
     <FFSelect2
       onLoadMore={fetchNextPage}
-      setIsPopoverOpen={setIsPopoverOpen}
+      setOpenSelect={setOpenSelect}
       setSearch={setSearch}
       hasMore={hasNextPage}
       isClearable
       isFetching={isFetching}
       isMultiSelect
-      isPopoverOpen={isPopoverOpen}
       isSearchable
+      openSelect={openSelect}
       options={data?.options}
       search={search}
       {...props}

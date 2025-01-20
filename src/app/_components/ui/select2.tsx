@@ -53,8 +53,8 @@ export interface ISelect2Props<TValue = string | string[] | null>
   onLoadMore?: () => void
   search?: string
   setSearch?: Dispatch<SetStateAction<string>>
-  isPopoverOpen?: boolean
-  setIsPopoverOpen?: Dispatch<SetStateAction<boolean>>
+  openSelect?: boolean
+  setOpenSelect?: Dispatch<SetStateAction<boolean>>
   isClearable?: boolean
   isSearchable?: boolean
   isOptionLabelMessageKey?: boolean
@@ -76,8 +76,8 @@ export const Select2 = forwardRef<HTMLButtonElement, ISelect2Props>(
       onLoadMore,
       search,
       setSearch,
-      isPopoverOpen: propIsPopoverOpen,
-      setIsPopoverOpen: propsSetIsPopoverOpen,
+      openSelect: propOpenSelect,
+      setOpenSelect: propsSetOpenSelect,
       isClearable = false,
       isSearchable = false,
       isOptionLabelMessageKey = false,
@@ -90,23 +90,23 @@ export const Select2 = forwardRef<HTMLButtonElement, ISelect2Props>(
   ) => {
     const [selectedOptions, setSelectedOptions] = useState<IOption[]>([])
 
-    const [isPopoverOpen, setIsPopoverOpen] = useFallbackState(
-      propIsPopoverOpen,
-      propsSetIsPopoverOpen,
+    const [openSelect, setOpenSelect] = useFallbackState(
+      propOpenSelect,
+      propsSetOpenSelect,
       false,
     )
 
     useDeepCompareEffect(() => {
-      const _initOption = initOption ? zodt.toArray(initOption) : []
-      const _value = value ? zodt.toArray(value) : []
+      const initOptions = initOption ? zodt.toArray(initOption) : []
+      const values = value ? zodt.toArray(value) : []
 
       setSelectedOptions((prevSelectedOptions) =>
         sortByKeys(
           uniqBy(
-            [..._initOption, ...prevSelectedOptions, ...options],
+            [...initOptions, ...prevSelectedOptions, ...options],
             'value',
-          ).filter((option) => _value.includes(option.value)),
-          _value,
+          ).filter((option) => values.includes(option.value)),
+          values,
           'value',
         ),
       )
@@ -130,16 +130,14 @@ export const Select2 = forwardRef<HTMLButtonElement, ISelect2Props>(
     }
 
     const handleClearOption = (option?: IOption) => {
-      if (!option) {
-        onChange?.(isMultiSelect ? [] : null)
-      } else {
+      if (option) {
         if (isMultiSelect) {
-          let _value = [...(value as string[])]
-          _value = _value.filter((value) => value !== option.value)
-          onChange?.(_value)
+          onChange?.((value as string[]).filter((v) => v !== option.value))
         } else {
           onChange?.(null)
         }
+      } else {
+        onChange?.(isMultiSelect ? [] : null)
       }
     }
 
@@ -155,9 +153,9 @@ export const Select2 = forwardRef<HTMLButtonElement, ISelect2Props>(
 
     const t = useTranslations()
     return (
-      <Popover onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
+      <Popover onOpenChange={setOpenSelect} open={openSelect}>
         <PopoverTrigger
-          onClick={() => setIsPopoverOpen((prev) => !prev)}
+          onClick={() => setOpenSelect((prev) => !prev)}
           asChild
           className={cn(className, {
             'border-destructive ring-destructive focus:ring-destructive focus-visible:ring-destructive':
@@ -184,7 +182,7 @@ export const Select2 = forwardRef<HTMLButtonElement, ISelect2Props>(
           )}
         </PopoverTrigger>
         <PopoverContent
-          onEscapeKeyDown={() => setIsPopoverOpen(false)}
+          onEscapeKeyDown={() => setOpenSelect(false)}
           align='start'
           className='w-auto min-w-36 p-0'
         >
@@ -232,7 +230,7 @@ export const Select2 = forwardRef<HTMLButtonElement, ISelect2Props>(
                     <div className='flex items-center justify-between'>
                       <CommandItem
                         onSelect={onLoadMore}
-                        className='max-w-full flex-1 cursor-pointer justify-center'
+                        className='cursor-pointer justify-center'
                         disabled={isFetching}
                       >
                         {t('Admin.Common.loadMore')}
@@ -271,7 +269,7 @@ interface ISelectButtonFilterProps
   isOptionLabelMessageKey?: boolean
   placeholder?: TMessageKey
 }
-const SelectButtonFilter = forwardRef<
+export const SelectButtonFilter = forwardRef<
   HTMLButtonElement,
   ISelectButtonFilterProps
 >(
@@ -333,7 +331,7 @@ interface ISelectButtonDefaultProps
   isOptionLabelMessageKey?: boolean
   placeholder?: TMessageKey
 }
-const SelectButtonDefault = forwardRef<
+export const SelectButtonDefault = forwardRef<
   HTMLButtonElement,
   ISelectButtonDefaultProps
 >(
