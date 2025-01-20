@@ -10,7 +10,7 @@ import { useQueryFilter, useQueryList } from '~/app/_hooks'
 
 import { fetcherAdmin } from '../../fetcher'
 
-export const SORT_DEFAULTS = [['name', 'asc']]
+export const SORT_DEFAULTS = [['createdAt', 'desc']]
 export const FILTER_DEFS: IFilterDef<IGetProductQuery>[] = [
   {
     queryField: 'search',

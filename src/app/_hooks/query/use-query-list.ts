@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash'
 import { parseAsInteger, useQueryStates } from 'nuqs'
 
 export function useQueryList(sortDefaults?: string[][]) {
@@ -21,6 +22,7 @@ export function useQueryList(sortDefaults?: string[][]) {
       serialize: (sort: string[][]) => {
         return sort.map((s) => s.join(':')).join(',')
       },
+      eq: isEqual,
     },
   })
 }

@@ -13,7 +13,6 @@ import { Checkbox } from '../../ui/checkbox'
 
 export function DataTableHeader<IData>({
   column,
-  header,
   table,
 }: HeaderContext<IData, unknown>) {
   const t = useTranslations()
@@ -39,9 +38,22 @@ export function DataTableHeader<IData>({
     : headerTitle && t(headerTitle)
 
   if (column.getCanSort()) {
+    const sortDefaultColumns =
+      table.options.meta?.sortDefaults?.map((s) => s[0]) ?? []
+    const isSortDefaultColumn = sortDefaultColumns.includes(column.id)
+    const currSort = column.getIsSorted()
+
     return (
       <Button
-        onClick={header.column.getToggleSortingHandler()}
+        onClick={
+          isSortDefaultColumn
+            ? (e) =>
+                column.toggleSorting(
+                  currSort === 'asc' ? true : false,
+                  table.options.isMultiSortEvent?.(e),
+                )
+            : column.getToggleSortingHandler()
+        }
         className='-ml-2 gap-1 px-2'
         variant={'ghost'}
       >
