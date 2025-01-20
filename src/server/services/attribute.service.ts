@@ -52,7 +52,7 @@ export const attributeService = {
 
   get: async ({ query }: IAdminCtxQuery<IGetAttributeQuery>) => {
     const where: Prisma.AttributeWhereInput = {
-      name: { contains: query.search ?? Prisma.skip },
+      name: { contains: query.search ?? Prisma.skip, mode: 'insensitive' },
       type: { in: query.type ?? Prisma.skip },
     }
 
@@ -72,7 +72,10 @@ export const attributeService = {
       where: query.ids
         ? { id: { in: query.ids } }
         : {
-            name: { contains: query.search ?? Prisma.skip },
+            name: {
+              contains: query.search ?? Prisma.skip,
+              mode: 'insensitive',
+            },
           },
       ...queryUtil.skipTakeOrder(query),
     })

@@ -43,7 +43,7 @@ export const categoryService = {
 
   get: async ({ query }: IAdminCtxQuery<IListQuery>) => {
     const where: Prisma.CategoryWhereInput = {
-      name: { contains: query.search ?? Prisma.skip },
+      name: { contains: query.search ?? Prisma.skip, mode: 'insensitive' },
     }
 
     const [categories, total] = await Promise.all([

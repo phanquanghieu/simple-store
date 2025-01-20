@@ -48,7 +48,7 @@ export const brandService = {
 
   get: async ({ query }: IAdminCtxQuery<IGetBrandQuery>) => {
     const where: Prisma.BrandWhereInput = {
-      name: { contains: query.search ?? Prisma.skip },
+      name: { contains: query.search ?? Prisma.skip, mode: 'insensitive' },
     }
 
     const [brands, total] = await Promise.all([
@@ -67,7 +67,10 @@ export const brandService = {
       where: query.ids
         ? { id: { in: query.ids } }
         : {
-            name: { contains: query.search ?? Prisma.skip },
+            name: {
+              contains: query.search ?? Prisma.skip,
+              mode: 'insensitive',
+            },
           },
       ...queryUtil.skipTakeOrder(query),
     })

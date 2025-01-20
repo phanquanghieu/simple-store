@@ -55,6 +55,7 @@ export function FSelectBrand({
       isSearchable
       options={brandsData?.options}
       placeholder={'Admin.Brand.brand'}
+      search={search}
       value={globalFilterValue}
       variant='filter'
       {...props}
