@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
-import { toast } from '~/app/_hooks/use-toast'
+import { toast } from '~/app/_hooks'
 
 function makeQueryClient(t: TTranslationFn) {
   return new QueryClient({

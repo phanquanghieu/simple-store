@@ -6,7 +6,7 @@ import { LuArrowDown, LuArrowUp, LuChevronsUpDown } from 'react-icons/lu'
 import { HeaderContext } from '@tanstack/react-table'
 import { isUndefined } from 'lodash'
 
-import { E_COLUMN_ID } from '~/app/_components/data-table/data-table.interface'
+import { E_COLUMN_ID } from '~/app/_components/data-table'
 
 import { Button } from '../../ui/button'
 import { Checkbox } from '../../ui/checkbox'

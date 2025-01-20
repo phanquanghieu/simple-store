@@ -19,7 +19,7 @@ import {
   TooltipTrigger,
 } from '~/app/_components/ui/tooltip'
 
-import { useIsMobile } from '~/app/_hooks/common/use-mobile'
+import { useIsMobile } from '~/app/_hooks'
 
 import { cn } from '~/app/_libs/utils'
 

@@ -2,7 +2,7 @@ import { pick } from 'lodash'
 import querystring from 'querystring'
 import { ZodSchema } from 'zod'
 
-import { buildErrorValidationResDetail } from '~/shared/libs/zod'
+import { buildErrorValidationResDetail } from '~/shared/libs'
 
 import { BadRequestException } from '~/server/common'
 import { ICtx, IMiddlewareArgNext, IMiddlewareArgs } from '~/server/core'

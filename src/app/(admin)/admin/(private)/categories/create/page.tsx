@@ -9,7 +9,7 @@ import { LuPlus } from 'react-icons/lu'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
-import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -19,11 +19,11 @@ import { useCreateCategory } from '~/app/_apis/admin/category/useCreateCategory'
 import { SPECIAL_STRING } from '~/app/_constant/common.constant'
 
 import {
-  AttributeFormField,
-  CategoryFormField,
+  FFAttribute,
+  FFCategory,
+  FFInput,
+  FFRichText,
   Form,
-  InputFormField,
-  RichTextFormField,
 } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
@@ -99,13 +99,13 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <InputFormField
+                  <FFInput
                     autoFocus
                     label={'Admin.Category.name'}
                     name='name'
                     placeholder={'Admin.Category.name'}
                   />
-                  <RichTextFormField
+                  <FFRichText
                     label={'Admin.Category.description'}
                     name='description'
                   />
@@ -115,12 +115,12 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <CategoryFormField
+                  <FFCategory
                     hasOptionNull
                     label={'Admin.Category.parent'}
                     name='parentId'
                   />
-                  <AttributeFormField
+                  <FFAttribute
                     label={'Admin.Attribute.attributes'}
                     name='attributeIds'
                   />

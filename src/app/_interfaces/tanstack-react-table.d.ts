@@ -7,7 +7,7 @@ import {
   IFilterDef,
   IRowAction,
   IRowActionDef,
-} from '../_components/data-table/data-table.interface'
+} from '../_components/data-table'
 import { BadgeProps } from '../_components/ui/badge'
 
 declare module '@tanstack/react-table' {

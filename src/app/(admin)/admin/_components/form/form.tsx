@@ -15,7 +15,7 @@ import {
 import * as LabelPrimitive from '@radix-ui/react-label'
 import { Slot } from '@radix-ui/react-slot'
 
-import { E_ZOD_ERROR_CODE } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE } from '~/shared/libs'
 
 import { Label } from '~/app/_components/ui/label'
 

@@ -12,7 +12,7 @@ import { snakeCase } from 'lodash'
 import { z } from 'zod'
 
 import { E_ATTRIBUTE_EXCEPTION } from '~/shared/dto/attribute/res'
-import { E_ZOD_ERROR_CODE, zod, zodRegex } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE, zod, zodRegex } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -20,12 +20,7 @@ import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
 import { useCreateAttribute } from '~/app/_apis/admin/attribute/useCreateAttribute'
 
-import {
-  Form,
-  InputFormField,
-  RichTextFormField,
-  Select2FormField,
-} from '../../../_components/form'
+import { FFInput, FFRichText, FFSelect2, Form } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
 import { OptionFormField } from '../_components/option-form-field'
@@ -206,13 +201,13 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <InputFormField
+                  <FFInput
                     autoFocus
                     label={'Admin.Attribute.name'}
                     name='name'
                   />
-                  <InputFormField label={'Admin.Attribute.key'} name='key' />
-                  <RichTextFormField
+                  <FFInput label={'Admin.Attribute.key'} name='key' />
+                  <FFRichText
                     label={'Admin.Attribute.description'}
                     name='description'
                   />
@@ -223,7 +218,7 @@ export default function Page() {
               <CardS>
                 <Grid className='gap-3' grid={2}>
                   <Col>
-                    <Select2FormField
+                    <FFSelect2
                       isOptionLabelMessageKey
                       label={'Admin.Attribute.type'}
                       name='type'

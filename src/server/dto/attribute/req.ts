@@ -1,7 +1,7 @@
 import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 
 import { E_BULK_ATTRIBUTE_TYPE } from '~/shared/dto/attribute/req'
-import { zod, zodRegex, zodt } from '~/shared/libs/zod'
+import { zod, zodRegex, zodt } from '~/shared/libs'
 
 export const GetAttributeQuerySchema = zod.object({
   type: zod

@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
-import { Input, InputProps } from '~/app/_components/ui/input'
+import { ISelect2Props, Select2 } from '~/app/_components/ui/select2'
 
 import {
   FormControl,
@@ -11,35 +11,28 @@ import {
   FormLabel,
   FormMessage,
 } from '../form'
+import { IFormFieldProps } from '../form.interface'
 
-export function InputFormField({
+export interface IFFSelect2Props extends ISelect2Props, IFormFieldProps {}
+
+export function FFSelect2({
   name,
   label,
-  placeholder,
   description,
   ...props
-}: {
-  name: string
-  label?: TMessageKey
-  placeholder?: TMessageKey
-  description?: TMessageKey
-} & InputProps) {
-  const form = useFormContext()
+}: IFFSelect2Props) {
+  const { control } = useFormContext()
 
   const t = useTranslations()
   return (
     <FormField
-      control={form.control}
+      control={control}
       name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
-            <Input
-              placeholder={placeholder && t(placeholder)}
-              {...field}
-              {...props}
-            />
+            <Select2 {...field} {...props} />
           </FormControl>
           <FormDescription>{description && t(description)}</FormDescription>
           <FormMessage />

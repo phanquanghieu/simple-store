@@ -9,7 +9,7 @@ import { LuPlus } from 'react-icons/lu'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
-import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -17,11 +17,7 @@ import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
 import { useCreateBrand } from '~/app/_apis/admin/brand/useCreateBrand'
 
-import {
-  Form,
-  InputFormField,
-  RichTextFormField,
-} from '../../../_components/form'
+import { FFInput, FFRichText, Form } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
 const CreateBrandFormSchema = zod.object({
@@ -81,12 +77,8 @@ export default function Page() {
               <Grid>
                 <CardS>
                   <Grid className='gap-3'>
-                    <InputFormField
-                      autoFocus
-                      label={'Admin.Brand.name'}
-                      name='name'
-                    />
-                    <RichTextFormField
+                    <FFInput autoFocus label={'Admin.Brand.name'} name='name' />
+                    <FFRichText
                       label={'Admin.Brand.description'}
                       name='description'
                     />

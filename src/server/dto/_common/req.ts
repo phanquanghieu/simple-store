@@ -1,6 +1,6 @@
 import { isArray } from 'lodash'
 
-import { zod, zodt } from '~/shared/libs/zod'
+import { zod, zodt } from '~/shared/libs'
 
 export const IdsQuerySchema = zod.object({
   ids: zod

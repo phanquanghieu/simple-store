@@ -7,15 +7,13 @@ import { LuPlus } from 'react-icons/lu'
 import { E_BULK_BRAND_TYPE } from '~/shared/dto/brand/req'
 import { IBrandRes } from '~/shared/dto/brand/res'
 
-import { DataTable } from '~/app/_components/data-table/data-table'
 import {
   BULK_ACTION_COMMON,
-  ROW_ACTION_COMMON,
-} from '~/app/_components/data-table/data-table.constant'
-import {
+  DataTable,
   IDataTableConfig,
+  ROW_ACTION_COMMON,
   useDataTable,
-} from '~/app/_components/data-table/hooks/use-data-table'
+} from '~/app/_components/data-table'
 import { Button } from '~/app/_components/ui/button'
 
 import { useBulkBrands } from '~/app/_apis/admin/brand/useBulkBrands'

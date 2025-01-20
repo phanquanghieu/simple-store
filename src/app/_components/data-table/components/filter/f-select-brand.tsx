@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { isEmpty } from 'lodash'
 import { useDebounceValue } from 'usehooks-ts'
 
-import { zodt } from '~/shared/libs/zod'
+import { zodt } from '~/shared/libs'
 
 import { ISelect2Props, Select2 } from '~/app/_components/ui/select2'
 

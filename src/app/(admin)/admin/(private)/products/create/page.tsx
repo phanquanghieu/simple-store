@@ -8,18 +8,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { E_PRODUCT_STATUS } from '@prisma/client'
 import { z } from 'zod'
 
-import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
 import { Col, Container, Grid } from '~/app/_components/ui/layout'
 
-import {
-  CurrencyFormField,
-  Form,
-  InputFormField,
-  SelectFormField,
-} from '../../../_components/form'
+import { FFCurrency, FFInput, FFSelect2, Form } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
 const CreateProductFormSchema = zod.object({
@@ -74,9 +69,9 @@ export default function Page() {
               <Grid>
                 <CardS>
                   <Grid className='gap-3'>
-                    <InputFormField label={'Admin.Product.name'} name='name' />
-                    <InputFormField label={'Admin.Product.slug'} name='slug' />
-                    <InputFormField
+                    <FFInput label={'Admin.Product.name'} name='name' />
+                    <FFInput label={'Admin.Product.slug'} name='slug' />
+                    <FFInput
                       label={'Admin.Product.description'}
                       name='description'
                     />
@@ -84,11 +79,8 @@ export default function Page() {
                 </CardS>
                 <CardS title={t('Admin.Product.price')}>
                   <Grid grid={3}>
-                    <CurrencyFormField
-                      label={'Admin.Product.price'}
-                      name='price'
-                    />
-                    <CurrencyFormField
+                    <FFCurrency label={'Admin.Product.price'} name='price' />
+                    <FFCurrency
                       label={'Admin.Product.compareAtPrice'}
                       name='compareAtPrice'
                     />
@@ -100,7 +92,7 @@ export default function Page() {
             <Col>
               <Grid>
                 <CardS title={t('Admin.Product.status')}>
-                  <SelectFormField
+                  <FFSelect2
                     name='status'
                     options={[
                       { label: 'Active', value: E_PRODUCT_STATUS.ACTIVE },

@@ -1,7 +1,7 @@
 import { E_PRODUCT_STATUS } from '@prisma/client'
 
 import { E_BULK_PRODUCT_TYPE } from '~/shared/dto/product/req'
-import { zod, zodt } from '~/shared/libs/zod'
+import { zod, zodt } from '~/shared/libs'
 
 export const GetProductQuerySchema = zod.object({
   status: zod

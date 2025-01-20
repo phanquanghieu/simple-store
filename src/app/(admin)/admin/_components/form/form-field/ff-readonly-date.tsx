@@ -1,7 +1,9 @@
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
-import { Textarea } from '~/app/_components/ui/textarea'
+import { Input } from '~/app/_components/ui/input'
+
+import { useDatetime } from '~/app/_hooks'
 
 import {
   FormControl,
@@ -11,20 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from '../form'
+import { IFormFieldProps } from '../form.interface'
 
-export function RichTextFormField({
-  name,
-  label,
-  placeholder,
-  description,
-  ...props
-}: {
-  name: string
-  label?: TMessageKey
-  placeholder?: TMessageKey
-  description?: TMessageKey
-} & React.ComponentProps<'textarea'>) {
+export function FFReadonlyDate({ name, label, description }: IFormFieldProps) {
   const form = useFormContext()
+  const { formatDatetime } = useDatetime()
 
   const t = useTranslations()
   return (
@@ -35,10 +28,9 @@ export function RichTextFormField({
         <FormItem>
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
-            <Textarea
-              placeholder={placeholder && t(placeholder)}
-              {...field}
-              {...props}
+            <Input
+              disabled
+              value={field.value ? formatDatetime(field.value) : ''}
             />
           </FormControl>
           <FormDescription>{description && t(description)}</FormDescription>

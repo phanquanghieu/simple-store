@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
-import { ISelectTreeProps, SelectTree } from '~/app/_components/ui/select-tree'
+import { Input, InputProps } from '~/app/_components/ui/input'
 
 import {
   FormControl,
@@ -11,32 +11,31 @@ import {
   FormLabel,
   FormMessage,
 } from '../form'
+import { IFormFieldProps } from '../form.interface'
 
-export interface ISelectTreeFormFieldProps
-  extends Omit<ISelectTreeProps, 'onChange'> {
-  name: string
-  label?: TMessageKey
-  description?: TMessageKey
-}
-
-export function SelectTreeFormField({
+export function FFInput({
   name,
   label,
+  placeholder,
   description,
   ...props
-}: ISelectTreeFormFieldProps) {
-  const { control } = useFormContext()
+}: IFormFieldProps & InputProps) {
+  const form = useFormContext()
 
   const t = useTranslations()
   return (
     <FormField
-      control={control}
+      control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
-            <SelectTree {...field} {...props} />
+            <Input
+              placeholder={placeholder && t(placeholder)}
+              {...field}
+              {...props}
+            />
           </FormControl>
           <FormDescription>{description && t(description)}</FormDescription>
           <FormMessage />

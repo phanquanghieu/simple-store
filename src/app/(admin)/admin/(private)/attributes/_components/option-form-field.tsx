@@ -12,10 +12,9 @@ import {
   SortableItem,
 } from '~/app/_components/ui/sortable'
 
-import { useDeepCompareEffect } from '~/app/_hooks/common/use-deep-compare-effect'
-import { usePrevious } from '~/app/_hooks/common/use-previous'
+import { useDeepCompareEffect, usePrevious } from '~/app/_hooks'
 
-import { FormItem, FormLabel, InputFormField } from '../../../_components/form'
+import { FFInput, FormItem, FormLabel } from '../../../_components/form'
 
 type TFormValue = {
   type: E_ATTRIBUTE_TYPE
@@ -92,13 +91,13 @@ function TextOptionFormField() {
               </SortableDragHandle>
             </div>
             <div className='flex-1'>
-              <InputFormField
+              <FFInput
                 name={`options.${index}.name`}
                 placeholder={'Admin.Attribute.optionName'}
               />
             </div>
             <div className='flex-1'>
-              <InputFormField
+              <FFInput
                 disabled={!!field.id}
                 name={`options.${index}.key`}
                 placeholder={'Admin.Attribute.optionKey'}
@@ -192,20 +191,20 @@ function ColorOptionFormField() {
               </SortableDragHandle>
             </div>
             <div className='flex-1'>
-              <InputFormField
+              <FFInput
                 name={`options.${index}.name`}
                 placeholder={'Admin.Attribute.optionName'}
               />
             </div>
             <div className='flex-1'>
-              <InputFormField
+              <FFInput
                 disabled={!!field.id}
                 name={`options.${index}.key`}
                 placeholder={'Admin.Attribute.optionKey'}
               />
             </div>
             <div className='flex-1'>
-              <InputFormField name={`options.${index}.value`} type='color' />
+              <FFInput name={`options.${index}.value`} type='color' />
             </div>
             <div className='flex-none'>
               <Button
@@ -266,13 +265,13 @@ function BooleanOptionFormField() {
               </SortableDragHandle>
             </div>
             <div className='flex-1'>
-              <InputFormField
+              <FFInput
                 name={`options.${index}.name`}
                 placeholder={'Admin.Attribute.optionName'}
               />
             </div>
             <div className='flex-1'>
-              <InputFormField
+              <FFInput
                 disabled
                 name={`options.${index}.key`}
                 placeholder={'Admin.Attribute.optionKey'}

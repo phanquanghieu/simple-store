@@ -27,8 +27,7 @@ import {
 } from '~/app/_components/ui/popover'
 import { Separator } from '~/app/_components/ui/separator'
 
-import { useDeepCompareEffect } from '~/app/_hooks/common/use-deep-compare-effect'
-import { useFallbackState } from '~/app/_hooks/common/use-fallback-state'
+import { useDeepCompareEffect, useFallbackState } from '~/app/_hooks'
 
 import { cn } from '~/app/_libs/utils'
 

@@ -12,7 +12,7 @@ import { useToggle } from 'usehooks-ts'
 import { z } from 'zod'
 
 import { TIdParam } from '~/shared/dto/_common/req'
-import { E_ZOD_ERROR_CODE, zod, zodRegex } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE, zod, zodRegex } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -24,11 +24,11 @@ import { useUpdateAttribute } from '~/app/_apis/admin/attribute/useUpdateAttribu
 
 import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import {
+  FFInput,
+  FFReadonlyDate,
+  FFRichText,
+  FFSelect2,
   Form,
-  InputFormField,
-  ReadonlyDateFormField,
-  RichTextFormField,
-  Select2FormField,
 } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
@@ -217,27 +217,23 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <InputFormField
+                  <FFInput
                     autoFocus
                     label={'Admin.Attribute.name'}
                     name='name'
                   />
-                  <InputFormField
-                    disabled
-                    label={'Admin.Attribute.key'}
-                    name='key'
-                  />
-                  <RichTextFormField
+                  <FFInput disabled label={'Admin.Attribute.key'} name='key' />
+                  <FFRichText
                     label={'Admin.Attribute.description'}
                     name='description'
                   />
 
                   <Grid grid={2}>
-                    <ReadonlyDateFormField
+                    <FFReadonlyDate
                       label={'Common.updatedAt'}
                       name='updatedAt'
                     />
-                    <ReadonlyDateFormField
+                    <FFReadonlyDate
                       label={'Common.createdAt'}
                       name='createdAt'
                     />
@@ -249,7 +245,7 @@ export default function Page() {
               <CardS>
                 <Grid className='gap-3' grid={2}>
                   <Col>
-                    <Select2FormField
+                    <FFSelect2
                       disabled
                       isOptionLabelMessageKey
                       label={'Admin.Attribute.type'}

@@ -10,8 +10,7 @@ import { LuChevronDown, LuListFilter, LuX } from 'react-icons/lu'
 
 import { isEmpty, uniqBy } from 'lodash'
 
-import { sortByKeys } from '~/shared/libs/lodash'
-import { zodt } from '~/shared/libs/zod'
+import { sortByKeys, zodt } from '~/shared/libs'
 
 import { Badge } from '~/app/_components/ui/badge'
 import { Button } from '~/app/_components/ui/button'
@@ -30,8 +29,7 @@ import {
 } from '~/app/_components/ui/popover'
 import { Separator } from '~/app/_components/ui/separator'
 
-import { useDeepCompareEffect } from '~/app/_hooks/common/use-deep-compare-effect'
-import { useFallbackState } from '~/app/_hooks/common/use-fallback-state'
+import { useDeepCompareEffect, useFallbackState } from '~/app/_hooks'
 
 import { cn } from '~/app/_libs/utils'
 
@@ -40,7 +38,10 @@ import { IOption } from '~/app/_interfaces/common.interface'
 import { Checkbox } from './checkbox'
 
 export interface ISelect2Props<TValue = string | string[] | null>
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'value'> {
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    'onChange' | 'value' | 'name'
+  > {
   variant?: 'default' | 'filter'
   isMultiSelect?: boolean
   options?: IOption[]

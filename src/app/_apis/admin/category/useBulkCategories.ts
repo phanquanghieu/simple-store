@@ -6,7 +6,7 @@ import {
   IBulkCategoryBody,
 } from '~/shared/dto/category/req'
 
-import { useToast } from '~/app/_hooks/use-toast'
+import { useToast } from '~/app/_hooks'
 
 import { fetcherAdmin } from '../../fetcher'
 

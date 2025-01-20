@@ -6,7 +6,7 @@ import { ZodSchema } from 'zod'
 
 import { IActionState } from '~/shared/dto/_common/server-action'
 import { ILoginReq } from '~/shared/dto/auth/req'
-import { buildErrorValidationResDetail, zod } from '~/shared/libs/zod'
+import { buildErrorValidationResDetail, zod } from '~/shared/libs'
 
 import { authService } from '~/server/services/auth.service'
 

@@ -6,7 +6,7 @@ import {
   IBulkAttributeBody,
 } from '~/shared/dto/attribute/req'
 
-import { useToast } from '~/app/_hooks/use-toast'
+import { useToast } from '~/app/_hooks'
 
 import { fetcherAdmin } from '../../fetcher'
 

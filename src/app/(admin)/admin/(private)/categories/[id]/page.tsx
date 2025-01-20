@@ -12,7 +12,7 @@ import { z } from 'zod'
 
 import { TIdParam } from '~/shared/dto/_common/req'
 import { E_CATEGORY_EXCEPTION } from '~/shared/dto/category/res'
-import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -25,12 +25,12 @@ import { SPECIAL_STRING } from '~/app/_constant/common.constant'
 
 import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import {
-  AttributeFormField,
-  CategoryFormField,
+  FFAttribute,
+  FFCategory,
+  FFInput,
+  FFReadonlyDate,
+  FFRichText,
   Form,
-  InputFormField,
-  ReadonlyDateFormField,
-  RichTextFormField,
 } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 
@@ -153,22 +153,22 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <InputFormField
+                  <FFInput
                     autoFocus
                     label={'Admin.Category.name'}
                     name='name'
                     placeholder={'Admin.Category.name'}
                   />
-                  <RichTextFormField
+                  <FFRichText
                     label={'Admin.Category.description'}
                     name='description'
                   />
                   <Grid grid={2}>
-                    <ReadonlyDateFormField
+                    <FFReadonlyDate
                       label={'Common.updatedAt'}
                       name='updatedAt'
                     />
-                    <ReadonlyDateFormField
+                    <FFReadonlyDate
                       label={'Common.createdAt'}
                       name='createdAt'
                     />
@@ -179,7 +179,7 @@ export default function Page() {
             <Col>
               <CardS>
                 <Grid className='gap-3'>
-                  <CategoryFormField
+                  <FFCategory
                     disableValue={category?.id}
                     hasOptionNull
                     initOption={
@@ -191,7 +191,7 @@ export default function Page() {
                     label={'Admin.Category.parent'}
                     name='parentId'
                   />
-                  <AttributeFormField
+                  <FFAttribute
                     initOption={category?.attributes.map((attribute) => ({
                       value: attribute.id,
                       label: attribute.name,

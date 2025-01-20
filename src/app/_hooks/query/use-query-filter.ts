@@ -8,7 +8,7 @@ import {
   useQueryStates,
 } from 'nuqs'
 
-import { IFilterDef } from '~/app/_components/data-table/data-table.interface'
+import { IFilterDef } from '~/app/_components/data-table'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useQueryFilter<IQuery = any>(

@@ -7,14 +7,9 @@ import { treeUtil } from '~/app/_libs/tree'
 import { useGetTreeCategories } from '~/app/_apis/admin/category/useGetTreeCategories'
 import { IOptionTree } from '~/app/_interfaces/common.interface'
 
-import {
-  ISelectTreeFormFieldProps,
-  SelectTreeFormField,
-} from '../form-field/select-tree-form-field'
+import { FFSelectTree, IFFSelectTreeProps } from '../form-field/ff-select-tree'
 
-export function CategoryFormField(
-  props: Omit<ISelectTreeFormFieldProps, 'options'>,
-) {
+export function FFCategory(props: IFFSelectTreeProps) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const { data: categoryTrees, isFetching } =
@@ -29,13 +24,13 @@ export function CategoryFormField(
   )
 
   return (
-    <SelectTreeFormField
-      {...props}
+    <FFSelectTree
       setIsPopoverOpen={setIsPopoverOpen}
       disableNodeLevel={5}
       isFetching={isFetching}
       isPopoverOpen={isPopoverOpen}
       options={options}
+      {...props}
     />
   )
 }

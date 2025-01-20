@@ -18,9 +18,11 @@ import {
 } from '@tanstack/react-table'
 import { isEmpty } from 'lodash'
 
-import { useDebouncedCallback } from '~/app/_hooks/common/use-debounced-callback'
-import { useQueryFilter } from '~/app/_hooks/query/use-query-filter'
-import { useQueryList } from '~/app/_hooks/query/use-query-list'
+import {
+  useDebouncedCallback,
+  useQueryFilter,
+  useQueryList,
+} from '~/app/_hooks'
 
 import { cn } from '~/app/_libs/utils'
 

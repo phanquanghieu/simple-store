@@ -11,7 +11,7 @@ import { useToggle } from 'usehooks-ts'
 import { z } from 'zod'
 
 import { TIdParam } from '~/shared/dto/_common/req'
-import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs/zod'
+import { E_ZOD_ERROR_CODE, zod } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -23,11 +23,11 @@ import { useUpdateBrand } from '~/app/_apis/admin/brand/useUpdateBrand'
 
 import { ConfirmDialog } from '../../../_components/dialogs/confirm-dialog'
 import {
+  FFInput,
+  FFReadonlyDate,
+  FFRichText,
   Form,
-  InputFormField,
-  RichTextFormField,
 } from '../../../_components/form'
-import { ReadonlyDateFormField } from '../../../_components/form/form-field/readonly-date-form-field'
 import { PageHeader } from '../../../_components/page-header'
 
 const UpdateBrandFormSchema = zod.object({
@@ -127,21 +127,17 @@ export default function Page() {
             <Col col={2} start={2}>
               <CardS>
                 <Grid className='gap-3'>
-                  <InputFormField
-                    autoFocus
-                    label={'Admin.Brand.name'}
-                    name='name'
-                  />
-                  <RichTextFormField
+                  <FFInput autoFocus label={'Admin.Brand.name'} name='name' />
+                  <FFRichText
                     label={'Admin.Brand.description'}
                     name='description'
                   />
                   <Grid grid={2}>
-                    <ReadonlyDateFormField
+                    <FFReadonlyDate
                       label={'Common.updatedAt'}
                       name='updatedAt'
                     />
-                    <ReadonlyDateFormField
+                    <FFReadonlyDate
                       label={'Common.createdAt'}
                       name='createdAt'
                     />

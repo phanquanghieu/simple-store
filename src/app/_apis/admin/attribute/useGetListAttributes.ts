@@ -4,10 +4,9 @@ import { IOkListRes } from '~/shared/dto/_common/res'
 import { IGetAttributeQuery } from '~/shared/dto/attribute/req'
 import { IAttributeRes } from '~/shared/dto/attribute/res'
 
-import { IFilterDef } from '~/app/_components/data-table/data-table.interface'
+import { IFilterDef } from '~/app/_components/data-table'
 
-import { useQueryFilter } from '~/app/_hooks/query/use-query-filter'
-import { useQueryList } from '~/app/_hooks/query/use-query-list'
+import { useQueryFilter, useQueryList } from '~/app/_hooks'
 
 import { fetcherAdmin } from '../../fetcher'
 

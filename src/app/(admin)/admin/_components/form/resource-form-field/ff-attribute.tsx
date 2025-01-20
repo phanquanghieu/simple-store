@@ -4,14 +4,9 @@ import { useDebounceValue } from 'usehooks-ts'
 
 import { useGetInfinityAttributes } from '~/app/_apis/admin/attribute/useGetInfiniteAttributes'
 
-import {
-  ISelect2FormFieldProps,
-  Select2FormField,
-} from '../form-field/select2-form-field'
+import { FFSelect2, IFFSelect2Props } from '../form-field/ff-select2'
 
-export function AttributeFormField(
-  props: Omit<ISelect2FormFieldProps, 'options'>,
-) {
+export function FFAttribute(props: IFFSelect2Props) {
   const [search, setSearch] = useState('')
   const [searchDebounced] = useDebounceValue(search, 500)
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
@@ -20,7 +15,7 @@ export function AttributeFormField(
     useGetInfinityAttributes({ search: searchDebounced }, isPopoverOpen)
 
   return (
-    <Select2FormField
+    <FFSelect2
       onLoadMore={fetchNextPage}
       setIsPopoverOpen={setIsPopoverOpen}
       setSearch={setSearch}

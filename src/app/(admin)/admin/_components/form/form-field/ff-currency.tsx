@@ -6,8 +6,7 @@ import { countBy } from 'lodash'
 
 import { Input } from '~/app/_components/ui/input'
 
-import { useCurrency } from '~/app/_hooks/use-currency'
-import { useNumber } from '~/app/_hooks/use-number'
+import { useCurrency, useNumber } from '~/app/_hooks'
 
 import {
   FormControl,
@@ -17,18 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from '../form'
+import { IFormFieldProps } from '../form.interface'
 
-export function CurrencyFormField({
+export function FFCurrency({
   name,
   label,
   placeholder,
   description,
-}: {
-  name: string
-  label?: TMessageKey
-  placeholder?: TMessageKey
-  description?: TMessageKey
-}) {
+}: IFormFieldProps) {
   const [value, setValue] = useState('')
   const form = useFormContext()
   const {

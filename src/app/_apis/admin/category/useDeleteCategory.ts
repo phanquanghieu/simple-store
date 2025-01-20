@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { IOkRes } from '~/shared/dto/_common/res'
 
-import { useToast } from '~/app/_hooks/use-toast'
+import { useToast } from '~/app/_hooks'
 
 import { fetcherAdmin } from '../../fetcher'
 

@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 import { Button } from '../../_components/ui/button'
-import { useToast } from '../../_hooks/use-toast'
+import { useToast } from '../../_hooks'
 import { cn } from '../../_libs/utils'
 import LanguageToggle from './_components/language-toggle'
 

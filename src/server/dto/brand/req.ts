@@ -1,5 +1,5 @@
 import { E_BULK_BRAND_TYPE } from '~/shared/dto/brand/req'
-import { zod } from '~/shared/libs/zod'
+import { zod } from '~/shared/libs'
 
 export const CreateBrandSchema = zod.object({
   name: zod.string().trim().min(1).max(256),

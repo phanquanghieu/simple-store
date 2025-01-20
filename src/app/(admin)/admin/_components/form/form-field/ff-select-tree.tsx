@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
-import { ISelect2Props, Select2 } from '~/app/_components/ui/select2'
+import { ISelectTreeProps, SelectTree } from '~/app/_components/ui/select-tree'
 
 import {
   FormControl,
@@ -11,19 +11,18 @@ import {
   FormLabel,
   FormMessage,
 } from '../form'
+import { IFormFieldProps } from '../form.interface'
 
-export interface ISelect2FormFieldProps extends ISelect2Props {
-  name: string
-  label?: TMessageKey
-  description?: TMessageKey
-}
+export interface IFFSelectTreeProps
+  extends Omit<ISelectTreeProps, 'onChange'>,
+    IFormFieldProps {}
 
-export function Select2FormField({
+export function FFSelectTree({
   name,
   label,
   description,
   ...props
-}: ISelect2FormFieldProps) {
+}: IFFSelectTreeProps) {
   const { control } = useFormContext()
 
   const t = useTranslations()
@@ -35,7 +34,7 @@ export function Select2FormField({
         <FormItem>
           <FormLabel>{label && t(label)}</FormLabel>
           <FormControl>
-            <Select2 {...field} {...props} />
+            <SelectTree {...field} {...props} />
           </FormControl>
           <FormDescription>{description && t(description)}</FormDescription>
           <FormMessage />

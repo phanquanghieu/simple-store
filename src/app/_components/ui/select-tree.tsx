@@ -28,8 +28,7 @@ import {
 } from '~/app/_components/ui/popover'
 import { Separator } from '~/app/_components/ui/separator'
 
-import { useDeepCompareEffect } from '~/app/_hooks/common/use-deep-compare-effect'
-import { useFallbackState } from '~/app/_hooks/common/use-fallback-state'
+import { useDeepCompareEffect, useFallbackState } from '~/app/_hooks'
 
 import { treeUtil } from '~/app/_libs/tree'
 import { cn } from '~/app/_libs/utils'
@@ -41,8 +40,8 @@ import { Checkbox } from './checkbox'
 import { Collapsible, CollapsibleContent } from './collapsible'
 
 export interface ISelectTreeProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
-  options: IOptionTree[]
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'name'> {
+  options?: IOptionTree[]
   initOption?: IOptionTree | null
   value?: string
   onChange: (value: string) => void
@@ -296,7 +295,7 @@ const TreeNode = ({
             <div className='size-4' key={index} />
           ))}
           <Checkbox checked={isSelected} variant={'circle'} />
-          <span>{option.label}</span>
+          <span className='truncate'>{option.label}</span>
         </CommandItem>
         <CollapsibleContent>
           {option.children?.map((optionChild) => (

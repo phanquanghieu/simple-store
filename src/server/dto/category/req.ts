@@ -1,5 +1,5 @@
 import { E_BULK_CATEGORY_TYPE } from '~/shared/dto/category/req'
-import { zod } from '~/shared/libs/zod'
+import { zod } from '~/shared/libs'
 
 export const CreateCategoryBodySchema = zod.object({
   parentId: zod.string().uuid().nullable(),
