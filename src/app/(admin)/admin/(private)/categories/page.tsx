@@ -10,6 +10,7 @@ import { ICategoryRes } from '~/shared/dto/category/res'
 import {
   BULK_ACTION_COMMON,
   DataTable,
+  FSelectCategory,
   IDataTableConfig,
   ROW_ACTION_COMMON,
   useDataTable,
@@ -92,6 +93,12 @@ export default function Page() {
         setRowSelection={setRowSelection}
         columns={columns}
         data={data?.data}
+        filterNode={
+          <FSelectCategory
+            placeholder={'Admin.Category.parent'}
+            queryField='parentIds'
+          />
+        }
         getRowId={(row) => row.id}
         isFetching={isFetching}
         meta={meta}

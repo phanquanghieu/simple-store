@@ -3,7 +3,7 @@ import { Category } from '@prisma/client'
 import { IListQuery } from '../_common/req'
 
 export interface IGetCategoryQuery extends IListQuery {
-  parentId?: string
+  parentIds?: string[]
 }
 
 export interface ICreateCategoryBody

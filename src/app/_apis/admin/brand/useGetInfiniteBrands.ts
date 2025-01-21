@@ -30,9 +30,9 @@ export function useGetInfiniteBrands(
       const _data = data.pages.flatMap((page) => page.data)
       return {
         data: _data,
-        options: _data.map((brand) => ({
-          label: brand.name,
-          value: brand.id,
+        options: _data.map((d) => ({
+          label: d.name,
+          value: d.id,
         })) as IOption[],
       }
     },

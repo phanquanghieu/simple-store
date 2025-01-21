@@ -1,5 +1,11 @@
 import { E_BULK_CATEGORY_TYPE } from '~/shared/dto/category/req'
-import { zod } from '~/shared/libs'
+import { zod, zodt } from '~/shared/libs'
+
+export const GetCategoryQuerySchema = zod.object({
+  parentIds: zod
+    .preprocess(zodt.toArray, zod.array(zod.string().uuid()).nonempty())
+    .optional(),
+})
 
 export const CreateCategoryBodySchema = zod.object({
   parentId: zod.string().uuid().nullable(),

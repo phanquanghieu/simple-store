@@ -298,7 +298,7 @@ export const SelectButtonFilter = forwardRef<
         {selectedOptions.length > 0 && (
           <>
             <Separator className='h-4' orientation='vertical' />
-            <div className='space-x-1'>
+            <div className='max-w-96 space-x-1 truncate'>
               {selectedOptions.map((option) => (
                 <Badge
                   className='rounded-sm px-1.5 font-normal shadow-sm'

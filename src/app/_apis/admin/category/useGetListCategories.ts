@@ -17,7 +17,7 @@ export const FILTER_DEFS: IFilterDef<IGetCategoryQuery>[] = [
     dataType: 'string',
   },
   {
-    queryField: 'parentId',
+    queryField: 'parentIds',
     dataType: 'string[]',
   },
 ]

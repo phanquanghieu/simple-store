@@ -98,6 +98,7 @@ export default function Page() {
         filterNode={
           <>
             <FSelect
+              isMultiSelect
               options={STATUS_OPTIONS}
               placeholder={'Admin.Product.status'}
               queryField='status'

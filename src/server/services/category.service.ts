@@ -2,16 +2,18 @@ import { Prisma } from '@prisma/client'
 import { difference, isUndefined } from 'lodash'
 import { v7 } from 'uuid'
 
-import { IIdParam, IListQuery } from '~/shared/dto/_common/req'
+import { IIdParam, ILiteQuery } from '~/shared/dto/_common/req'
 import {
   E_BULK_CATEGORY_TYPE,
   IBulkCategoryBody,
   ICreateCategoryBody,
+  IGetCategoryQuery,
   IUpdateCategoryBody,
 } from '~/shared/dto/category/req'
 import {
   E_CATEGORY_EXCEPTION,
   ICategoryDetailRes,
+  ICategoryLiteRes,
   ICategoryLiteTreeRes,
   ICategoryRes,
 } from '~/shared/dto/category/res'
@@ -33,17 +35,26 @@ import {
 import { prisma } from '../infra/db'
 
 export const categoryService = {
+  CATEGORY_TREE_HEIGHT: 5,
   GET_SORTABLE_FIELDS: [
     Prisma.CategoryScalarFieldEnum.id,
     Prisma.CategoryScalarFieldEnum.name,
     Prisma.CategoryScalarFieldEnum.updatedAt,
     Prisma.CategoryScalarFieldEnum.createdAt,
   ],
-  CATEGORY_TREE_HEIGHT: 5,
+  GET_LITE_SORTABLE_FIELDS: [
+    Prisma.CategoryScalarFieldEnum.id,
+    Prisma.CategoryScalarFieldEnum.name,
+  ],
+  GET_LITE_SORT_DEFAULTS: [
+    ['name', 'asc'],
+    ['id', 'desc'],
+  ],
 
-  get: async ({ query }: IAdminCtxQuery<IListQuery>) => {
+  get: async ({ query }: IAdminCtxQuery<IGetCategoryQuery>) => {
     const where: Prisma.CategoryWhereInput = {
       name: { contains: query.search ?? Prisma.skip, mode: 'insensitive' },
+      parentId: { in: query.parentIds ?? Prisma.skip },
     }
 
     const [categories, total] = await Promise.all([
@@ -58,6 +69,22 @@ export const categoryService = {
     ])
 
     return OkListRes(ICategoryRes.list(categories), total)
+  },
+
+  getLite: async ({ query }: IAdminCtxQuery<ILiteQuery>) => {
+    const categories = await prisma.category.findMany({
+      where: query.ids
+        ? { id: { in: query.ids } }
+        : {
+            name: {
+              contains: query.search ?? Prisma.skip,
+              mode: 'insensitive',
+            },
+          },
+      ...queryUtil.skipTakeOrder(query),
+    })
+
+    return OkLiteRes(ICategoryLiteRes.list(categories))
   },
 
   getTree: async () => {

@@ -1,22 +1,21 @@
 import { useState } from 'react'
 
 import { isEmpty } from 'lodash'
-import { useDebounceValue } from 'usehooks-ts'
 
 import { zodt } from '~/shared/libs'
 
-import { ISelect2Props, Select2 } from '~/app/_components/ui/select2'
+import { ISelectTreeProps, SelectTree } from '~/app/_components/ui/select-tree'
 
-import { useGetInfiniteBrands } from '~/app/_apis/admin/brand/useGetInfiniteBrands'
-import { useGetLiteBrands } from '~/app/_apis/admin/brand/useGetLiteBrands'
+import { useGetLiteCategories } from '~/app/_apis/admin/category/useGetLiteCategories'
+import { useGetTreeCategories } from '~/app/_apis/admin/category/useGetTreeCategories'
 
 import { useTableGlobalFilter } from '../../hooks/use-table-global-filter'
 import { IFilterProps } from './filter.interface'
 
-export function FSelectBrand({
+export function FSelectCategory({
   queryField,
   ...props
-}: IFilterProps & ISelect2Props) {
+}: IFilterProps & ISelectTreeProps) {
   const { globalFilterValue, setGlobalFilterValue } = useTableGlobalFilter<
     string | string[] | null
   >(queryField)
@@ -24,27 +23,19 @@ export function FSelectBrand({
   const [initIds] = useState(
     globalFilterValue ? zodt.toArray(globalFilterValue) : undefined,
   )
-  const { data: initData } = useGetLiteBrands(
+  const { data: initData } = useGetLiteCategories(
     { ids: initIds },
     !isEmpty(initIds),
   )
 
-  const [search, setSearch] = useState('')
-  const [searchDebounced] = useDebounceValue(search, 500)
   const [openSelect, setOpenSelect] = useState(false)
 
-  const { data, hasNextPage, fetchNextPage, isFetching } = useGetInfiniteBrands(
-    { search: searchDebounced },
-    openSelect,
-  )
+  const { data, isFetching } = useGetTreeCategories(openSelect)
 
   return (
-    <Select2
+    <SelectTree
       onChange={setGlobalFilterValue}
-      onLoadMore={fetchNextPage}
       setOpenSelect={setOpenSelect}
-      setSearch={setSearch}
-      hasMore={hasNextPage}
       initOption={initData?.options}
       isClearable
       isFetching={isFetching}
@@ -52,8 +43,7 @@ export function FSelectBrand({
       isSearchable
       openSelect={openSelect}
       options={data?.options}
-      placeholder={'Admin.Brand.brand'}
-      search={search}
+      placeholder={'Admin.Category.category'}
       value={globalFilterValue}
       variant='filter'
       {...props}

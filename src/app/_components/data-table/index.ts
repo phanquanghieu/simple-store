@@ -1,5 +1,6 @@
 export * from './components/filter/f-select'
 export * from './components/filter/f-select-brand'
+export * from './components/filter/f-select-category'
 
 export * from './components/data-table-bulk-action'
 export * from './components/data-table-cell'

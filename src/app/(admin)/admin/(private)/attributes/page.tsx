@@ -97,15 +97,12 @@ export default function Page() {
         columns={columns}
         data={data?.data}
         filterNode={
-          <>
-            <FSelect
-              isMultiSelect
-              isOptionLabelMessageKey
-              options={TYPE_OPTIONS}
-              placeholder={'Admin.Attribute.type'}
-              queryField='type'
-            />
-          </>
+          <FSelect
+            isMultiSelect
+            options={TYPE_OPTIONS}
+            placeholder={'Admin.Attribute.type'}
+            queryField='type'
+          />
         }
         getRowId={(row) => row.id}
         isFetching={isFetching}
