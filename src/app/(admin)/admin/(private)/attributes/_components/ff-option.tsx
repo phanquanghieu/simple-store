@@ -21,21 +21,21 @@ type TFormValue = {
   options: { id?: string; name: string; key: string; value?: string }[]
 }
 
-export function OptionFormField({ label }: { label: TMessageKey }) {
+export function FFOption({ label }: { label: TMessageKey }) {
   const { type } = useWatch()
 
   const t = useTranslations()
   return (
     <FormItem className='space-y-2'>
       <FormLabel>{t(label)}</FormLabel>
-      {type === E_ATTRIBUTE_TYPE.TEXT && <TextOptionFormField />}
-      {type === E_ATTRIBUTE_TYPE.COLOR && <ColorOptionFormField />}
-      {type === E_ATTRIBUTE_TYPE.BOOLEAN && <BooleanOptionFormField />}
+      {type === E_ATTRIBUTE_TYPE.TEXT && <FFTextOption />}
+      {type === E_ATTRIBUTE_TYPE.COLOR && <FFColorOption />}
+      {type === E_ATTRIBUTE_TYPE.BOOLEAN && <FFBooleanOption />}
     </FormItem>
   )
 }
 
-function TextOptionFormField() {
+function FFTextOption() {
   const { control, watch, trigger, setValue } = useFormContext<TFormValue>()
   const { fields, remove, append, move } = useFieldArray({
     control: control,
@@ -135,7 +135,7 @@ function TextOptionFormField() {
   )
 }
 
-function ColorOptionFormField() {
+function FFColorOption() {
   const { control, watch, trigger, setValue } = useFormContext<TFormValue>()
   const { fields, remove, append, move } = useFieldArray({
     control: control,
@@ -238,7 +238,7 @@ function ColorOptionFormField() {
   )
 }
 
-function BooleanOptionFormField() {
+function FFBooleanOption() {
   const { control } = useFormContext<TFormValue>()
   const { fields, move } = useFieldArray({
     control: control,

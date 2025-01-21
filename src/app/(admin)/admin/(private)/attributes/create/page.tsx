@@ -23,7 +23,7 @@ import { useCreateAttribute } from '~/app/_apis/admin/attribute/useCreateAttribu
 import { FFInput, FFRichText, FFSelect2, Form } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
-import { OptionFormField } from '../_components/option-form-field'
+import { FFOption } from '../_components/ff-option'
 
 const CreateAttributeFormSchemaBase = zod.object({
   name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
@@ -226,7 +226,7 @@ export default function Page() {
                     />
                   </Col>
                   <Col col={2}>
-                    <OptionFormField label={'Admin.Attribute.options'} />
+                    <FFOption label={'Admin.Attribute.options'} />
                   </Col>
                 </Grid>
               </CardS>
