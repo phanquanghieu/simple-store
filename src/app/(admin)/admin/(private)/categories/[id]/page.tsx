@@ -185,6 +185,7 @@ export default function Page() {
                   />
                   <FFAttribute
                     initOption={data?.attributeOptions}
+                    isMultiSelect
                     label={'Admin.Attribute.attributes'}
                     name='attributeIds'
                   />

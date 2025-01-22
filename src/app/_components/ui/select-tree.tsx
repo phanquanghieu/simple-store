@@ -10,7 +10,7 @@ import {
 import { LuChevronRight } from 'react-icons/lu'
 
 import { CollapsibleTrigger } from '@radix-ui/react-collapsible'
-import { isEmpty, isNull, range, uniqBy } from 'lodash'
+import { isEmpty, isNull, range, unionBy } from 'lodash'
 
 import { sortByKeys, zodt } from '~/shared/libs'
 
@@ -37,7 +37,7 @@ import { IOptionTree } from '~/app/_interfaces/common.interface'
 
 import { Checkbox } from './checkbox'
 import { Collapsible, CollapsibleContent } from './collapsible'
-import { SelectButtonDefault, SelectButtonFilter } from './select2'
+import { SelectTriggerDefault, SelectTriggerFilter } from './select2'
 
 export interface ISelectTreeProps<TValue = string | string[] | null>
   extends Omit<
@@ -105,14 +105,12 @@ export const SelectTree = forwardRef<HTMLButtonElement, ISelectTreeProps>(
       const values = value ? zodt.toArray(value) : []
 
       setSelectedOptions((prevSelectedOptions) => {
-        const _options = uniqBy(
-          [
-            ...initOptions,
-            ...prevSelectedOptions,
-            ...values
-              .map((v) => treeUtil.findNode(options, v, 'value'))
-              .filter((option) => !isNull(option)),
-          ],
+        const _options = unionBy(
+          initOptions,
+          prevSelectedOptions,
+          values
+            .map((v) => treeUtil.findNode(options, v, 'value'))
+            .filter((option) => !isNull(option)),
           'value',
         )
         return sortByKeys(
@@ -166,13 +164,13 @@ export const SelectTree = forwardRef<HTMLButtonElement, ISelectTreeProps>(
           {...props}
         >
           {variant === 'filter' ? (
-            <SelectButtonFilter
+            <SelectTriggerFilter
               isOptionLabelMessageKey={isOptionLabelMessageKey}
               placeholder={placeholder}
               selectedOptions={selectedOptions}
             />
           ) : (
-            <SelectButtonDefault
+            <SelectTriggerDefault
               onClearOption={handleClearOption}
               isClearable={isClearable}
               isMultiSelect={isMultiSelect}

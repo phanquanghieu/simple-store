@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
-import { LuArrowDownUp, LuPlus, LuTrash } from 'react-icons/lu'
+import { LuArrowDownUp, LuPlus, LuX } from 'react-icons/lu'
 
 import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 import { snakeCase } from 'lodash'
@@ -22,7 +22,7 @@ type TFormValue = {
 }
 
 export function FFOption({ label }: { label: TMessageKey }) {
-  const { type } = useWatch()
+  const type = useWatch<TFormValue, 'type'>({ name: 'type' })
 
   const t = useTranslations()
   return (
@@ -36,16 +36,21 @@ export function FFOption({ label }: { label: TMessageKey }) {
 }
 
 function FFTextOption() {
-  const { control, watch, trigger, setValue } = useFormContext<TFormValue>()
-  const { fields, remove, append, move } = useFieldArray({
+  const { control, trigger, setValue } = useFormContext<TFormValue>()
+
+  const {
+    fields: fieldOptions,
+    remove,
+    append,
+    move,
+  } = useFieldArray({
     control: control,
     keyName: '_id',
     name: 'options',
   })
-
-  const watchOptions = watch('options')
-  const options = fields.map((field, index) => ({
-    ...field,
+  const watchOptions = useWatch<TFormValue, 'options'>({ name: 'options' })
+  const options = fieldOptions.map((fieldOption, index) => ({
+    ...fieldOption,
     ...watchOptions[index],
   }))
 
@@ -75,18 +80,13 @@ function FFTextOption() {
   return (
     <Sortable
       onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
-      value={fields.map(({ _id }) => ({ id: _id }))}
+      value={options.map(({ _id }) => ({ id: _id }))}
     >
-      {fields.map((field, index) => (
-        <SortableItem asChild key={field._id} value={field._id}>
+      {options.map((option, index) => (
+        <SortableItem asChild key={option._id} value={option._id}>
           <div className='flex w-full gap-3 pb-1'>
             <div className='flex-none'>
-              <SortableDragHandle
-                className='text-muted-foreground hover:cursor-move'
-                size={'icon'}
-                type='button'
-                variant={'outline'}
-              >
+              <SortableDragHandle>
                 <LuArrowDownUp />
               </SortableDragHandle>
             </div>
@@ -98,34 +98,28 @@ function FFTextOption() {
             </div>
             <div className='flex-1'>
               <FFInput
-                disabled={!!field.id}
+                disabled={!!option.id}
                 name={`options.${index}.key`}
                 placeholder={'Admin.Attribute.optionKey'}
               />
             </div>
             <div className='flex-none'>
               <Button
-                onClick={() => {
-                  remove(index)
-                }}
-                className='border-destructive'
+                onClick={() => remove(index)}
                 disabled={options.length === 1}
                 size={'icon'}
-                variant={'outline'}
+                variant={'outline-destructive'}
               >
-                <LuTrash className='text-destructive' />
+                <LuX />
               </Button>
             </div>
           </div>
         </SortableItem>
       ))}
       <Button
-        onClick={() => {
-          append({ name: '', key: '' })
-        }}
-        className='hover:text-info-hover border-info pl-2 font-normal text-info'
+        onClick={() => append({ name: '', key: '' })}
+        className='pl-2'
         size={'sm'}
-        type='button'
         variant={'outline'}
       >
         <LuPlus />
@@ -136,16 +130,21 @@ function FFTextOption() {
 }
 
 function FFColorOption() {
-  const { control, watch, trigger, setValue } = useFormContext<TFormValue>()
-  const { fields, remove, append, move } = useFieldArray({
+  const { control, trigger, setValue } = useFormContext<TFormValue>()
+
+  const {
+    fields: fieldOptions,
+    remove,
+    append,
+    move,
+  } = useFieldArray({
     control: control,
     keyName: '_id',
     name: 'options',
   })
-
-  const watchOptions = watch('options')
-  const options = fields.map((field, index) => ({
-    ...field,
+  const watchOptions = useWatch<TFormValue, 'options'>({ name: 'options' })
+  const options = fieldOptions.map((fieldOption, index) => ({
+    ...fieldOption,
     ...watchOptions[index],
   }))
 
@@ -175,18 +174,13 @@ function FFColorOption() {
   return (
     <Sortable
       onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
-      value={fields.map(({ _id }) => ({ id: _id }))}
+      value={options.map(({ _id }) => ({ id: _id }))}
     >
-      {fields.map((field, index) => (
-        <SortableItem asChild key={field._id} value={field._id}>
+      {options.map((option, index) => (
+        <SortableItem asChild key={option._id} value={option._id}>
           <div className='flex w-full gap-3 pb-1'>
             <div className='flex-none'>
-              <SortableDragHandle
-                className='text-muted-foreground hover:cursor-move'
-                size={'icon'}
-                type='button'
-                variant={'outline'}
-              >
+              <SortableDragHandle>
                 <LuArrowDownUp />
               </SortableDragHandle>
             </div>
@@ -198,7 +192,7 @@ function FFColorOption() {
             </div>
             <div className='flex-1'>
               <FFInput
-                disabled={!!field.id}
+                disabled={!!option.id}
                 name={`options.${index}.key`}
                 placeholder={'Admin.Attribute.optionKey'}
               />
@@ -208,27 +202,21 @@ function FFColorOption() {
             </div>
             <div className='flex-none'>
               <Button
-                onClick={() => {
-                  remove(index)
-                }}
-                className='border-destructive'
+                onClick={() => remove(index)}
                 disabled={options.length === 1}
                 size={'icon'}
-                variant={'outline'}
+                variant={'outline-destructive'}
               >
-                <LuTrash className='text-destructive' />
+                <LuX />
               </Button>
             </div>
           </div>
         </SortableItem>
       ))}
       <Button
-        onClick={() => {
-          append({ name: '', key: '', value: '' })
-        }}
-        className='hover:text-info-hover border-info pl-2 font-normal text-info'
+        onClick={() => append({ name: '', key: '', value: '' })}
+        className='pl-2'
         size={'sm'}
-        type='button'
         variant={'outline'}
       >
         <LuPlus />
@@ -239,9 +227,11 @@ function FFColorOption() {
 }
 
 function FFBooleanOption() {
-  const { control } = useFormContext<TFormValue>()
-  const { fields, move } = useFieldArray({
-    control: control,
+  const { fields: fieldOptions, move } = useFieldArray<
+    TFormValue,
+    'options',
+    '_id'
+  >({
     keyName: '_id',
     name: 'options',
   })
@@ -249,18 +239,13 @@ function FFBooleanOption() {
   return (
     <Sortable
       onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
-      value={fields.map(({ _id }) => ({ id: _id }))}
+      value={fieldOptions.map(({ _id }) => ({ id: _id }))}
     >
-      {fields.map((field, index) => (
-        <SortableItem asChild key={field._id} value={field._id}>
+      {fieldOptions.map((option, index) => (
+        <SortableItem asChild key={option._id} value={option._id}>
           <div className='flex w-full gap-3 pb-1'>
             <div className='flex-none'>
-              <SortableDragHandle
-                className='text-muted-foreground hover:cursor-move'
-                size={'icon'}
-                type='button'
-                variant={'outline'}
-              >
+              <SortableDragHandle>
                 <LuArrowDownUp />
               </SortableDragHandle>
             </div>

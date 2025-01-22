@@ -4,13 +4,20 @@ import { LuArrowLeft } from 'react-icons/lu'
 
 import { Button } from '~/app/_components/ui/button'
 
+import { cn } from '~/app/_libs/utils'
+
 export function PageHeader({
   children,
   title,
   backUrl,
-}: PropsWithChildren<{ title: ReactNode; backUrl?: string }>) {
+  className,
+}: PropsWithChildren<{
+  title: ReactNode
+  backUrl?: string
+  className?: string
+}>) {
   return (
-    <div className='flex items-center justify-between'>
+    <div className={cn('flex items-center justify-between', className)}>
       <div className='flex items-center'>
         {backUrl && (
           <Link href={backUrl}>

@@ -25,6 +25,7 @@ export const zodt = {
 
 export const zodRegex = {
   KEY: /^[a-z0-9_]+$/,
+  MONEY: /^\d+(\.\d{1,3})?$/,
 }
 
 export enum E_ZOD_ERROR_CODE {

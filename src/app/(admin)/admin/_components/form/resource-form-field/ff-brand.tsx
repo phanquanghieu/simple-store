@@ -2,17 +2,19 @@ import { useState } from 'react'
 
 import { useDebounceValue } from 'usehooks-ts'
 
-import { useGetInfinityAttributes } from '~/app/_apis/admin/attribute/useGetInfiniteAttributes'
+import { useGetInfiniteBrands } from '~/app/_apis/admin/brand/useGetInfiniteBrands'
 
 import { FFSelect2, IFFSelect2Props } from '../form-field/ff-select2'
 
-export function FFAttribute(props: IFFSelect2Props) {
+export function FFBrand(props: IFFSelect2Props) {
   const [search, setSearch] = useState('')
   const [searchDebounced] = useDebounceValue(search, 500)
   const [openSelect, setOpenSelect] = useState(false)
 
-  const { data, hasNextPage, fetchNextPage, isFetching } =
-    useGetInfinityAttributes({ search: searchDebounced }, openSelect)
+  const { data, hasNextPage, fetchNextPage, isFetching } = useGetInfiniteBrands(
+    { search: searchDebounced },
+    openSelect,
+  )
 
   return (
     <FFSelect2

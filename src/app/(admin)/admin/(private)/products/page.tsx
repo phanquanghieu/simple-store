@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { LuArchive, LuBox, LuFilePen } from 'react-icons/lu'
+import { LuArchive, LuBox, LuFilePen, LuPlus } from 'react-icons/lu'
 
 import { E_PRODUCT_STATUS } from '@prisma/client'
 
@@ -87,7 +87,10 @@ export default function Page() {
     <>
       <PageHeader title={t('Admin.Product.products')}>
         <Link href='/admin/products/create'>
-          <Button>{t('Common.create')}</Button>
+          <Button size={'sm-icon'}>
+            <LuPlus />
+            {t('Common.create')}
+          </Button>
         </Link>
       </PageHeader>
       <DataTable

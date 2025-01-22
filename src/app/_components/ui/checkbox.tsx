@@ -16,9 +16,14 @@ const checkboxVariants = cva(
         default: 'rounded-sm',
         circle: 'rounded-full',
       },
+      isError: {
+        false: '',
+        true: 'border-destructive ring-destructive focus-visible:ring-destructive',
+      },
     },
     defaultVariants: {
       variant: 'default',
+      isError: false,
     },
   },
 )
@@ -29,9 +34,9 @@ export interface CheckboxProps
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   CheckboxProps
->(({ className, variant, ...props }, ref) => (
+>(({ className, variant, isError, ...props }, ref) => (
   <CheckboxPrimitive.Root
-    className={cn(checkboxVariants({ variant, className }))}
+    className={cn(checkboxVariants({ variant, isError, className }))}
     ref={ref}
     {...props}
   >

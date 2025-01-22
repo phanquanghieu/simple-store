@@ -30,4 +30,20 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }
+function TooltipS({
+  children,
+  tooltip,
+  ...props
+}: { tooltip: React.ReactNode } & TooltipPrimitive.TooltipContentProps &
+  React.RefAttributes<HTMLDivElement>) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent align='center' side='right' {...props}>
+        {tooltip}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+export { Tooltip, TooltipContent, TooltipProvider, TooltipS, TooltipTrigger }

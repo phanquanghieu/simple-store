@@ -24,6 +24,22 @@ export class IAttributeLiteRes {
   }
 }
 
+type IAttributeLiteWithOptionsResParam = Prisma.AttributeGetPayload<{
+  include: { attributeOptions: true }
+}>
+export class IAttributeLiteWithOptionsRes extends IAttributeLiteRes {
+  options: IAttributeOptionRes[]
+
+  constructor(data: IAttributeLiteWithOptionsResParam) {
+    super(data)
+    this.options = IAttributeOptionRes.list(data.attributeOptions)
+  }
+
+  static list(data: IAttributeLiteWithOptionsResParam[]) {
+    return data.map((d) => new IAttributeLiteWithOptionsRes(d))
+  }
+}
+
 export class IAttributeRes extends IAttributeLiteRes {
   description: string
   updatedAt: string

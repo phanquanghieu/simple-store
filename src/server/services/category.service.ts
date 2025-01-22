@@ -3,6 +3,7 @@ import { difference, isUndefined } from 'lodash'
 import { v7 } from 'uuid'
 
 import { IIdParam, ILiteQuery } from '~/shared/dto/_common/req'
+import { IAttributeLiteWithOptionsRes } from '~/shared/dto/attribute/res'
 import {
   E_BULK_CATEGORY_TYPE,
   IBulkCategoryBody,
@@ -143,6 +144,18 @@ export const categoryService = {
       })
 
     return OkRes(new ICategoryDetailRes(category))
+  },
+
+  getAttributes: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
+    const categoryAttributes = await prisma.attribute.findMany({
+      where: { categories: { some: { id } } },
+      include: {
+        attributeOptions: true,
+      },
+      orderBy: { name: 'asc' },
+    })
+
+    return OkRes(IAttributeLiteWithOptionsRes.list(categoryAttributes))
   },
 
   create: async ({ body }: IAdminCtxBody<ICreateCategoryBody>) => {

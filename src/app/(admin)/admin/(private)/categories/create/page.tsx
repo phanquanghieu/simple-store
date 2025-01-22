@@ -115,6 +115,7 @@ export default function Page() {
                 <Grid className='gap-3'>
                   <FFCategory label={'Admin.Category.parent'} name='parentId' />
                   <FFAttribute
+                    isMultiSelect
                     label={'Admin.Attribute.attributes'}
                     name='attributeIds'
                   />

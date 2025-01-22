@@ -23,8 +23,8 @@
         "TEXT": "Text"
       },
       "addOption": "Add Option",
-      "attributes": "Attributes",
       "attribute": "Attribute",
+      "attributes": "Attributes",
       "createAttribute": "Create Attribute",
       "description": "Description",
       "editAttribute": "Edit Attribute",
@@ -49,8 +49,8 @@
           "DELETE": "Delete this brand?"
         }
       },
-      "brands": "Brands",
       "brand": "Brand",
+      "brands": "Brands",
       "createBrand": "Create Brand",
       "description": "Description",
       "editBrand": "Edit Brand",
@@ -157,16 +157,29 @@
         "ARCHIVED": "Archived",
         "DRAFT": "Draft"
       },
+      "addVariantAttribute": "Add Variant Attribute",
+      "categoryAndAttributes": "Category & Attributes",
       "compareAtPrice": "Compare-At Price",
+      "countVariants": "{count} variants",
       "createProduct": "Create Product",
       "description": "Description",
       "editProduct": "Edit Product",
+      "editVariant": "Edit Variants",
+      "hasVariants": "Has Variants",
       "name": "Name",
       "price": "Price",
+      "productAttributes": "Product Attributes",
+      "productOrganization": "Product Organization",
+      "productVariants": "Product Variants",
       "products": "Products",
       "slug": "Slug",
       "status": "Status",
-      "totalVariants": "Total Variants"
+      "totalVariants": "Total Variants",
+      "variant": "Variant",
+      "variantAttributeAddEmptyMessage": "Please add Product Attributes first",
+      "variantAttributeConnectedMessage": "Attribute has been used in product variant",
+      "variantAttributes": "Variant Attributes",
+      "variants": "Variants"
     },
     "SideBar": {
       "attributes": "Attributes",

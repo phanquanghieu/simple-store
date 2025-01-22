@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { countBy } from 'lodash'
+import { countBy, isNil } from 'lodash'
 
 import { Input } from '~/app/_components/ui/input'
 
@@ -37,7 +37,7 @@ export function FFCurrency({
   const formValue = form.watch(name)
 
   useEffect(() => {
-    if (formValue === '') {
+    if (isNil(formValue) || formValue === '') {
       setValue('')
     } else {
       setValue(formatCurrencyNumberString(formValue))
@@ -67,7 +67,7 @@ export function FFCurrency({
   const handleBlur = (rawValue: string) => {
     if (rawValue === '') {
       setValue('')
-      form.setValue(name, '')
+      form.setValue(name, null)
     } else {
       const currencyNumberString =
         transformStringToCurrencyNumberString(rawValue)

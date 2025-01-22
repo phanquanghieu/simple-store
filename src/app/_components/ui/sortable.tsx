@@ -334,11 +334,13 @@ const SortableDragHandle = React.forwardRef<
   return (
     <Button
       className={cn(
-        'cursor-grab data-[state=dragging]:cursor-grabbing',
+        'cursor-move data-[state=dragging]:cursor-grabbing',
         className,
       )}
       data-state={isDragging ? 'dragging' : undefined}
       ref={composeRefs(ref)}
+      size={'icon'}
+      variant={'outline'}
       {...attributes}
       {...listeners}
       {...props}

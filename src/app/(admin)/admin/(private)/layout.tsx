@@ -29,7 +29,7 @@ export default function Layout({ children }: PropsWithChildren) {
               <Notification />
             </div>
           </header>
-          <div className='flex flex-col gap-4 p-4'>{children}</div>
+          <div className='flex flex-col gap-4 p-4 pb-8'>{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </ReactQueryProvider>

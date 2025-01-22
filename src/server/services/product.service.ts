@@ -1,20 +1,22 @@
 import { E_PRODUCT_STATUS, Prisma } from '@prisma/client'
 
-import { IIdParam, IPaginationQuery } from '~/shared/dto/_common/req'
+import { IIdParam } from '~/shared/dto/_common/req'
 import {
   E_BULK_PRODUCT_TYPE,
   IBulkProductBody,
+  ICreateProductBody,
   IGetProductQuery,
 } from '~/shared/dto/product/req'
 import { IProductDetailRes, IProductRes } from '~/shared/dto/product/res'
 
-import { NotFoundException, OkListRes, OkRes, queryUtil } from '../common'
 import {
-  IAdminCtx,
-  IAdminCtxBody,
-  IAdminCtxParam,
-  IAdminCtxQuery,
-} from '../core/ctx'
+  InternalServerErrorException,
+  NotFoundException,
+  OkListRes,
+  OkRes,
+  queryUtil,
+} from '../common'
+import { IAdminCtxBody, IAdminCtxParam, IAdminCtxQuery } from '../core/ctx'
 import { prisma } from '../infra/db'
 
 export const productService = {
@@ -56,12 +58,9 @@ export const productService = {
     return OkRes(new IProductDetailRes(product))
   },
 
-  create: async ({
-    param,
-    query,
-    body,
-  }: IAdminCtx<IIdParam, IPaginationQuery>) => {
-    return OkRes({ param, query, body })
+  create: async ({ body }: IAdminCtxBody<ICreateProductBody>) => {
+    console.log(body)
+    throw new InternalServerErrorException()
   },
 
   delete: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {

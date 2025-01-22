@@ -10,12 +10,12 @@ export interface IGetProductQuery extends IListQuery {
 export interface ICreateProductBody {
   categoryId: string | null
   brandId: string | null
+  attributes: { id: string; selectedOptionIds: string[] }[]
   name: string
   slug: string
   description: string
   price: string
-  compareAtPrice: string
-  totalVariants: number
+  compareAtPrice: string | null
   status: Extract<E_PRODUCT_STATUS, 'ACTIVE' | 'DRAFT'>
 }
 
