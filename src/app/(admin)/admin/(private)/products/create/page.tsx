@@ -41,6 +41,7 @@ const CreateProductFormSchema = zod.object({
   description: zod.string().trim().max(5000),
   price: zod.string({ message: E_ZOD_ERROR_CODE.REQUIRED }),
   compareAtPrice: zod.string().nullable(),
+  cost: zod.string().nullable(),
   status: zod.enum([E_PRODUCT_STATUS.ACTIVE, E_PRODUCT_STATUS.DRAFT]),
   attributes: zod.array(
     zod.object({
@@ -65,6 +66,25 @@ const CreateProductFormSchema = zod.object({
       id: zod.string(),
     }),
   ),
+  variants: zod.array(
+    zod.object({
+      id: zod.string().optional(),
+      sku: zod.string().trim().nullable(),
+      price: zod.string({ message: E_ZOD_ERROR_CODE.REQUIRED }),
+      compareAtPrice: zod.string().nullable(),
+      cost: zod.string().nullable(),
+      attributeOptions: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          key: zod.string(),
+          value: zod.string().optional(),
+        }),
+      ),
+      isNew: zod.boolean(),
+      isDeleted: zod.boolean(),
+    }),
+  ),
 })
 
 type TCreateProductFormValue = z.infer<typeof CreateProductFormSchema>
@@ -76,10 +96,12 @@ const defaultValues: TCreateProductFormValue = {
   description: '',
   price: '0',
   compareAtPrice: null,
+  cost: null,
   status: E_PRODUCT_STATUS.ACTIVE,
   attributes: [],
   hasVariants: false,
   variantAttributes: [],
+  variants: [],
 }
 
 export default function Page() {
@@ -99,18 +121,32 @@ export default function Page() {
       {
         brandId: values.brandId,
         categoryId: values.categoryId,
+        attributes: values.attributes
+          .filter((attribute) => !isEmpty(attribute.selectedOptionIds))
+          .map((attribute) => ({
+            id: attribute.id,
+            optionIds: attribute.selectedOptionIds,
+          })),
+        variantAttributeIds: values.hasVariants
+          ? values.variantAttributes.map((x) => x.id)
+          : null,
+        variants: values.hasVariants
+          ? values.variants.map((variant) => ({
+              sku: variant.sku || null,
+              price: variant.price,
+              compareAtPrice: variant.compareAtPrice,
+              cost: variant.cost,
+              attributeOptionIds: variant.attributeOptions.map((x) => x.id),
+            }))
+          : null,
         name: values.name,
         slug: values.slug,
         description: values.description,
         price: values.price,
         compareAtPrice: values.compareAtPrice,
+        cost: values.cost,
         status: values.status,
-        attributes: values.attributes
-          .filter((attribute) => !isEmpty(attribute.selectedOptionIds))
-          .map((attribute) => ({
-            id: attribute.id,
-            selectedOptionIds: attribute.selectedOptionIds,
-          })),
+        hasVariants: values.hasVariants,
       },
       {
         onSuccess: () => {

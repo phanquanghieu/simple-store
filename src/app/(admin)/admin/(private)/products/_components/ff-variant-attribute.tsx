@@ -9,25 +9,18 @@ import { differenceBy, isEmpty } from 'lodash'
 import { filterBy, sortByKeys } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
-import { CardS } from '~/app/_components/ui/card'
 import { Label } from '~/app/_components/ui/label'
 import { Col, Grid } from '~/app/_components/ui/layout'
 import { Select2 } from '~/app/_components/ui/select2'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTrigger,
-} from '~/app/_components/ui/sheet'
 import {
   Sortable,
   SortableDragHandle,
   SortableItem,
 } from '~/app/_components/ui/sortable'
 
-import { FFCheckbox, FFSelect2 } from '../../../_components/form'
-import { PageHeader } from '../../../_components/page-header'
-import { STATUS_OPTIONS, TCUProductFormValue } from '../_common'
+import { FFCheckbox } from '../../../_components/form'
+import { TCUProductFormValue } from '../_common'
+import { FFVariant } from './ff-variant'
 
 const MAX_VARIANT_ATTRIBUTES = 3
 
@@ -166,55 +159,9 @@ export function FFVariantAttribute() {
             </div>
           )}
 
-          <div className='mt-4 flex items-center justify-between'>
-            <div>{t('Admin.Product.countVariants', { count: 2 })}</div>
-            <ProductVariantEditorSheet />
-          </div>
+          <FFVariant />
         </Col>
       )}
     </Grid>
-  )
-}
-
-function ProductVariantEditorSheet() {
-  const t = useTranslations()
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button size={'sm'} variant='outline'>
-          {t('Admin.Product.editVariant')}
-        </Button>
-      </SheetTrigger>
-      <SheetContent
-        onInteractOutside={(e) => e.preventDefault()}
-        className='bg-background2'
-        side={'right'}
-      >
-        <PageHeader className='mb-4' title={t('Admin.Product.productVariants')}>
-          <SheetClose asChild>
-            <Button size={'sm'} type='button' variant={'outline'}>
-              {t('Common.close')}
-            </Button>
-          </SheetClose>
-          <SheetClose asChild>
-            <Button size={'sm'} type='submit'>
-              {t('Common.save')}
-            </Button>
-          </SheetClose>
-        </PageHeader>
-        <Grid grid={3}>
-          <Col>
-            <CardS>
-              <FFSelect2
-                isOptionLabelMessageKey
-                name='status'
-                options={STATUS_OPTIONS}
-              />
-            </CardS>
-          </Col>
-          <Col col={3}></Col>
-        </Grid>
-      </SheetContent>
-    </Sheet>
   )
 }

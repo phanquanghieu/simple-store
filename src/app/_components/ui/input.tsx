@@ -5,7 +5,7 @@ import { VariantProps, cva } from 'class-variance-authority'
 import { cn } from '~/app/_libs/utils'
 
 const inputVariants = cva(
-  'invalid: flex w-full rounded-md border border-input bg-background text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+  'invalid: peer flex w-full rounded-md border border-input bg-background text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
   {
     variants: {
       variant: {
@@ -49,7 +49,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {icon && (
-          <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2'>
+          <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 peer-disabled:opacity-50'>
             {icon}
           </div>
         )}

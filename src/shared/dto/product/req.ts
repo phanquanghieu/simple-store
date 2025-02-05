@@ -10,13 +10,25 @@ export interface IGetProductQuery extends IListQuery {
 export interface ICreateProductBody {
   categoryId: string | null
   brandId: string | null
-  attributes: { id: string; selectedOptionIds: string[] }[]
+  attributes: { id: string; optionIds: string[] }[]
+  variantAttributeIds: string[] | null
+  variants:
+    | {
+        sku: string | null
+        price: string
+        compareAtPrice: string | null
+        cost: string | null
+        attributeOptionIds: string[]
+      }[]
+    | null
   name: string
   slug: string
   description: string
   price: string
   compareAtPrice: string | null
+  cost: string | null
   status: Extract<E_PRODUCT_STATUS, 'ACTIVE' | 'DRAFT'>
+  hasVariants: boolean
 }
 
 export enum E_BULK_PRODUCT_TYPE {

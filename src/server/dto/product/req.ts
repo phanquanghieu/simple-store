@@ -21,15 +21,30 @@ export const CreateProductBodySchema = zod.object({
   attributes: zod.array(
     zod.object({
       id: zod.string().uuid(),
-      selectedOptionIds: zod.array(zod.string().uuid()).nonempty(),
+      optionIds: zod.array(zod.string().uuid()).nonempty(),
     }),
   ),
+  variantAttributeIds: zod.array(zod.string().uuid()).nonempty().nullable(),
+  variants: zod
+    .array(
+      zod.object({
+        sku: zod.string().trim().nullable(),
+        price: zod.string().regex(zodRegex.MONEY),
+        compareAtPrice: zod.string().regex(zodRegex.MONEY).nullable(),
+        cost: zod.string().regex(zodRegex.MONEY).nullable(),
+        attributeOptionIds: zod.array(zod.string().uuid()).nonempty(),
+      }),
+    )
+    .nonempty()
+    .nullable(),
   name: zod.string().trim().min(1).max(256),
   slug: zod.string().trim().regex(zodRegex.KEY).min(1).max(256),
   description: zod.string().trim().max(5000),
   price: zod.string().regex(zodRegex.MONEY),
   compareAtPrice: zod.string().regex(zodRegex.MONEY).nullable(),
+  cost: zod.string().regex(zodRegex.MONEY).nullable(),
   status: zod.enum([E_PRODUCT_STATUS.ACTIVE, E_PRODUCT_STATUS.DRAFT]),
+  hasVariants: zod.boolean(),
 })
 
 export const BulkProductBodySchema = zod.object({

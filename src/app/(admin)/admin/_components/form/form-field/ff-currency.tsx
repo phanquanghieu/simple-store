@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 
 import { countBy, isNil } from 'lodash'
 
-import { Input } from '~/app/_components/ui/input'
+import { Input, InputProps } from '~/app/_components/ui/input'
 
 import { useCurrency, useNumber } from '~/app/_hooks'
 
@@ -23,7 +23,8 @@ export function FFCurrency({
   label,
   placeholder,
   description,
-}: IFormFieldProps) {
+  ...props
+}: IFormFieldProps & InputProps) {
   const [value, setValue] = useState('')
   const form = useFormContext()
   const {
@@ -98,6 +99,7 @@ export function FFCurrency({
               placeholder={placeholder && t(placeholder)}
               value={value}
               variant={'icon'}
+              {...props}
             />
           </FormControl>
           <FormDescription>{description && t(description)}</FormDescription>
