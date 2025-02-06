@@ -28,7 +28,7 @@ export const CreateProductBodySchema = zod.object({
   variants: zod
     .array(
       zod.object({
-        sku: zod.string().trim().nullable(),
+        sku: zod.string().trim().min(1).max(100).nullable(),
         price: zod.string().regex(zodRegex.MONEY),
         compareAtPrice: zod.string().regex(zodRegex.MONEY).nullable(),
         cost: zod.string().regex(zodRegex.MONEY).nullable(),
@@ -39,6 +39,7 @@ export const CreateProductBodySchema = zod.object({
     .nullable(),
   name: zod.string().trim().min(1).max(256),
   slug: zod.string().trim().regex(zodRegex.KEY).min(1).max(256),
+  sku: zod.string().trim().min(1).max(100).nullable(),
   description: zod.string().trim().max(5000),
   price: zod.string().regex(zodRegex.MONEY),
   compareAtPrice: zod.string().regex(zodRegex.MONEY).nullable(),

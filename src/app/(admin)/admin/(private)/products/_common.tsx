@@ -21,13 +21,10 @@ export const STATUS_OPTIONS: IOption<TMessageKey, E_PRODUCT_STATUS>[] = [
 ]
 
 export type TCUProductFormValue = {
-  name: string
-  slug: string
   categoryId: string | null
   attributes: (IAttributeLiteWithOptionsRes & {
     selectedOptionIds: string[]
   })[]
-  hasVariants: boolean
   variantAttributes: {
     id: string
   }[]
@@ -41,4 +38,9 @@ export type TCUProductFormValue = {
     isNew: boolean
     isDeleted: boolean
   }[]
+  name: string
+  slug: string
+  price: string
+  cost: string | null
+  hasVariants: boolean
 }

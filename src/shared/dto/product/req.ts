@@ -23,6 +23,7 @@ export interface ICreateProductBody {
     | null
   name: string
   slug: string
+  sku: string | null
   description: string
   price: string
   compareAtPrice: string | null

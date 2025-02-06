@@ -24,6 +24,7 @@ import { useDeepCompareEffect } from '~/app/_hooks'
 import { FFCurrency, FFInput } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 import { TCUProductFormValue } from '../_common'
+import { calcMargin } from '../_util'
 
 export function FFVariant() {
   const { setValue } = useFormContext<TCUProductFormValue>()
@@ -199,20 +200,7 @@ export function FFVariant() {
                       disabled={variant.isDeleted}
                       icon={<div className='flex w-4 justify-center'>%</div>}
                       readOnly
-                      value={
-                        variant.cost
-                          ? decimal.round(
-                              decimal.mul(
-                                decimal.div(
-                                  decimal.sub(variant.price, variant.cost),
-                                  variant.price,
-                                ),
-                                100,
-                              ),
-                              2,
-                            )
-                          : ''
-                      }
+                      value={calcMargin(variant.cost, variant.price)}
                       variant={'icon'}
                     />
                   </div>

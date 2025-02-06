@@ -84,7 +84,6 @@ export const productService = {
       description: body.description,
       price: body.price,
       compareAtPrice: body.compareAtPrice,
-      // cost: body.cost,
       status: body.status,
       totalVariants: body.hasVariants ? body.variants!.length : 1,
     }
@@ -151,14 +150,14 @@ export const productService = {
           inventory: {
             create: {
               productVariantId,
-              sku: null,
+              sku: body.sku,
               quantityAvailable: 0,
               quantityUnavailable: 0,
               quantityCommitted: 0,
               quantityTotal: 0,
             },
           },
-          sku: null,
+          sku: body.sku,
           price: body.price,
           compareAtPrice: body.compareAtPrice,
           cost: body.cost,

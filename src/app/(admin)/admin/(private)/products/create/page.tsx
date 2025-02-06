@@ -21,7 +21,6 @@ import { useCreateProduct } from '~/app/_apis/admin/product/useCreateProduct'
 
 import {
   FFBrand,
-  FFCurrency,
   FFInput,
   FFRichText,
   FFSelect2,
@@ -30,19 +29,13 @@ import {
 import { PageHeader } from '../../../_components/page-header'
 import { STATUS_OPTIONS } from '../_common'
 import { FFCategoryAttribute } from '../_components/ff-category-attribute'
+import { FFPrice } from '../_components/ff-price'
 import { FFSlug } from '../_components/ff-slug'
 import { FFVariantAttribute } from '../_components/ff-variant-attribute'
 
 const CreateProductFormSchema = zod.object({
   brandId: zod.string().nullable(),
   categoryId: zod.string().nullable(),
-  name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
-  slug: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
-  description: zod.string().trim().max(5000),
-  price: zod.string({ message: E_ZOD_ERROR_CODE.REQUIRED }),
-  compareAtPrice: zod.string().nullable(),
-  cost: zod.string().nullable(),
-  status: zod.enum([E_PRODUCT_STATUS.ACTIVE, E_PRODUCT_STATUS.DRAFT]),
   attributes: zod.array(
     zod.object({
       id: zod.string(),
@@ -60,7 +53,6 @@ const CreateProductFormSchema = zod.object({
       selectedOptionIds: zod.array(zod.string()),
     }),
   ),
-  hasVariants: zod.boolean(),
   variantAttributes: zod.array(
     zod.object({
       id: zod.string(),
@@ -69,7 +61,7 @@ const CreateProductFormSchema = zod.object({
   variants: zod.array(
     zod.object({
       id: zod.string().optional(),
-      sku: zod.string().trim().nullable(),
+      sku: zod.string().trim().max(100).nullable(),
       price: zod.string({ message: E_ZOD_ERROR_CODE.REQUIRED }),
       compareAtPrice: zod.string().nullable(),
       cost: zod.string().nullable(),
@@ -85,23 +77,33 @@ const CreateProductFormSchema = zod.object({
       isDeleted: zod.boolean(),
     }),
   ),
+  name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
+  slug: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
+  sku: zod.string().trim().max(100).nullable(),
+  description: zod.string().trim().max(5000),
+  price: zod.string({ message: E_ZOD_ERROR_CODE.REQUIRED }),
+  compareAtPrice: zod.string().nullable(),
+  cost: zod.string().nullable(),
+  status: zod.enum([E_PRODUCT_STATUS.ACTIVE, E_PRODUCT_STATUS.DRAFT]),
+  hasVariants: zod.boolean(),
 })
 
 type TCreateProductFormValue = z.infer<typeof CreateProductFormSchema>
 const defaultValues: TCreateProductFormValue = {
   brandId: null,
   categoryId: null,
+  attributes: [],
+  variantAttributes: [],
+  variants: [],
   name: '',
   slug: '',
+  sku: '',
   description: '',
   price: '0',
   compareAtPrice: null,
   cost: null,
   status: E_PRODUCT_STATUS.ACTIVE,
-  attributes: [],
   hasVariants: false,
-  variantAttributes: [],
-  variants: [],
 }
 
 export default function Page() {
@@ -141,6 +143,7 @@ export default function Page() {
           : null,
         name: values.name,
         slug: values.slug,
+        sku: values.sku || null,
         description: values.description,
         price: values.price,
         compareAtPrice: values.compareAtPrice,
@@ -188,6 +191,7 @@ export default function Page() {
                   <Grid className='gap-3'>
                     <FFInput label={'Admin.Product.name'} name='name' />
                     <FFSlug />
+                    <FFInput label={'Admin.Product.sku'} name='sku' />
                     <FFRichText
                       label={'Admin.Product.description'}
                       name='description'
@@ -195,13 +199,7 @@ export default function Page() {
                   </Grid>
                 </CardS>
                 <CardS title={t('Admin.Product.price')}>
-                  <Grid grid={2}>
-                    <FFCurrency label={'Admin.Product.price'} name='price' />
-                    <FFCurrency
-                      label={'Admin.Product.compareAtPrice'}
-                      name='compareAtPrice'
-                    />
-                  </Grid>
+                  <FFPrice />
                 </CardS>
                 <CardS title={t('Admin.Product.categoryAndAttributes')}>
                   <FFCategoryAttribute />
