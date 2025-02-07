@@ -45,7 +45,42 @@ export const productService = {
 
   getDetail: async ({ param: { id } }: IAdminCtxParam<IIdParam>) => {
     const product = await prisma.product
-      .findUniqueOrThrow({ where: { id }, include: { brand: true } })
+      .findUniqueOrThrow({
+        where: { id },
+        include: {
+          brand: true,
+          category: true,
+          productAttributes: {
+            include: {
+              attribute: true,
+              productAttributeOptions: {
+                include: {
+                  attributeOption: true,
+                },
+                orderBy: {
+                  position: 'asc',
+                },
+              },
+            },
+            orderBy: {
+              position: 'asc',
+            },
+          },
+          productVariants: {
+            include: {
+              variantAttributeOption1: true,
+              variantAttributeOption2: true,
+              variantAttributeOption3: true,
+            },
+            orderBy: {
+              position: 'asc',
+            },
+          },
+          variantAttribute1: true,
+          variantAttribute2: true,
+          variantAttribute3: true,
+        },
+      })
       .catch(() => {
         throw new NotFoundException()
       })

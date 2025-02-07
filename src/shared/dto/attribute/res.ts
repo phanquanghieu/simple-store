@@ -1,6 +1,6 @@
 import { Attribute, E_ATTRIBUTE_TYPE, Prisma } from '@prisma/client'
 
-import { IAttributeOptionRes } from './attribute-option/res'
+import { IAttributeOptionRes } from '../attribute-option/res'
 
 export enum E_ATTRIBUTE_EXCEPTION {
   KEY_EXISTED = 'KEY_EXISTED',
