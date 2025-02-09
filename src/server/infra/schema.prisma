@@ -81,6 +81,7 @@ model ProductAttribute {
   updatedAt               DateTime                 @default(now()) @updatedAt @map("updated_at")
   createdAt               DateTime                 @default(now()) @map("created_at")
 
+  @@unique([productId, attributeId])
   @@map("product_attribute")
 }
 
@@ -96,6 +97,7 @@ model ProductAttributeOption {
   updatedAt          DateTime         @default(now()) @updatedAt @map("updated_at")
   createdAt          DateTime         @default(now()) @map("created_at")
 
+  @@unique([productId, attributeOptionId])
   @@map("product_attribute_option")
 }
 
