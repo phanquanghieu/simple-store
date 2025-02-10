@@ -30,9 +30,11 @@ model Product {
   productAttributeOptions ProductAttributeOption[]
   name                    String                   @db.VarChar(256)
   slug                    String                   @unique @db.VarChar(256)
+  sku                     String?                  @unique @db.VarChar(100)
   description             String
   price                   Decimal                  @db.Decimal(20, 2)
   compareAtPrice          Decimal?                 @map("compare_at_price") @db.Decimal(20, 2)
+  cost                    Decimal?                 @db.Decimal(20, 2)
   totalVariants           Int                      @map("total_variants")
   status                  E_PRODUCT_STATUS
   updatedAt               DateTime                 @default(now()) @updatedAt @map("updated_at")
@@ -51,8 +53,7 @@ model ProductVariant {
   id                        String           @id @default(uuid(7)) @db.Uuid()
   productId                 String           @map("product_id") @db.Uuid()
   product                   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
-  inventoryId               String           @unique @map("inventory_id") @db.Uuid()
-  inventory                 Inventory        @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
+  inventory                 Inventory?
   variantAttributeOption1Id String?          @map("variant_attribute_option_1_id") @db.Uuid()
   variantAttributeOption1   AttributeOption? @relation("VariantProductVariantAttributeOption1", fields: [variantAttributeOption1Id], references: [id], onDelete: SetNull)
   variantAttributeOption2Id String?          @map("variant_attribute_option_2_id") @db.Uuid()
@@ -103,8 +104,8 @@ model ProductAttributeOption {
 
 model Inventory {
   id                  String             @id @default(uuid(7)) @db.Uuid()
-  productVariantId    String             @map("product_variant_id") @db.Uuid()
-  productVariant      ProductVariant?
+  productVariantId    String             @unique @map("product_variant_id") @db.Uuid()
+  productVariant      ProductVariant     @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
   inventoryHistories  InventoryHistory[]
   sku                 String?            @unique @db.VarChar(100)
   quantityAvailable   Int                @default(0) @map("quantity_available")
