@@ -30,7 +30,7 @@ model Product {
   productAttributeOptions ProductAttributeOption[]
   name                    String                   @db.VarChar(256)
   slug                    String                   @unique @db.VarChar(256)
-  sku                     String?                  @unique @db.VarChar(100)
+  sku                     String?                  @db.VarChar(100)
   description             String
   price                   Decimal                  @db.Decimal(20, 2)
   compareAtPrice          Decimal?                 @map("compare_at_price") @db.Decimal(20, 2)
@@ -60,7 +60,7 @@ model ProductVariant {
   variantAttributeOption2   AttributeOption? @relation("VariantProductVariantAttributeOption2", fields: [variantAttributeOption2Id], references: [id], onDelete: SetNull)
   variantAttributeOption3Id String?          @map("variant_attribute_option_3_id") @db.Uuid()
   variantAttributeOption3   AttributeOption? @relation("VariantProductVariantAttributeOption3", fields: [variantAttributeOption3Id], references: [id], onDelete: SetNull)
-  sku                       String?          @unique @db.VarChar(100)
+  sku                       String?          @db.VarChar(100)
   price                     Decimal          @db.Decimal(20, 2)
   compareAtPrice            Decimal?         @map("compare_at_price") @db.Decimal(20, 2)
   cost                      Decimal?         @db.Decimal(20, 2)
@@ -107,7 +107,7 @@ model Inventory {
   productVariantId    String             @unique @map("product_variant_id") @db.Uuid()
   productVariant      ProductVariant     @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
   inventoryHistories  InventoryHistory[]
-  sku                 String?            @unique @db.VarChar(100)
+  sku                 String?            @db.VarChar(100)
   quantityAvailable   Int                @default(0) @map("quantity_available")
   quantityUnavailable Int                @default(0) @map("quantity_unavailable")
   quantityCommitted   Int                @default(0) @map("quantity_committed")
