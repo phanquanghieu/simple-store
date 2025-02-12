@@ -18,8 +18,9 @@ export function FFInput({
   label,
   placeholder,
   description,
+  valueRegExp,
   ...props
-}: IFormFieldProps & InputProps) {
+}: IFormFieldProps & InputProps & { valueRegExp?: RegExp }) {
   const form = useFormContext()
 
   const t = useTranslations()
@@ -34,6 +35,12 @@ export function FFInput({
             <Input
               placeholder={placeholder && t(placeholder)}
               {...field}
+              onChange={(e) => {
+                if (valueRegExp) {
+                  e.target.value = e.target.value?.replace(valueRegExp, '')
+                }
+                field.onChange(e)
+              }}
               {...props}
             />
           </FormControl>

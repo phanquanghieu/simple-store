@@ -29,7 +29,12 @@ export function FFCheckbox({
       render={({ field }) => (
         <FormItem className='flex flex-row items-start space-x-3 space-y-0'>
           <FormControl>
-            <Checkbox onCheckedChange={field.onChange} {...field} {...props} />
+            <Checkbox
+              {...field}
+              onCheckedChange={field.onChange}
+              checked={field.value}
+              {...props}
+            />
           </FormControl>
           <div className='space-y-1 leading-none'>
             <FormLabel>{label && t(label)}</FormLabel>
