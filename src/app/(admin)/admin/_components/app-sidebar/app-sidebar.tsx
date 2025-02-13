@@ -24,6 +24,7 @@ export type IMenuItem = {
   title: TMessageKey
   url: string
   icon?: IconType
+  isRoot?: boolean
   subMenuItems?: {
     title: TMessageKey
     url: string
@@ -35,6 +36,7 @@ const menuItems: IMenuItem[] = [
     title: 'Admin.SideBar.home',
     url: '/admin',
     icon: LuHouse,
+    isRoot: true,
   },
   {
     title: 'Admin.SideBar.orders',

@@ -51,7 +51,7 @@ export function NavMain({ menuItems }: { menuItems: IMenuItem[] }) {
                 <SidebarMenuItem>
                   <Link href={menuItem.url}>
                     <SidebarMenuButton
-                      isActive={pathname === menuItem.url}
+                      isActive={pathname.startsWith(menuItem.url)}
                       tooltip={t(menuItem.title)}
                     >
                       {menuItem.icon && <menuItem.icon />}
@@ -65,7 +65,7 @@ export function NavMain({ menuItems }: { menuItems: IMenuItem[] }) {
                         <SidebarMenuSubItem key={subMenuItem.url}>
                           <SidebarMenuSubButton
                             asChild
-                            isActive={pathname === subMenuItem.url}
+                            isActive={pathname.startsWith(subMenuItem.url)}
                           >
                             <Link href={subMenuItem.url}>
                               {t(subMenuItem.title)}
@@ -80,7 +80,11 @@ export function NavMain({ menuItems }: { menuItems: IMenuItem[] }) {
             ) : (
               <Link href={menuItem.url}>
                 <SidebarMenuButton
-                  isActive={pathname === menuItem.url}
+                  isActive={
+                    menuItem.isRoot
+                      ? pathname === menuItem.url
+                      : pathname.startsWith(menuItem.url)
+                  }
                   tooltip={t(menuItem.title)}
                 >
                   {menuItem.icon && <menuItem.icon />}
