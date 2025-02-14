@@ -30,7 +30,7 @@ export function routeExecutor(request: NextRequest, params: INextRouteParams) {
         if (error instanceof HttpException) {
           return ErrorRes(error.getRes(), error.getStatusCode())
         } else {
-          console.error(error)
+          console.error('[RouteExecutor]', error)
           return ErrorRes(HttpException.getRes(), HttpException.getStatusCode())
         }
       }

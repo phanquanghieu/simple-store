@@ -11,11 +11,11 @@
     "format": "prettier --write .",
     "p": "prisma",
     "p:gen": "prisma generate",
-    "p:m": "prisma migrate dev --name",
+    "p:dev": "prisma migrate dev",
+    "p:devn": "prisma migrate dev --name",
     "p:deploy": "prisma migrate deploy",
     "p:seed": "prisma db seed",
-    "p:s": "prisma studio",
-    "p:f": "prisma format"
+    "p:s": "prisma studio"
   },
   "prisma": {
     "schema": "src/server/infra/schema.prisma"

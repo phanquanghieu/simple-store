@@ -2,7 +2,7 @@ import { routeExecutor } from '~/server/core'
 
 import { brandService } from '~/server/services/brand.service'
 
-import { UpdateBrandSchema } from '~/server/dto/brand/req'
+import { UpdateBrandBodySchema } from '~/server/dto/brand/req'
 import {
   adminGuard,
   bodyValidator,
@@ -21,7 +21,7 @@ export async function PATCH(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
     idParamValidator,
-    bodyValidator(UpdateBrandSchema),
+    bodyValidator(UpdateBrandBodySchema),
     brandService.update,
   )
 }
