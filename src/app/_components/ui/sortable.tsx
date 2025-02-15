@@ -83,7 +83,7 @@ interface SortableProps<TData extends { id: UniqueIdentifier }>
    * An optional callback function that is called when the order of the data items changes.
    * It receives the new array of items as its argument.
    * @example
-   * onValueChange={(items) => console.log(items)}
+   * onValueChange={(items) => {}}
    */
   onValueChange?: (items: TData[]) => void
 
@@ -93,7 +93,7 @@ interface SortableProps<TData extends { id: UniqueIdentifier }>
    * This will override the default behavior of updating the order of the data items.
    * @type (event: { activeIndex: number; overIndex: number }) => void
    * @example
-   * onMove={(event) => console.log(`Item moved from index ${event.activeIndex} to index ${event.overIndex}`)}
+   * onMove={(event) => `Item moved from index ${event.activeIndex} to index ${event.overIndex}`}
    */
   onMove?: (event: { activeIndex: number; overIndex: number }) => void
 

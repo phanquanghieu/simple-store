@@ -7,12 +7,8 @@ import { useForm } from 'react-hook-form'
 import { LuPlus } from 'react-icons/lu'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { E_ATTRIBUTE_TYPE } from '@prisma/client'
-import { snakeCase } from 'lodash'
-import { z } from 'zod'
 
 import { E_ATTRIBUTE_EXCEPTION } from '~/shared/dto/attribute/res'
-import { E_ZOD_ERROR_CODE, zod, zodRegex } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -23,123 +19,24 @@ import { useCreateAttribute } from '~/app/_apis/admin/attribute/useCreateAttribu
 import { FFInput, FFRichText, FFSelect2, Form } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
+import { FFKey } from '../_components/ff-key'
 import { FFOption } from '../_components/ff-option'
-
-const CreateAttributeFormSchemaBase = zod.object({
-  name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
-  key: zod
-    .string()
-    .trim()
-    .regex(zodRegex.KEY, E_ZOD_ERROR_CODE.KEY_INVALID)
-    .min(1, E_ZOD_ERROR_CODE.REQUIRED)
-    .max(100),
-  description: zod.string().trim().max(5000),
-})
-const OptionNameSchema = zod
-  .string()
-  .trim()
-  .min(1, E_ZOD_ERROR_CODE.REQUIRED)
-  .max(256)
-const OptionKeySchema = zod
-  .string()
-  .trim()
-  .min(1, E_ZOD_ERROR_CODE.REQUIRED)
-  .regex(zodRegex.KEY, E_ZOD_ERROR_CODE.KEY_INVALID)
-  .max(100)
-const OptionSuperRefine = (
-  options: { name: string; key: string }[],
-  ctx: z.RefinementCtx,
-) => {
-  options.forEach((option, index) => {
-    const hasSameKey = options.some(
-      (o, i) => i !== index && o.key === option.key,
-    )
-    if (hasSameKey) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: [index, 'key'],
-        message: E_ZOD_ERROR_CODE.UNIQUE,
-      })
-    }
-  })
-}
-
-const CreateAttributeFormSchema = zod.discriminatedUnion('type', [
-  zod
-    .object({
-      type: zod.literal(E_ATTRIBUTE_TYPE.TEXT),
-      options: zod
-        .array(
-          zod.object({
-            name: OptionNameSchema,
-            key: OptionKeySchema,
-          }),
-        )
-        .nonempty()
-        .max(100)
-        .superRefine(OptionSuperRefine),
-    })
-    .merge(CreateAttributeFormSchemaBase),
-  zod
-    .object({
-      type: zod.literal(E_ATTRIBUTE_TYPE.COLOR),
-      options: zod
-        .array(
-          zod.object({
-            name: OptionNameSchema,
-            key: OptionKeySchema,
-            value: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(7),
-          }),
-        )
-        .nonempty()
-        .max(100)
-        .superRefine(OptionSuperRefine),
-    })
-    .merge(CreateAttributeFormSchemaBase),
-  zod
-    .object({
-      type: zod.literal(E_ATTRIBUTE_TYPE.BOOLEAN),
-      options: zod.array(
-        zod.object({
-          name: OptionNameSchema,
-          key: zod.enum(['true', 'false']),
-        }),
-      ),
-    })
-    .merge(CreateAttributeFormSchemaBase),
-])
-
-type TCreateAttributeFormValue = z.infer<typeof CreateAttributeFormSchema>
-const defaultValues: TCreateAttributeFormValue = {
-  name: '',
-  key: '',
-  description: '',
-  type: E_ATTRIBUTE_TYPE.TEXT,
-  options: [
-    {
-      name: '',
-      key: '',
-    },
-  ],
-}
+import {
+  CreateAttributeFormSchema,
+  TCreateAttributeFormValue,
+  defaultCreateAttributeFormValue,
+} from '../_schema'
 
 export default function Page() {
   const { mutate: mutateCreate, isPending } = useCreateAttribute()
 
   const form = useForm<TCreateAttributeFormValue>({
     resolver: zodResolver(CreateAttributeFormSchema),
-    defaultValues,
+    defaultValues: defaultCreateAttributeFormValue,
     mode: 'onBlur',
   })
   const formId = useId()
   const router = useRouter()
-
-  const name = form.watch('name')
-  useEffect(() => {
-    if (!form.formState.dirtyFields.key) {
-      form.setValue('key', snakeCase(name))
-    }
-  }, [name, form])
 
   const type = form.watch('type')
   useEffect(() => {
@@ -206,7 +103,7 @@ export default function Page() {
                     label={'Admin.Attribute.name'}
                     name='name'
                   />
-                  <FFInput label={'Admin.Attribute.key'} name='key' />
+                  <FFKey />
                   <FFRichText
                     label={'Admin.Attribute.description'}
                     name='description'
@@ -226,7 +123,7 @@ export default function Page() {
                     />
                   </Col>
                   <Col col={2}>
-                    <FFOption label={'Admin.Attribute.options'} />
+                    <FFOption />
                   </Col>
                 </Grid>
               </CardS>

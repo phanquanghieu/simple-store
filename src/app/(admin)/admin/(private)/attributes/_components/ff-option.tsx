@@ -5,6 +5,8 @@ import { LuArrowDownUp, LuPlus, LuX } from 'react-icons/lu'
 import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 import { snakeCase } from 'lodash'
 
+import { zodRegex } from '~/shared/libs'
+
 import { Button } from '~/app/_components/ui/button'
 import {
   Sortable,
@@ -21,13 +23,13 @@ type TFormValue = {
   options: { id?: string; name: string; key: string; value?: string }[]
 }
 
-export function FFOption({ label }: { label: TMessageKey }) {
+export function FFOption() {
   const type = useWatch<TFormValue, 'type'>({ name: 'type' })
 
   const t = useTranslations()
   return (
     <FormItem className='space-y-2'>
-      <FormLabel>{t(label)}</FormLabel>
+      <FormLabel>{t('Admin.Attribute.options')}</FormLabel>
       {type === E_ATTRIBUTE_TYPE.TEXT && <FFTextOption />}
       {type === E_ATTRIBUTE_TYPE.COLOR && <FFColorOption />}
       {type === E_ATTRIBUTE_TYPE.BOOLEAN && <FFBooleanOption />}
@@ -59,7 +61,7 @@ function FFTextOption() {
   useDeepCompareEffect(() => {
     options.forEach((option, index) => {
       const prevName = prevOptions[index]?.name
-      if (prevName !== option.name) {
+      if (!option.id && prevName !== option.name) {
         setValue(`options.${index}.key`, snakeCase(option.name))
       }
 
@@ -101,6 +103,7 @@ function FFTextOption() {
                 disabled={!!option.id}
                 name={`options.${index}.key`}
                 placeholder={'Admin.Attribute.optionKey'}
+                valueRegExp={zodRegex.KEY_REPLACE}
               />
             </div>
             <div className='flex-none'>
@@ -116,15 +119,17 @@ function FFTextOption() {
           </div>
         </SortableItem>
       ))}
-      <Button
-        onClick={() => append({ name: '', key: '' })}
-        className='pl-2'
-        size={'sm'}
-        variant={'outline'}
-      >
-        <LuPlus />
-        {t('Admin.Attribute.addOption')}
-      </Button>
+      <div className='w-full'>
+        <Button
+          onClick={() => append({ name: '', key: '' })}
+          className='pl-2'
+          size={'sm'}
+          variant={'outline'}
+        >
+          <LuPlus />
+          {t('Admin.Attribute.addOption')}
+        </Button>
+      </div>
     </Sortable>
   )
 }
@@ -153,7 +158,7 @@ function FFColorOption() {
   useDeepCompareEffect(() => {
     options.forEach((option, index) => {
       const prevName = prevOptions[index]?.name
-      if (prevName !== option.name) {
+      if (!option.id && prevName !== option.name) {
         setValue(`options.${index}.key`, snakeCase(option.name))
       }
 
@@ -195,6 +200,7 @@ function FFColorOption() {
                 disabled={!!option.id}
                 name={`options.${index}.key`}
                 placeholder={'Admin.Attribute.optionKey'}
+                valueRegExp={zodRegex.KEY_REPLACE}
               />
             </div>
             <div className='flex-1'>
@@ -213,15 +219,17 @@ function FFColorOption() {
           </div>
         </SortableItem>
       ))}
-      <Button
-        onClick={() => append({ name: '', key: '', value: '' })}
-        className='pl-2'
-        size={'sm'}
-        variant={'outline'}
-      >
-        <LuPlus />
-        {t('Admin.Attribute.addOption')}
-      </Button>
+      <div className='w-full'>
+        <Button
+          onClick={() => append({ name: '', key: '', value: '' })}
+          className='pl-2'
+          size={'sm'}
+          variant={'outline'}
+        >
+          <LuPlus />
+          {t('Admin.Attribute.addOption')}
+        </Button>
+      </div>
     </Sortable>
   )
 }

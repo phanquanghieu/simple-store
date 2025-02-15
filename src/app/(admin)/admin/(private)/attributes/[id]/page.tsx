@@ -7,12 +7,9 @@ import { useForm } from 'react-hook-form'
 import { LuSave, LuTrash } from 'react-icons/lu'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { E_ATTRIBUTE_TYPE } from '@prisma/client'
 import { useToggle } from 'usehooks-ts'
-import { z } from 'zod'
 
 import { TIdParam } from '~/shared/dto/_common/req'
-import { E_ZOD_ERROR_CODE, zod, zodRegex } from '~/shared/libs'
 
 import { Button } from '~/app/_components/ui/button'
 import { CardS } from '~/app/_components/ui/card'
@@ -33,97 +30,11 @@ import {
 import { PageHeader } from '../../../_components/page-header'
 import { TYPE_OPTIONS } from '../_common'
 import { FFOption } from '../_components/ff-option'
-
-const UpdateAttributeFormSchemaBase = zod.object({
-  name: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(256),
-  key: zod.string(),
-  description: zod.string().trim().max(5000),
-  updatedAt: zod.string().optional(),
-  createdAt: zod.string().optional(),
-})
-const OptionNameSchema = zod
-  .string()
-  .trim()
-  .min(1, E_ZOD_ERROR_CODE.REQUIRED)
-  .max(256)
-const OptionKeySchema = zod
-  .string()
-  .trim()
-  .min(1, E_ZOD_ERROR_CODE.REQUIRED)
-  .regex(zodRegex.KEY, E_ZOD_ERROR_CODE.KEY_INVALID)
-  .max(100)
-const OptionSuperRefine = (
-  options: { name: string; key: string }[],
-  ctx: z.RefinementCtx,
-) => {
-  options.forEach((option, index) => {
-    const hasSameKey = options.some(
-      (o, i) => i !== index && o.key === option.key,
-    )
-    if (hasSameKey) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: [index, 'key'],
-        message: E_ZOD_ERROR_CODE.UNIQUE,
-      })
-    }
-  })
-}
-
-const UpdateAttributeFormSchema = zod.discriminatedUnion('type', [
-  zod
-    .object({
-      type: zod.literal(E_ATTRIBUTE_TYPE.TEXT),
-      options: zod
-        .array(
-          zod.object({
-            id: zod.string().optional(),
-            name: OptionNameSchema,
-            key: OptionKeySchema,
-          }),
-        )
-        .nonempty()
-        .max(100)
-        .superRefine(OptionSuperRefine),
-    })
-    .merge(UpdateAttributeFormSchemaBase),
-  zod
-    .object({
-      type: zod.literal(E_ATTRIBUTE_TYPE.COLOR),
-      options: zod
-        .array(
-          zod.object({
-            id: zod.string().optional(),
-            name: OptionNameSchema,
-            key: OptionKeySchema,
-            value: zod.string().trim().min(1, E_ZOD_ERROR_CODE.REQUIRED).max(7),
-          }),
-        )
-        .nonempty()
-        .max(100)
-        .superRefine(OptionSuperRefine),
-    })
-    .merge(UpdateAttributeFormSchemaBase),
-  zod
-    .object({
-      type: zod.literal(E_ATTRIBUTE_TYPE.BOOLEAN),
-      options: zod.array(
-        zod.object({
-          id: zod.string().optional(),
-          name: OptionNameSchema,
-          key: zod.string(),
-        }),
-      ),
-    })
-    .merge(UpdateAttributeFormSchemaBase),
-])
-
-type TUpdateAttributeFormValue = z.infer<typeof UpdateAttributeFormSchema>
-const defaultValues = {
-  name: '',
-  key: '',
-  description: '',
-} as TUpdateAttributeFormValue
+import {
+  TUpdateAttributeFormValue,
+  UpdateAttributeFormSchema,
+  defaultUpdateAttributeFormValue,
+} from '../_schema'
 
 export default function Page() {
   const { id } = useParams<TIdParam>()
@@ -154,7 +65,7 @@ export default function Page() {
           updatedAt: attribute.updatedAt,
           createdAt: attribute.createdAt,
         } as TUpdateAttributeFormValue)
-      : defaultValues,
+      : defaultUpdateAttributeFormValue,
     mode: 'onBlur',
   })
   const formId = useId()
@@ -254,7 +165,7 @@ export default function Page() {
                     />
                   </Col>
                   <Col col={2}>
-                    <FFOption label={'Admin.Attribute.options'} />
+                    <FFOption />
                   </Col>
                 </Grid>
               </CardS>
