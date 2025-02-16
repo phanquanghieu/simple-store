@@ -1,8 +1,5 @@
 import { E_PRODUCT_STATUS } from '@prisma/client'
 
-import { IAttributeOptionRes } from '~/shared/dto/attribute/attribute-option/res'
-import { IAttributeLiteWithOptionsRes } from '~/shared/dto/attribute/res'
-
 import { IOption } from '~/app/_interfaces/common.interface'
 
 export const STATUS_OPTIONS: IOption<TMessageKey, E_PRODUCT_STATUS>[] = [
@@ -19,28 +16,3 @@ export const STATUS_OPTIONS: IOption<TMessageKey, E_PRODUCT_STATUS>[] = [
     value: E_PRODUCT_STATUS.ARCHIVED,
   },
 ]
-
-export type TCUProductFormValue = {
-  categoryId: string | null
-  attributes: (IAttributeLiteWithOptionsRes & {
-    selectedOptionIds: string[]
-  })[]
-  variantAttributes: {
-    id: string
-  }[]
-  variants: {
-    id?: string
-    sku: string | null
-    price: string
-    compareAtPrice: string | null
-    cost: string | null
-    attributeOptions: IAttributeOptionRes[]
-    isNew: boolean
-    isDeleted: boolean
-  }[]
-  name: string
-  slug: string
-  price: string
-  cost: string | null
-  hasVariants: boolean
-}

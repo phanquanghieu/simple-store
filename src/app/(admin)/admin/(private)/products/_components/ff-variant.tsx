@@ -1,11 +1,6 @@
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { useFieldArray, useWatch } from 'react-hook-form'
 import { LuX } from 'react-icons/lu'
-
-import { isEmpty, xorBy } from 'lodash'
-
-import { decimal, filterBy, sortByKeys } from '~/shared/libs'
 
 import { Badge } from '~/app/_components/ui/badge'
 import { Button } from '~/app/_components/ui/button'
@@ -19,20 +14,14 @@ import {
   SheetTrigger,
 } from '~/app/_components/ui/sheet'
 
-import { useDeepCompareEffect } from '~/app/_hooks'
-
 import { FFCurrency, FFInput } from '../../../_components/form'
 import { PageHeader } from '../../../_components/page-header'
-import { TCUProductFormValue } from '../_common'
-import { calcMargin } from '../_util'
+import { TCUProductFormValue } from '../_schema'
+import { calcMargin, calcProfit } from '../_util'
 
 export function FFVariant() {
-  const { setValue } = useFormContext<TCUProductFormValue>()
-  const [watchAttributes, watchVariantAttributes, watchVariants] = useWatch<
-    TCUProductFormValue,
-    ['attributes', 'variantAttributes', 'variants']
-  >({
-    name: ['attributes', 'variantAttributes', 'variants'],
+  const watchVariants = useWatch<TCUProductFormValue, 'variants'>({
+    name: 'variants',
   })
 
   const { fields: fieldVariants, update } = useFieldArray<
@@ -49,24 +38,14 @@ export function FFVariant() {
     ...watchVariants[index],
   }))
 
-  const variantAttributes = useMemo(() => {
-    return sortByKeys(
-      filterBy(watchAttributes, watchVariantAttributes, 'id'),
-      watchVariantAttributes.map((x) => x.id),
-    )
-  }, [watchAttributes, watchVariantAttributes])
-
-  useDeepCompareEffect(() => {
-    const newVariants: TCUProductFormValue['variants'] =
-      buildVariantsFormVariantAttributes(variantAttributes)
-
-    setValue('variants', mergeVariants(variants, newVariants))
-  }, [variantAttributes])
-
   const t = useTranslations()
   return (
     <div className='mt-4 flex items-center justify-between'>
-      <div>{t('Admin.Product.countVariants', { count: variants.length })}</div>
+      <div>
+        {t('Admin.Product.countVariants', {
+          count: variants.filter((variant) => !variant.isDeleted).length,
+        })}
+      </div>
 
       <Sheet>
         <SheetTrigger asChild>
@@ -76,7 +55,7 @@ export function FFVariant() {
         </SheetTrigger>
         <SheetContent
           onInteractOutside={(e) => e.preventDefault()}
-          className='bg-background2 md:w-5/6'
+          className='overflow-auto bg-background2 md:w-[calc(100%-16rem)]'
           side={'right'}
         >
           <PageHeader
@@ -188,11 +167,7 @@ export function FFVariant() {
                       disabled={variant.isDeleted}
                       name={''}
                       readOnly
-                      value={
-                        variant.cost
-                          ? decimal.sub(variant.price, variant.cost)
-                          : ''
-                      }
+                      value={calcProfit(variant.cost, variant.price)}
                     />
                   </div>
                   <div className='w-24 flex-none'>
@@ -213,80 +188,3 @@ export function FFVariant() {
     </div>
   )
 }
-
-const buildVariantsFormVariantAttributes = (
-  variantAttributes: TCUProductFormValue['attributes'],
-  variantAttributeIndex = 0,
-): TCUProductFormValue['variants'] => {
-  const variantAttribute = variantAttributes[variantAttributeIndex]
-
-  if (!variantAttribute) {
-    return [
-      {
-        sku: '',
-        price: '0',
-        compareAtPrice: null,
-        cost: null,
-        attributeOptions: [],
-        isNew: true,
-        isDeleted: false,
-      },
-    ]
-  } else {
-    return variantAttribute.selectedOptionIds.flatMap((selectedOptionId) => {
-      const selectedOption = variantAttribute.options.find(
-        (o) => o.id === selectedOptionId,
-      )!
-
-      const nextVariants = buildVariantsFormVariantAttributes(
-        variantAttributes,
-        variantAttributeIndex + 1,
-      )
-
-      return nextVariants.map((nextVariant) => ({
-        ...nextVariant,
-        attributeOptions: [selectedOption, ...nextVariant.attributeOptions],
-      }))
-    })
-  }
-}
-
-const mergeVariants = (
-  oldVariants: TCUProductFormValue['variants'],
-  newVariants: TCUProductFormValue['variants'],
-) => {
-  const variantDeletes: TCUProductFormValue['variants'] = oldVariants
-    .filter(
-      (oldVariant) =>
-        oldVariant.id &&
-        !newVariants.some((newVariant) =>
-          isSameVariant(oldVariant, newVariant),
-        ),
-    )
-    .map((variant) => ({ ...variant, isDeleted: true }))
-
-  const variants: TCUProductFormValue['variants'] = newVariants.map(
-    (newVariant) => {
-      const oldVariant = oldVariants.find((oldVariant) =>
-        isSameVariant(oldVariant, newVariant),
-      )
-      if (oldVariant) {
-        return {
-          ...oldVariant,
-          attributeOptions: newVariant.attributeOptions,
-        }
-      } else {
-        return newVariant
-      }
-    },
-  )
-
-  variants.push(...variantDeletes)
-
-  return variants
-}
-
-const isSameVariant = (
-  variant1: TCUProductFormValue['variants'][number],
-  variant2: TCUProductFormValue['variants'][number],
-) => isEmpty(xorBy(variant1.attributeOptions, variant2.attributeOptions, 'id'))

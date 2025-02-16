@@ -1,12 +1,10 @@
 import { useWatch } from 'react-hook-form'
 
-import { decimal } from '~/shared/libs'
-
 import { Grid } from '~/app/_components/ui/layout'
 
 import { FFCurrency, FFInput } from '../../../_components/form'
-import { TCUProductFormValue } from '../_common'
-import { calcMargin } from '../_util'
+import { TCUProductFormValue } from '../_schema'
+import { calcMargin, calcProfit } from '../_util'
 
 export function FFPrice() {
   const [price, cost] = useWatch<TCUProductFormValue, ['price', 'cost']>({
@@ -28,7 +26,7 @@ export function FFPrice() {
           label={'Admin.Product.profit'}
           name={''}
           readOnly
-          value={cost ? decimal.sub(price, cost) : ''}
+          value={calcProfit(cost, price)}
         />
         <FFInput
           icon={<div className='flex w-4 justify-center'>%</div>}

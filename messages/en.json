@@ -133,6 +133,10 @@
       "username": "Username"
     },
     "Product": {
+      "ApiException": {
+        "SLUG_EXISTED": "Slug already existed",
+        "SKU_EXISTED": "SKU already existed"
+      },
       "BulkAction": {
         "Confirm": {
           "ACTIVATE": "Set {count} products as active?",

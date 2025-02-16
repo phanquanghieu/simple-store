@@ -133,6 +133,10 @@
       "username": "Tên người dùng"
     },
     "Product": {
+      "ApiException": {
+        "SKU_EXISTED": "SKU đã tồn tại",
+        "SLUG_EXISTED": "Slug đã tồn tại"
+      },
       "BulkAction": {
         "Confirm": {
           "ACTIVATE": "Đặt {count} sản phẩm là đang hoạt động?",

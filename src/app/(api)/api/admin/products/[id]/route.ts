@@ -2,7 +2,7 @@ import { routeExecutor } from '~/server/core'
 
 import { productService } from '~/server/services/product.service'
 
-import { PaginationQuerySchema } from '~/server/dto/_common/req'
+import { UpdateProductBodySchema } from '~/server/dto/product/req'
 import {
   adminGuard,
   bodyValidator,
@@ -17,12 +17,12 @@ export async function GET(...args: INextRouteArgs) {
   )
 }
 
-export async function POST(...args: INextRouteArgs) {
+export async function PATCH(...args: INextRouteArgs) {
   return routeExecutor(...args)(
     adminGuard,
     idParamValidator,
-    bodyValidator(PaginationQuerySchema),
-    productService.create,
+    bodyValidator(UpdateProductBodySchema),
+    productService.update,
   )
 }
 

@@ -15,6 +15,26 @@ export const GetProductQuerySchema = zod.object({
     .optional(),
 })
 
+const CUProductBodySchema = zod.object({
+  categoryId: zod.string().uuid().nullable(),
+  brandId: zod.string().uuid().nullable(),
+  attributes: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      optionIds: zod.array(zod.string().uuid()).nonempty(),
+    }),
+  ),
+  variantAttributeIds: zod.array(zod.string().uuid()).nonempty().nullable(),
+  name: zod.string().trim().min(1).max(256),
+  slug: zod.string().trim().regex(zodRegex.KEY).min(1).max(256),
+  sku: zod.string().trim().min(1).max(100).nullable(),
+  description: zod.string().trim().max(5000),
+  price: zod.string().regex(zodRegex.MONEY),
+  compareAtPrice: zod.string().regex(zodRegex.MONEY).nullable(),
+  cost: zod.string().regex(zodRegex.MONEY).nullable(),
+  hasVariants: zod.boolean(),
+})
+
 export const CreateProductBodySchema = zod.object({
   categoryId: zod.string().uuid().nullable(),
   brandId: zod.string().uuid().nullable(),
@@ -47,6 +67,25 @@ export const CreateProductBodySchema = zod.object({
   status: zod.enum([E_PRODUCT_STATUS.ACTIVE, E_PRODUCT_STATUS.DRAFT]),
   hasVariants: zod.boolean(),
 })
+
+export const UpdateProductBodySchema = CUProductBodySchema.merge(
+  zod.object({
+    variants: zod
+      .array(
+        zod.object({
+          id: zod.string().uuid().optional(),
+          sku: zod.string().trim().min(1).max(100).nullable(),
+          price: zod.string().regex(zodRegex.MONEY),
+          compareAtPrice: zod.string().regex(zodRegex.MONEY).nullable(),
+          cost: zod.string().regex(zodRegex.MONEY).nullable(),
+          attributeOptionIds: zod.array(zod.string().uuid()).nonempty(),
+        }),
+      )
+      .nonempty()
+      .nullable(),
+    status: zod.nativeEnum(E_PRODUCT_STATUS),
+  }),
+)
 
 export const BulkProductBodySchema = zod.object({
   ids: zod.array(zod.string().uuid()).min(1),

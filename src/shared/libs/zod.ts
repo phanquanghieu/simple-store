@@ -25,6 +25,7 @@ export const zodt = {
 
 export const zodRegex = {
   KEY: /^[a-z0-9_]+$/,
+  KEY_REPLACE: /[^a-z0-9_]/g,
   MONEY: /^\d+(\.\d{1,3})?$/,
 }
 

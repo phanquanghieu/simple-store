@@ -16,11 +16,16 @@ import {
 import { TooltipS } from '~/app/_components/ui/tooltip'
 
 import { useGetAttributesCategory } from '~/app/_apis/admin/category/useGetAttributesCategory'
+import { IOption } from '~/app/_interfaces/common.interface'
 
 import { FFCategory } from '../../../_components/form'
-import { TCUProductFormValue } from '../_common'
+import { TCUProductFormValue } from '../_schema'
 
-export function FFCategoryAttribute() {
+export function FFCategoryAttribute({
+  initOptionCategory,
+}: {
+  initOptionCategory?: IOption
+}) {
   const categoryId = useWatch<TCUProductFormValue, 'categoryId'>({
     name: 'categoryId',
   })
@@ -61,7 +66,11 @@ export function FFCategoryAttribute() {
   return (
     <Grid className='gap-3' grid={2}>
       <Col>
-        <FFCategory label={'Admin.Category.category'} name='categoryId' />
+        <FFCategory
+          initOption={initOptionCategory}
+          label={'Admin.Category.category'}
+          name='categoryId'
+        />
       </Col>
       <Col col={2}>
         <Label variant={'form'}>{t('Admin.Product.productAttributes')}</Label>

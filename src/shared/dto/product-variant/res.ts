@@ -25,8 +25,8 @@ export class IProductVariantRes {
     this.attributeOptions = IAttributeOptionRes.list(
       compact([
         data.variantAttributeOption1,
-        data.variantAttributeOption1,
-        data.variantAttributeOption1,
+        data.variantAttributeOption2,
+        data.variantAttributeOption3,
       ]),
     )
     this.sku = data.sku

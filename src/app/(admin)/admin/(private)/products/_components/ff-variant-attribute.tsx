@@ -19,19 +19,21 @@ import {
 } from '~/app/_components/ui/sortable'
 
 import { FFCheckbox } from '../../../_components/form'
-import { TCUProductFormValue } from '../_common'
+import { useCalcVariants } from '../_hooks/useCalcVariants'
+import { TCUProductFormValue } from '../_schema'
 import { FFVariant } from './ff-variant'
 
 const MAX_VARIANT_ATTRIBUTES = 3
 
 export function FFVariantAttribute() {
+  const { calcVariants } = useCalcVariants()
   const { setValue } = useFormContext<TCUProductFormValue>()
 
-  const hasVariants = useWatch<TCUProductFormValue, 'hasVariants'>({
-    name: 'hasVariants',
-  })
-  const attributes = useWatch<TCUProductFormValue, 'attributes'>({
-    name: 'attributes',
+  const [hasVariants, attributes] = useWatch<
+    TCUProductFormValue,
+    ['hasVariants', 'attributes']
+  >({
+    name: ['hasVariants', 'attributes'],
   })
 
   const {
@@ -71,6 +73,12 @@ export function FFVariantAttribute() {
     if (variantAttributes.some((x) => x.id === value)) return
 
     append({ id: value })
+    calcVariants()
+  }
+
+  const handleRemoveVariantAttribute = (index: number) => {
+    remove(index)
+    calcVariants()
   }
 
   const handleChangeOptions = (
@@ -84,6 +92,7 @@ export function FFVariantAttribute() {
         _attributes[index].selectedOptionIds = selectedOptionIds
       }),
     )
+    calcVariants()
   }
 
   const t = useTranslations()
@@ -99,9 +108,10 @@ export function FFVariantAttribute() {
 
           {!isEmpty(selectedVariantAttributes) && (
             <Sortable
-              onMove={({ activeIndex, overIndex }) =>
+              onMove={({ activeIndex, overIndex }) => {
                 move(activeIndex, overIndex)
-              }
+                calcVariants()
+              }}
               value={selectedVariantAttributes.map(({ id }) => ({ id }))}
             >
               <Grid className='mt-2 gap-3'>
@@ -132,7 +142,7 @@ export function FFVariantAttribute() {
                       </div>
                       <div className='flex-none'>
                         <Button
-                          onClick={() => remove(index)}
+                          onClick={() => handleRemoveVariantAttribute(index)}
                           size={'icon'}
                           variant={'outline-destructive'}
                         >

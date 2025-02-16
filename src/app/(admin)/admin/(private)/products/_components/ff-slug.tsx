@@ -3,8 +3,10 @@ import { useFormContext, useWatch } from 'react-hook-form'
 
 import { snakeCase } from 'lodash'
 
+import { zodRegex } from '~/shared/libs'
+
 import { FFInput } from '../../../_components/form'
-import { TCUProductFormValue } from '../_common'
+import { TCUProductFormValue } from '../_schema'
 
 export function FFSlug() {
   const { formState, setValue } = useFormContext<TCUProductFormValue>()
@@ -17,5 +19,11 @@ export function FFSlug() {
     }
   }, [name, setValue, formState])
 
-  return <FFInput label={'Admin.Product.slug'} name='slug' />
+  return (
+    <FFInput
+      label={'Admin.Product.slug'}
+      name='slug'
+      valueRegExp={zodRegex.KEY_REPLACE}
+    />
+  )
 }

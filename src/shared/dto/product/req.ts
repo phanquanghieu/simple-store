@@ -32,6 +32,21 @@ export interface ICreateProductBody {
   hasVariants: boolean
 }
 
+export interface IUpdateProductBody
+  extends Omit<ICreateProductBody, 'variants' | 'status'> {
+  variants:
+    | {
+        id?: string
+        sku: string | null
+        price: string
+        compareAtPrice: string | null
+        cost: string | null
+        attributeOptionIds: string[]
+      }[]
+    | null
+  status: E_PRODUCT_STATUS
+}
+
 export enum E_BULK_PRODUCT_TYPE {
   ACTIVATE = 'ACTIVATE',
   DRAFT = 'DRAFT',
